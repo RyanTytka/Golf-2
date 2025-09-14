@@ -35,12 +35,4 @@ public class rivalDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         nameObj.SetActive(false);
         scoreObj.SetActive(false);
     }
-
-    public void LoseScreenUpdate()
-    {
-        Course course = GameObject.Find("CourseManager").GetComponent<Course>();
-        int rivalScore = course.rivalScores[course.currentRival] + 36;
-        nameObj.GetComponent<TextMeshProUGUI>().text = course.rivalNames[course.currentRival];
-        scoreObj.GetComponent<TextMeshProUGUI>().text = "score: " + rivalScore.ToString();
-    }
 }

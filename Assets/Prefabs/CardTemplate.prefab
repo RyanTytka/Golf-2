@@ -137,7 +137,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -0.48}
+  m_AnchoredPosition: {x: 0, y: -0.95}
   m_SizeDelta: {x: 45.3, y: 28.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1653663841192559741
@@ -177,8 +177,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -195,8 +195,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 6
-  m_fontSizeBase: 6
+  m_fontSize: 8
+  m_fontSizeBase: 8
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 10
@@ -523,7 +523,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.22, y: 1.21}
+  m_AnchoredPosition: {x: 0.22, y: 1.29}
   m_SizeDelta: {x: 38.03, y: 16.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6938026419597359086
@@ -563,8 +563,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -704,7 +704,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: d34b2ebc76ee7784d8224be202f89e68, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8e47429a126b98545a5b38d12a071e43, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -743,6 +743,11 @@ MonoBehaviour:
   myCost: 0
   costObj: {fileID: 0}
   isDriver: 0
+  isDeckView: 0
+  isRemoveView: 0
+  isUpgradeView: 0
+  isPreviewing: 0
+  cardId: 0
 --- !u!61 &8151426438713169010
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -779,7 +784,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2.4, y: 3.36}
+    oldSize: {x: 2.488889, y: 3.5555556}
     newSize: {x: 2.4, y: 3.36}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -803,9 +808,6 @@ MonoBehaviour:
   gripIcon: {fileID: 6282837940002915006}
   shaftIcon: {fileID: 3539364335511352378}
   clubheadIcon: {fileID: 1910575064859019087}
-  gripID: 0
-  shaftID: 0
-  clubheadID: 0
 --- !u!1 &7686303943640279502
 GameObject:
   m_ObjectHideFlags: 0
@@ -832,8 +834,8 @@ Transform:
   m_GameObject: {fileID: 7686303943640279502}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.9756, y: 1.4756, z: -1}
-  m_LocalScale: {x: 0.4588, y: 0.4588, z: 0.4588}
+  m_LocalPosition: {x: -0.87, y: 1.22, z: -1}
+  m_LocalScale: {x: 0.40689138, y: 0.40689138, z: 0.40689138}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8307558494132384029}

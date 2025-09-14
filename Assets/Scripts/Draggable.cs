@@ -13,9 +13,26 @@ public class Draggable : MonoBehaviour
     public string description;
     public CardTypes cardType;
     public ClubTypes clubType;
-    public int carry; //How far ball travels in air
-    public int roll; //How far ball travels on ground
-    public List<GameObject> upgrades;
+    [SerializeField]
+    int carry; //How far ball travels in air
+    [SerializeField]
+    int roll; //How far ball travels on ground
+    public int Carry 
+    { 
+        get 
+        {
+            GetComponent<upgrades>().UpdateView();
+            return carry + GetComponent<upgrades>().Stats()[0]; 
+        } 
+    }
+    public int Roll
+    {
+        get
+        {
+            GetComponent<upgrades>().UpdateView();
+            return roll + GetComponent<upgrades>().Stats()[1];
+        }
+    }
     public GameObject titleObj; //reference to the card's name obj
     public GameObject descObj; //reference to the card's description obj
     public bool selected; //If I am currently selected to be played
@@ -25,6 +42,11 @@ public class Draggable : MonoBehaviour
     public int myCost; //how many tees this costs to buy
     public GameObject costObj; //the price that is displayed while I am in the shop. Delete it when I am bought
     public bool isDriver = false;
+    public bool isDeckView = false;
+    public bool isRemoveView = false; //true if selecting a card to remove from deck
+    public bool isUpgradeView = false; //true if selecting a card to upgrade
+    public bool isPreviewing = false; //true if this is the card you are looking at to remove
+    public int cardId; //index of the deck list. used to identify cards
 
     //Internal Helper Variables
     //these are used for when dragging
@@ -36,6 +58,8 @@ public class Draggable : MonoBehaviour
     private Coroutine returnCoroutine;
     private bool onDisplay = false; //true if this card is being displayed and not interactable
     private Vector3 displayPos; //where this should be displayed if onDisplay is true
+    private Vector3 originalPosition;
+    private Vector3 originalScale;
 
     public enum CardTypes
     {
@@ -54,8 +78,27 @@ public class Draggable : MonoBehaviour
 
     void OnMouseDown()
     {
-        if (isUpgradeOption || isShopOption)
-            return; 
+        if (isRemoveView || isUpgradeView)
+        {
+            if (!isPreviewing)
+            {
+                if (GameObject.Find("ShopManager").GetComponent<shopManager>().isPreviewing) return;
+                // Prevent multiple previews
+                isPreviewing = true;
+                //Display this card
+                originalPosition = transform.position;
+                originalScale = transform.localScale;
+                // Start animation to center
+                Vector3 centerScreen = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+                centerScreen.z = 0;
+                StartCoroutine(AnimateToPoint(centerScreen, transform.localScale * 1.5f, false, true));
+                GameObject.Find("ShopManager").GetComponent<shopManager>().OpenPreview(this.gameObject, isRemoveView, isUpgradeView);
+            }
+        }
+
+
+        if (isUpgradeOption || isShopOption || isDeckView)
+            return;
 
         //start dragging this obj
         distance = Vector3.Distance(transform.position, Camera.main.transform.position);
@@ -129,10 +172,13 @@ public class Draggable : MonoBehaviour
 
     void OnMouseUp()
     {
+        if (GameObject.Find("GameManager").GetComponent<Hand>().paused) return;
+        if (isDeckView) return;
         if (isUpgradeOption)
         {
             //add this to your deck
             GameObject.Find("GameManager").GetComponent<Hand>().baseDeck.Add(this.gameObject);
+            gameObject.transform.parent = GameObject.Find("GameManager").transform.Find("BaseDeck");
             //delete other upgrade options
             GameObject.Find("GameManager").GetComponent<Hand>().DeleteOptions(this.gameObject);
             gameObject.SetActive(false);
@@ -140,7 +186,6 @@ public class Draggable : MonoBehaviour
             {
                 //Go to the shop
                 isUpgradeOption = false;
-                SceneManager.sceneLoaded += OnSceneLoaded;
                 SceneManager.LoadScene("Shop");
             }
             else
@@ -160,12 +205,12 @@ public class Draggable : MonoBehaviour
                 GameObject.Find("CourseManager").GetComponent<Course>().tees -= myCost;
                 //add this to your deck
                 GameObject.Find("GameManager").GetComponent<Hand>().baseDeck.Add(this.gameObject);
+                gameObject.transform.parent = GameObject.Find("GameManager").transform.Find("BaseDeck");
                 gameObject.SetActive(false);
                 isShopOption = false;
-                GameObject.Find("GameManager").GetComponent<Hand>().shopOptions.Remove(this.gameObject);
+                GameObject.Find("ShopManager").GetComponent<shopManager>().shopOptions.Remove(this.gameObject);
                 //update shop UI
-                GameObject.Find("TeesCount").GetComponent<TextMeshProUGUI>().text = 
-                    GameObject.Find("CourseManager").GetComponent<Course>().tees.ToString();
+                GameObject.Find("ShopManager").GetComponent<shopManager>().UpdateUI();
                 Destroy(costObj);
                 return;
             }
@@ -212,8 +257,8 @@ public class Draggable : MonoBehaviour
             // If the card is dragged into the play area
             if (transform.position.y > 0)
             {
-                if (cardType != CardTypes.Caddie ||
-                    GameObject.Find("GameManager").GetComponent<Hand>().playedCaddie == false) //one caddie per turn
+                //if (cardType != CardTypes.Caddie ||
+                    //GameObject.Find("GameManager").GetComponent<Hand>().playedCaddie == false) //one caddie per turn
                 {
                     if (cardType != CardTypes.Ability || GameObject.Find("GameManager").GetComponent<Hand>().playedAbility == false ||
                         GameObject.Find("CourseManager").GetComponent<Course>().currentRival != 3)
@@ -261,16 +306,56 @@ public class Draggable : MonoBehaviour
     //Update Text on card
     public void UpdateCard()
     {
+        //get upgrade info
+        GetComponent<upgrades>().UpdateView();
+        
+        //set card data
         titleObj.GetComponent<TextMeshProUGUI>().text = cardName;
         if(cardType == CardTypes.Club)
         {
-            string s = "Carry: " + carry + "\nRoll: " + roll + "\n" + description;
+            string s = "Carry: " + Carry + "\nRoll: " + Roll + "\n" + description;
             descObj.GetComponent<TextMeshProUGUI>().text = s;
         }
         else
         {
             descObj.GetComponent<TextMeshProUGUI>().text = description;
         }
+    }
+
+    //set the sort order of the card and each image in it
+    public void SetSortOrder(int so)
+    {
+        GetComponent<SpriteRenderer>().sortingOrder = so; //put this in front of black background
+        foreach (var sr in GetComponentsInChildren<SpriteRenderer>()) sr.sortingOrder = so; //put icons in front of bg
+        GetComponentInChildren<Canvas>().sortingOrder = so;
+    }
+
+    public IEnumerator AnimateToPoint(Vector3 destination, Vector3 endScale, bool isLocal, bool setPreview)
+    {
+        Vector3 startPos = isLocal ? transform.localPosition : transform.position;
+        Vector3 startScale = transform.localScale;
+
+        float duration = 0.3f;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.SmoothStep(0, 1, elapsed / duration);
+            if (isLocal)
+                transform.localPosition = Vector3.Lerp(startPos, destination, t);
+            else
+                transform.position = Vector3.Lerp(startPos, destination, t);
+            transform.localScale = Vector3.Lerp(startScale, endScale, t);
+            yield return null;
+        }
+
+        if (isLocal)
+            transform.localPosition = destination;
+        else
+            transform.position = destination;
+        transform.localScale = endScale;
+        isPreviewing = setPreview;
     }
 
     //Play me
@@ -334,23 +419,25 @@ public class Draggable : MonoBehaviour
                 }
                 break;
             case "Find a Ball":
-                //draw 2 random balls from your deck
+                // Draw 2 random ball cards from the deck
                 List<GameObject> balls = new();
-                foreach(GameObject go in GameObject.Find("GameManager").GetComponent<Hand>().currentDeck)
+                foreach (GameObject go in GameObject.Find("GameManager").GetComponent<Hand>().currentDeck)
                 {
-                    //find all balls in player deck
                     if (go.GetComponent<Draggable>().cardType == CardTypes.Ball)
                         balls.Add(go);
                 }
                 List<GameObject> toDraw = new();
-                while (toDraw.Count < 2 && toDraw.Count < balls.Count)
+                int drawCount = Mathf.Min(2, balls.Count);
+                // Shuffle the list
+                for (int i = balls.Count - 1; i > 0; i--)
                 {
-                    //get 2 balls to draw
-                    GameObject go = balls[Random.Range(0, balls.Count - 1)];
-                    if (toDraw.Contains(go) == false)
-                    {
-                        toDraw.Add(go);
-                    }
+                    int j = Random.Range(0, i + 1);
+                    (balls[i], balls[j]) = (balls[j], balls[i]);
+                }
+                // Draw N balls from shuffled list
+                for (int i = 0; i < drawCount; i++)
+                {
+                    toDraw.Add(balls[i]);
                 }
                 //draw the selected balls
                 foreach (GameObject go in toDraw)
@@ -377,11 +464,13 @@ public class Draggable : MonoBehaviour
                 GameObject.Find("GameManager").GetComponent<Hand>().hand.Add(newCaddie);
                 break;
             case "Tee Up":
-                foreach (GameObject go in GameObject.Find("GameManager").GetComponent<Hand>().drivers)
+                foreach (GameObject go in GameObject.Find("GameManager").GetComponent<Hand>().baseDeck)
                 {
-                    //Create copy to add to hand
-                    GameObject driver = Instantiate(go, GameObject.Find("GameManager").transform);
-                    GameObject.Find("GameManager").GetComponent<Hand>().hand.Add(driver);
+                    if (go.GetComponent<Draggable>().isDriver)
+                    {
+                        GameObject newObj = Instantiate(go, GameObject.Find("GameManager").transform);
+                        GameObject.Find("GameManager").GetComponent<Hand>().hand.Add(newObj);
+                    }
                 }
                 break;
         }
@@ -409,34 +498,23 @@ public class Draggable : MonoBehaviour
             // Unsubscribe to avoid duplicate calls in the future
             SceneManager.sceneLoaded -= OnSceneLoaded;
         }
-        if (scene.name == "Shop")
+    }
+
+    //returns null if cant take upgrade, or the matching upgrade if it will be replaced, or the passed upgrade if it is new
+    public upgradeBuy CanUpgrade(upgradeBuy newUpgrade)
+    {
+        if((int)newUpgrade.type < 3) //shaft/clubhead/grip
         {
-            //generate shop items
-            Hand hand = GameObject.Find("GameManager").GetComponent<Hand>();
-            List<GameObject> availableCards = hand.shopCards.OrderBy(x => Random.value).Take(3).ToList();
-            GameObject costObj = GameObject.Find("TeesCost");
-            int index = 0;
-            foreach (GameObject card in availableCards)
+            if (cardType == CardTypes.Club)
             {
-                //craete card obj
-                GameObject newCard = Instantiate(card);
-                hand.shopOptions.Add(newCard);
-                newCard.transform.position = new Vector3(index * 5 - 5, 0, 0);
-                newCard.GetComponent<Draggable>().isShopOption = true;
-                newCard.GetComponent<Draggable>().UpdateCard();
-                newCard.transform.parent = hand.gameObject.transform;
-                //create cost obj
-                GameObject newCost = Instantiate(costObj, GameObject.Find("MainCanvas").transform);
-                newCost.GetComponent<RectTransform>().position = new Vector3(index * 5 - 5.25f, 2.25f, 0);
-                newCost.GetComponentInChildren<TextMeshProUGUI>().text = newCard.GetComponent<Draggable>().myCost.ToString();
-                newCard.GetComponent<Draggable>().costObj = newCost;
-                index++;
+                foreach(upgradeBuy myUpgrade in GetComponentsInChildren<upgradeBuy>())
+                {
+                    if(myUpgrade.type == newUpgrade.type)
+                        return myUpgrade; //already has this type of upgrade
+                }
+                return newUpgrade; //can take this upgrade (new)
             }
-            Destroy(costObj);
-            GameObject.Find("TeesCount").GetComponent<TextMeshProUGUI>().text =
-                GameObject.Find("CourseManager").GetComponent<Course>().tees.ToString();
-            GameObject.Find("ContinueButton").GetComponent<Button>().onClick.AddListener(hand.ToNewHole);
-            SceneManager.sceneLoaded -= OnSceneLoaded;
         }
+        return null; //cant take this upgrade
     }
 }

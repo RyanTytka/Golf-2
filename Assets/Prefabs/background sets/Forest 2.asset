@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee3e8d16ea7cc4848ade743a16abf10c, type: 3}
+  m_Name: Forest 2
+  m_EditorClassIdentifier: 
+  layers:
+  - {fileID: 21300000, guid: 1664e96b5da2ef544a33effa921c79b9, type: 3}
+  - {fileID: 21300000, guid: 42c0542a9d71f074bab19a206638e370, type: 3}
+  - {fileID: 21300000, guid: 44086f264c1883c4083aeb132f902204, type: 3}
+  - {fileID: 21300000, guid: 4d5f27f25f6fa1f4ebac44096a1b9267, type: 3}
+  - {fileID: 21300000, guid: e7e11fed5e8764e4b9243bf71d182a99, type: 3}
+  moveRatios:
+  - 0.1
+  - 0.25
+  - 0.5
+  - 0.75
+  - 1

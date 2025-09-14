@@ -1,32 +1,47 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class upgrades : MonoBehaviour
 {
     public GameObject gripIcon, shaftIcon, clubheadIcon;
-    public Sprite[] gripImages, shaftImages, clubheadImages;
-    public int gripID, shaftID, clubheadID;
+    private int carry, roll;
 
     //return [carry, roll] based off of current upgrades
-    public int[] stats()
+    public int[] Stats()
     {
-        int[] stats = { 0, 0 };
+        int[] stats = { carry, roll };
         return stats;
     }
 
-    //update the icons on the card
-    public void updateView()
+    //update the icons on the card and get stats
+    public void UpdateView()
     {
-        if(gripID != 0)
-            gripIcon.GetComponent<Image>().sprite = gripImages[gripID];
-        gripIcon.SetActive(gripID != 0);
-        if (shaftID != 0)
-            shaftIcon.GetComponent<Image>().sprite = shaftImages[shaftID];
-        shaftIcon.SetActive(shaftID != 0);
-        if (clubheadID != 0)
-            clubheadIcon.GetComponent<Image>().sprite = clubheadImages[clubheadID];
-        clubheadIcon.SetActive(clubheadID != 0);
+        carry = 0;
+        roll = 0;
+        foreach (upgradeBuy upgrade in GetComponentsInChildren<upgradeBuy>())
+        {
+            int id = (int)upgrade.type * 4 + upgrade.ID;
+            carry += upgrade.carryStats[id];
+            roll += upgrade.rollStats[id];
+            if (upgrade.type == upgradeBuy.upgradeType.GRIP)
+            {
+                gripIcon.GetComponent<SpriteRenderer>().sprite = upgrade.icons[id];
+                gripIcon.SetActive(true);
+            }
+            if (upgrade.type == upgradeBuy.upgradeType.SHAFT)
+            {
+                shaftIcon.GetComponent<SpriteRenderer>().sprite = upgrade.icons[(int)upgrade.type * 4 + upgrade.ID];
+                shaftIcon.SetActive(true);
+            }
+            if (upgrade.type == upgradeBuy.upgradeType.CLUBHEAD)
+            {
+                clubheadIcon.GetComponent<SpriteRenderer>().sprite = upgrade.icons[(int)upgrade.type * 4 + upgrade.ID];
+                clubheadIcon.SetActive(true);
+            }
+        }
+    }
+
+    public void AddUpgrade(GameObject upgrade)
+    {
+        upgrade.transform.parent = transform;
     }
 }

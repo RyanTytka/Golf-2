@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class howToPlay : MonoBehaviour
 {
@@ -14,5 +15,7 @@ public class howToPlay : MonoBehaviour
     public void ShowPanel()
     {
         howToPlayPanel.SetActive(true);
+        howToPlayPanel.GetComponentInChildren<Button>().onClick.RemoveAllListeners();
+        howToPlayPanel.GetComponentInChildren<Button>().onClick.AddListener(HidePanel);
     }
 }

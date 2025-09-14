@@ -8,14 +8,31 @@ using UnityEngine.UI;
 
 public class Course : MonoBehaviour
 {
+    //holds the info on a course playthrough
+    public class CourseData
+    {
+        public int courseNum, rival, courseType;
+        public List<int> scores, pars;
+        public bool lostRun;
+    }
+    public List<CourseData> currentPlaythrough = new();
+
     //prevent duplicates of this obj
     public static GameObject courseManagerObj;
     public void Awake()
     {
-        if(courseManagerObj == null)
+        //set up debug
+        GameObject.Find("SkipHoleButton").GetComponent<Button>().onClick.AddListener(GameObject.Find("CourseManager").GetComponent<Course>().SkipHole);
+        //
+        if (courseManagerObj == null)
         {
+            //set up initial game state
             courseManagerObj = this.gameObject;
             DontDestroyOnLoad(this.gameObject);
+            for(int i = 0; i < rivalImages.Count; i++)
+            {
+                availRivals.Add(i);
+            }
         }
         else
         {
@@ -31,6 +48,14 @@ public class Course : MonoBehaviour
     public int holeNum = 0; //what number hole you are on
     public List<int> scores = new List<int>();
     public List<int> pars = new List<int>();
+    public enum CourseType
+    {
+        plains,
+        forest,
+        hills,
+        beach,
+        desert,
+    }
     private enum CoursePieces
     {
         FAIRWAY = 0,
@@ -59,6 +84,8 @@ public class Course : MonoBehaviour
     public GameObject finishText; //the text obj that displays whether you got par/etc
     public int tees = 0;
     public bool comingFromShop; //set to true after shop so you know to create new course
+    public CourseType courseType;
+    public int nextCourse = 0; //if -1, choose random course. Otherwise use this
 
     //dragging the course
     private bool isDragging = false;
@@ -77,8 +104,12 @@ public class Course : MonoBehaviour
     public List<string> rivalDescriptions = new List<string>();
     public List<int> rivalScores = new List<int>();
     public List<Sprite> rivalImages = new List<Sprite>();
-    public int currentRival = 0;
-    
+    public int currentRival = -1;
+    public List<int> availRivals = new(); //tracks which rivals have already been played so no duplicates
+
+    //lose screen
+    public GameObject recapObj; //instantiate to recap each course played
+
     void Update()
     {
         //Animate shot arc          
@@ -97,32 +128,40 @@ public class Course : MonoBehaviour
                     isDragging = true;
                     startMouseX = mouseWorldPos.x;
                     startChildX = courseDisplay.transform.localPosition.x;
+                    GameObject.Find("BackgroundManager").GetComponent<backgroundManager>().StorePositions();
                     float childCount = courseDisplay.transform.childCount;
-                    // Define movement bounds based on number of children
                     minX = childCount * childWidth * -1f + 16.5f;
                     maxX = 0f;
                     break;
                 }
             }
         }
+
         if (isDragging && Input.GetMouseButton(0))
         {
             float currentMouseX = mouseWorldPos.x;
             float deltaX = currentMouseX - startMouseX;
+
+            // Drag the course
             float targetX = startChildX + deltaX;
             float clampedX = Mathf.Clamp(targetX, minX, maxX);
             Vector3 newLocalPos = courseDisplay.transform.localPosition;
             newLocalPos.x = clampedX;
             courseDisplay.transform.localPosition = newLocalPos;
-            //Update shot arc
-            //reset highlight
+
+            // Calculate how far the course has actually moved
+            float courseDelta = clampedX - startChildX;
+            GameObject bgm = GameObject.Find("BackgroundManager");
+            if(bgm != null)
+                bgm.GetComponent<backgroundManager>().UpdatePositions(courseDelta);
+
+            // Reset and redraw shot arc
             GetComponent<LineRenderer>().positionCount = 0;
             Destroy(currentDot);
             if (selectedClub != null)
             {
-                //Calculate hit with currently selected cards
-                int carry = selectedClub.GetComponent<Draggable>().carry / 10;
-                int roll = selectedClub.GetComponent<Draggable>().roll / 10;
+                int carry = selectedClub.GetComponent<Draggable>().Carry / 10;
+                int roll = selectedClub.GetComponent<Draggable>().Roll / 10;
                 HighlightHit();
             }
         }
@@ -135,21 +174,66 @@ public class Course : MonoBehaviour
     public void NewCourse()
     {
         //set initial course data
-        holeNum = 8; //note: this will be incremented once before each hole
+        holeNum = 0; //note: this will be incremented once before each hole
         courseNum++;
+        if (nextCourse == -1)
+        {
+            courseType = (CourseType)Random.Range(0, 5);
+        }
+        else
+        {
+            courseType = (CourseType)nextCourse;
+            nextCourse = -1;
+        }
         //set up rival
-        currentRival = Random.Range(0, rivalNames.Count - 1);
+        if(currentRival == -1) //if it is not -1, just use what it is currently set to
+        {
+            currentRival = availRivals[Random.Range(0, availRivals.Count)];
+            availRivals.Remove(currentRival);
+        }
         //generate par data
+        int numParThrees = 1;
+        int numParFives = 1;
+        switch (courseType)
+        {
+            case CourseType.plains:
+                numParFives += Random.Range(1, 3);
+                break;
+            case CourseType.desert:
+                numParFives += 1;
+                numParThrees += 1;
+                break;
+            case CourseType.beach:
+                numParThrees += Random.Range(1, 3);
+                break;
+            case CourseType.hills:
+                numParFives += Random.Range(0, 2);
+                break;
+            case CourseType.forest:
+                break;
+        }
         scores.Clear();
         pars = new();
         for (int i = 0; i < 9; i++)
         {
             pars.Add(4);
         }
-        int par3 = Random.Range(0, 9);
-        int par5 = (par3 + Random.Range(1,9)) % 9;
-        pars[par3] = 3;
-        pars[par5] = 5;
+        List<int> availableHoles = Enumerable.Range(0, 9).ToList();
+        // Assign Par 3s
+        for (int i = 0; i < numParThrees && availableHoles.Count > 0; i++)
+        {
+            int index = Random.Range(0, availableHoles.Count);
+            pars[availableHoles[index]] = 3;
+            availableHoles.RemoveAt(index);
+        }
+        // Assign Par 5s
+        for (int i = 0; i < numParFives && availableHoles.Count > 0; i++)
+        {
+            int index = Random.Range(0, availableHoles.Count);
+            pars[availableHoles[index]] = 5;
+            availableHoles.RemoveAt(index);
+        }
+        //start first hole
         NewHole();
     }
 
@@ -168,39 +252,129 @@ public class Course : MonoBehaviour
         Vector3 newLocalPos = courseDisplay.transform.localPosition;
         newLocalPos.x = 0;
         courseDisplay.transform.localPosition = newLocalPos;
+        GameObject.Find("BackgroundManager").GetComponent<backgroundManager>().SetSprites((int)courseType);
+        GetComponent<BoxCollider2D>().enabled = true;
         //Generate Fairway
-        int holeLength = 30 + courseNum * 6 + (pars[holeNum-1] - 4) * 10 + Random.Range(-2,3); //actual length
+        CoursePieces fairwayType = CoursePieces.FAIRWAY;
+        int lengthMod = 0;
+        switch(courseType)
+        {
+            case CourseType.plains:
+                lengthMod = 5;
+                break;
+            case CourseType.desert:
+                fairwayType = CoursePieces.SAND;
+                lengthMod = -2;
+                break;
+            case CourseType.beach:
+                lengthMod = -3;
+                break;
+            case CourseType.hills:
+                lengthMod = 1;
+                break;
+            case CourseType.forest:
+                lengthMod = -1;
+                fairwayType = CoursePieces.ROUGH;
+                break;
+        }
+        int holeLength = 30 + courseNum * 6 + (pars[holeNum-1] - 4) * 10 + lengthMod + Random.Range(-2,3); //actual length
+        //int holeLength = 20 + courseNum * 6 + (pars[holeNum-1] - 4) * 10 + lengthMod + Random.Range(-2,3); //shorter test length
         for (int i = 0; i < holeLength; i++)
         {
-            GameObject fairway = Instantiate(coursePieces[(int)CoursePieces.FAIRWAY], courseDisplay.transform);
+            GameObject fairway = Instantiate(coursePieces[(int)fairwayType], courseDisplay.transform);
             fairway.GetComponent<CoursePiece>().myIndex = i;
             courseLayout.Add(fairway);
         }
         //Create Hazards
-        //Add some rough areas
-        int currentPos = Random.Range(1,10);
-        while(currentPos < courseLayout.Count)
-        {
-            int patchSize = Random.Range(3, 6);
-            AddHazardPatch((int)CoursePieces.ROUGH, currentPos, patchSize);
-            currentPos += Random.Range(patchSize + 3, patchSize + 8);
-        }
-        //Add in some sand/water pits
-        int numSandWater = Random.Range(2, 4 + courseNum);
-        for (int i = 0; i < numSandWater; i++)
-        {
-            AddHazardPatch(Random.Range(2,4), Random.Range(1,courseLayout.Count - 4), Random.Range(1, 4));
-        }
-        //Maybe add large pond (removed since you just always end up right in front of green after penalty
-        //if(Random.Range(0, 3) == 0)
-        //{
-        //    AddHazardPatch((int)CoursePieces.WATER, Random.Range(3,courseLayout.Count - 10), Random.Range(5, 15));
-        //}
-        //Add in green
+        int currentPos = Random.Range(1, 10);
         int greenStartOffsetMin = 12;
         int greenStartOffsetMax = 18;
         int greenLengthMin = 6;
         int greenLengthMax = 10;
+        switch (courseType)
+        {
+            case CourseType.plains:
+                //small patches of various hazards
+                while (currentPos < courseLayout.Count)
+                {
+                    int patchSize = Random.Range(2, 5);
+                    int patchType = Random.Range(1, 3);
+                    AddHazardPatch(patchType, currentPos, patchSize);
+                    currentPos += patchSize + Random.Range(0, 5);
+                }
+                //large green
+                greenStartOffsetMin = 14;
+                greenStartOffsetMax = 20;
+                greenLengthMin = 8;
+                greenLengthMax = 12;
+                break;
+            case CourseType.desert:
+                //patches of rough and fairway
+                while (currentPos < courseLayout.Count)
+                {
+                    int patchSize = Random.Range(4, 8);
+                    int patchType = Random.Range(0, 2);
+                    AddHazardPatch(patchType, currentPos, patchSize);
+                    currentPos += patchSize + Random.Range(0, 5);
+                }
+                //large green
+                greenStartOffsetMin = 14;
+                greenStartOffsetMax = 20;
+                greenLengthMin = 8;
+                greenLengthMax = 12;
+                break;
+            case CourseType.beach:
+                //patches of sand and water
+                while (currentPos < courseLayout.Count)
+                {
+                    int patchSize = Random.Range(1, 4);
+                    int patchType = Random.Range(0,5) == 0 ? 1 : Random.Range(2, 4);
+                    AddHazardPatch(patchType, currentPos, patchSize);
+                    currentPos += patchSize + Random.Range(0, 5);
+                }
+                //small green
+                greenStartOffsetMin = 10;
+                greenStartOffsetMax = 16;
+                greenLengthMax = 8;
+                break;
+            case CourseType.hills:
+                //patches large patches of rough and water, small sand pits
+                while (currentPos < courseLayout.Count)
+                {
+                    int patchSize = Random.Range(4, 8);
+                    int patchType = Random.Range(0, 3) == 0 ? 3 : 1;
+                    if (patchType == 3) patchSize -= 2; 
+                    AddHazardPatch(patchType, currentPos, patchSize);
+                    currentPos += patchSize + Random.Range(1, 4);
+                    if(Random.Range(0,5) == 0)
+                    {
+                        //add small sand pit occasionally
+                        AddHazardPatch((int)CoursePieces.SAND, currentPos + Random.Range(0,5), Random.Range(1,4));
+                    }
+                }
+                //larger green
+                greenStartOffsetMax = 20;
+                greenLengthMax = 12;
+                break;
+            case CourseType.forest:
+                //patches of fairway, sand, and water
+                while (currentPos < courseLayout.Count)
+                {
+                    int patchSize = Random.Range(2, 5);
+                    int patchType = Random.Range(1, 4);
+                    if (patchType == 1) patchType = 0; //turn rough into fairway
+                    AddHazardPatch(patchType, currentPos, patchSize);
+                    currentPos += patchSize + Random.Range(0, 5);
+                }
+                //small green
+                greenStartOffsetMin = 10;
+                greenStartOffsetMax = 16;
+                greenLengthMax = 8;
+                break;
+        }
+        //Tee box is always fairway
+        ReplacePieceAt(0, (int)CoursePieces.FAIRWAY);
+        //Add in green
         int startOfGreen = holeLength - Random.Range(greenStartOffsetMin, greenStartOffsetMax);
         int greenLength = Random.Range(greenLengthMin, greenLengthMax);
         for (int i = startOfGreen; i < Mathf.Min(startOfGreen + greenLength, courseLayout.Count); i++)
@@ -269,8 +443,8 @@ public class Course : MonoBehaviour
         if (selectedClub != null)
         {
             //Calculate hit with currently selected cards
-            int carry = selectedClub.GetComponent<Draggable>().carry / 10;
-            int roll = selectedClub.GetComponent<Draggable>().roll / 10;
+            int carry = selectedClub.GetComponent<Draggable>().Carry / 10;
+            int roll = selectedClub.GetComponent<Draggable>().Roll / 10;
             HighlightHit();
         }
     }
@@ -296,7 +470,7 @@ public class Course : MonoBehaviour
     }
 
     //Move the ball its carry distance then the roll distance
-    public void HitBall(int carry, int roll)
+    public void HitBall()
     {
         //card effects
         if (selectedClub.GetComponent<Draggable>().cardName == "Shovel Wedge")
@@ -334,25 +508,6 @@ public class Course : MonoBehaviour
                 else
                 {
                     power -= 10;
-                }
-            }
-            if (courseLayout[ballPos].GetComponent<CoursePiece>().pieceName == "Sand")
-            {
-                //discard a random card from your hand
-                if (luck > 0)
-                {
-                    luck--;
-                }
-                else
-                {
-                    Hand handObj = GameObject.Find("GameManager").GetComponent<Hand>();
-                    handObj.DiscardCard(handObj.hand[Random.Range(0, handObj.hand.Count)]);
-                }
-                //Item Effects
-                if (ballName == "Beach Ball")
-                {
-                    //Draw 3
-                    GameObject.Find("GameManager").GetComponent<Hand>().DrawCard(3);
                 }
             }
             if (courseLayout[ballPos].GetComponent<CoursePiece>().pieceName == "Water")
@@ -418,9 +573,26 @@ public class Course : MonoBehaviour
                 Destroy(go);
             }
         }
-        handRef.DrawCard(1);
-        if (GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Caddie 4") > 0)
-            luck++;
+        //do sand after discarding used cards
+        if (courseLayout[ballPos].GetComponent<CoursePiece>().pieceName == "Sand")
+        {
+            //discard a random card from your hand
+            if (luck > 0)
+            {
+                luck--;
+            }
+            else
+            {
+                Hand handObj = GameObject.Find("GameManager").GetComponent<Hand>();
+                handObj.DiscardCard(handObj.hand[Random.Range(0, handObj.hand.Count)]);
+            }
+            //Item Effects
+            if (ballName == "Beach Ball")
+            {
+                //Draw 3
+                GameObject.Find("GameManager").GetComponent<Hand>().DrawCard(3);
+            }
+        }
         //If on green, perform a putt
         if (courseLayout[ballPos].GetComponent<CoursePiece>().pieceName == "Green")
         {
@@ -435,6 +607,10 @@ public class Course : MonoBehaviour
             GoToNextHole();
             return;
         }
+        //clean up
+        handRef.DrawCard(1);
+        if (GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Caddie 4") > 0)
+            luck++;
         //Update scene graphics
         UpdateStatusEffectDisplay();
         DisplayCourse();
@@ -450,10 +626,12 @@ public class Course : MonoBehaviour
         {
             //lands out of bounds
             Vector3 startPos = courseLayout[swing.startIndex].transform.position;
-            Vector3 localOutOfBoundsPos = new Vector3(swing.landIndex * childWidth - 10, 0, 0);
+            Vector3 localOutOfBoundsPos = new Vector3(swing.landIndex * childWidth - 7.5f, 1.25f, 0);
+            localOutOfBoundsPos.y = courseLayout[swing.startIndex].transform.position.y;
             Vector3 worldOutOfBoundsPos = courseDisplay.transform.TransformPoint(localOutOfBoundsPos);
-
-            DrawArc(startPos, worldOutOfBoundsPos, worldOutOfBoundsPos.x, boundsPrefab);
+            Vector3 localTailEndPos = new Vector3(swing.endIndex * childWidth - 7.5f, 1.25f, 0);
+            Vector3 worldTailEndPos = courseDisplay.transform.TransformPoint(localTailEndPos);
+            DrawArc(startPos, worldOutOfBoundsPos, worldTailEndPos.x, boundsPrefab);
         }
         else
         {
@@ -479,8 +657,8 @@ public class Course : MonoBehaviour
         //get base distances
         if (selectedClub == null)
             return swing; //cant swing without a club!
-        int carry = selectedClub.GetComponent<Draggable>().carry/10;
-        int roll = selectedClub.GetComponent<Draggable>().roll/10;
+        int carry = selectedClub.GetComponent<Draggable>().Carry/10;
+        int roll = selectedClub.GetComponent<Draggable>().Roll/10;
         bool hasRoll = true; //false if an effect makes this shot have 0 roll
         //card effects
         //clubs
@@ -540,7 +718,7 @@ public class Course : MonoBehaviour
         int rollAmount = 0;
         int start = ballPos;
         swing.startIndex = start;
-        swing.landIndex = start + (carry + power/10) * direction;
+        swing.landIndex = start + Mathf.Max(carry + power/10, 1) * direction;
         int end = swing.landIndex;
         if(swing.landIndex >= courseLayout.Count || swing.landIndex < 0)
         {
@@ -548,7 +726,7 @@ public class Course : MonoBehaviour
             hasRoll = false;
         }
         if (hasRoll)
-            end = start + (carry + power/10 + roll - pinpoint/10) * direction;
+            end += Mathf.Max(roll - pinpoint / 10, 0) * direction;
         GameObject piece;
         for (int i = swing.landIndex; direction == 1 ? i < end : i > end; i += direction)
         {
@@ -609,9 +787,9 @@ public class Course : MonoBehaviour
     public void Swing()
     {
         if (selectedClub == null) return; //need a club to swing
-        int carry = selectedClub.GetComponent<Draggable>().carry;
-        int roll = selectedClub.GetComponent<Draggable>().roll;
-        HitBall(carry / 10, roll / 10);
+        int carry = selectedClub.GetComponent<Draggable>().Carry;
+        int roll = selectedClub.GetComponent<Draggable>().Roll;
+        HitBall();
     }
 
     public void UpdateStatusEffectDisplay()
@@ -665,6 +843,13 @@ public class Course : MonoBehaviour
         }
     }
 
+    //debug tool to quickly go through holes
+    public void SkipHole()
+    {
+        strokeCount = 4;
+        GoToNextHole();
+    }
+
     public void GoToNextHole()
     {
         if (GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Caddie 1") > 0)
@@ -696,21 +881,32 @@ public class Course : MonoBehaviour
         GetComponent<LineRenderer>().positionCount = 0;
         if (currentDot != null)
             Destroy(currentDot);
-        //Go to upgrade screen
         scores.Add(strokeCount);
-        //If just finished a course, check for loss
+        //If just finished a course, save course data and check for loss
         if(holeNum >= 9)
         {
+            currentPlaythrough.Add(GetCurrentCourseData());
             int totalScore = 0;
             foreach (int score in scores)
                 totalScore += score;
+            //if(courseNum >= 2) //debug test to end after 2nd hole
             if(totalScore - 36 >= rivalScores[currentRival])
             {
+                //you lost
+                SceneManager.sceneLoaded += OnSceneLoaded;
+                SceneManager.LoadScene("Lose");
+                currentPlaythrough[courseNum - 1].lostRun = true;
+                return;
+            }
+            if(courseNum >= 5)
+            {
+                //you won
                 SceneManager.sceneLoaded += OnSceneLoaded;
                 SceneManager.LoadScene("Lose");
                 return;
             }
         }
+        //Go to upgrade screen
         SceneManager.sceneLoaded += OnSceneLoaded;
         SceneManager.LoadScene("New Card");
     }
@@ -720,6 +916,7 @@ public class Course : MonoBehaviour
     {
         if (scene.name == "New Card")
         {
+            GetComponent<BoxCollider2D>().enabled = false;
             GameObject.Find("GameManager").GetComponent<Hand>().RemoveDeck();
             GameObject.Find("GameManager").GetComponent<Hand>().CreateNewCardOptions();
             int teeReward = Mathf.Max(pars[holeNum - 1] - strokeCount + 3,1);
@@ -731,9 +928,31 @@ public class Course : MonoBehaviour
         }
         if (scene.name == "Lose")
         {
-            GameObject.Find("RivalImage").GetComponent<rivalDisplay>().LoseScreenUpdate();
+            if (currentPlaythrough[currentPlaythrough.Count - 1].lostRun)
+            {
+                GameObject.Find("EndMessage").GetComponent<TextMeshProUGUI>().text = "You Lost";
+            }
+            else
+            {
+                GameObject.Find("EndMessage").GetComponent<TextMeshProUGUI>().text = "You Won";
+            }
+            int index = 0;
+            foreach (scorecard sc in GameObject.Find("RecapParent").GetComponentsInChildren<scorecard>())
+            {
+                //update recap for each course played through
+                if(index < currentPlaythrough.Count)
+                {
+                    sc.gameObject.SetActive(true);
+                    sc.ShowRecap(currentPlaythrough[index]);
+                }
+                else
+                {
+                    sc.gameObject.SetActive(false);
+                }
+                index++;
+            }
+            courseDisplay.SetActive(false);
             GameObject.Find("GameManager").GetComponent<Hand>().RemoveDeck();
-            GameObject.Find("Scorecard").GetComponent<scorecard>().ShowScores();
             SceneManager.sceneLoaded -= OnSceneLoaded;
         }
     }
@@ -744,5 +963,19 @@ public class Course : MonoBehaviour
         strokeCount++;
         GameObject.Find("GameManager").GetComponent<Hand>().DrawCard(1);
         DisplayCourse();
+    }
+
+    //return a courseData obj of the current course
+    public CourseData GetCurrentCourseData()
+    {
+        CourseData courseData = new()
+        {
+            pars = pars,
+            scores = scores,
+            rival = currentRival,
+            courseNum = courseNum,
+            courseType = (int)courseType
+        };
+        return courseData;
     }
 }

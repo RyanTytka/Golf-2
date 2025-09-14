@@ -21,8 +21,7 @@ public class mainMenuUI : MonoBehaviour
         GameObject.Find("CourseManager").GetComponent<Course>().comingFromShop = false;
 
         //set up hand and UI
-        GameObject.Find("GameManager").GetComponent<Hand>().RemoveDeck();
-        GameObject.Find("GameManager").GetComponent<Hand>().NewDeck();
+        GameObject.Find("GameManager").GetComponent<Hand>().StartGame();
         GameObject.Find("SwingButton").GetComponent<Button>().onClick.AddListener
             (GameObject.Find("CourseManager").GetComponent<Course>().Swing);
         GameObject.Find("MulliganButton").GetComponent<Button>().onClick.AddListener

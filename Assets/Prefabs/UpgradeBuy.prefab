@@ -36,7 +36,6 @@ RectTransform:
   - {fileID: 5887604811989275083}
   - {fileID: 8441772102982818071}
   - {fileID: 2157476909891169621}
-  - {fileID: 7761147097540802941}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -107,7 +106,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 0.7137255, g: 0.36078432, b: 0.36078432, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -143,6 +142,48 @@ MonoBehaviour:
   nameObj: {fileID: 6666703525867750847}
   imageObj: {fileID: 5568197951122709154}
   descObj: {fileID: 5716141954155310983}
+  names:
+  - Non-Slip Grip
+  - Rubber Grip
+  - Corded Grip
+  - Oversized Grip
+  - Step Steel Shaft
+  - Graphite Shaft
+  - Composite Shaft
+  - Rifle Shaft
+  - Low-Spin Clubhead
+  - Draw-Based Clubhead
+  - Blade Clubhead
+  - Cavity-Back Clubhead
+  descriptions:
+  - +10 Carry
+  - +10 Roll
+  - +20 Carry\n-10 Roll
+  - +20 Carry\n+10 Roll
+  - +10 Carry
+  - +10 Carry\n-10 Roll
+  - +10 Carry\n+10 Roll
+  - +20 Carry\n-10 Roll
+  - +20 Roll
+  - -10 Carry\n+20 Roll
+  - +20 Carry\n-20 Roll
+  - +10 Carry\n+10 Roll
+  icons:
+  - {fileID: 21300000, guid: 4265d955bcd667c4fb5213bdc75dfa59, type: 3}
+  - {fileID: 21300000, guid: 4265d955bcd667c4fb5213bdc75dfa59, type: 3}
+  - {fileID: 21300000, guid: 4265d955bcd667c4fb5213bdc75dfa59, type: 3}
+  - {fileID: 21300000, guid: 4265d955bcd667c4fb5213bdc75dfa59, type: 3}
+  - {fileID: 21300000, guid: 7887ffc584db0d048b35a065656190ec, type: 3}
+  - {fileID: 21300000, guid: 7887ffc584db0d048b35a065656190ec, type: 3}
+  - {fileID: 21300000, guid: 7887ffc584db0d048b35a065656190ec, type: 3}
+  - {fileID: 21300000, guid: 7887ffc584db0d048b35a065656190ec, type: 3}
+  - {fileID: 21300000, guid: 8818b72dbc803e44aa9dc5f0cd9cf6bf, type: 3}
+  - {fileID: 21300000, guid: 8818b72dbc803e44aa9dc5f0cd9cf6bf, type: 3}
+  - {fileID: 21300000, guid: 8818b72dbc803e44aa9dc5f0cd9cf6bf, type: 3}
+  - {fileID: 21300000, guid: 8818b72dbc803e44aa9dc5f0cd9cf6bf, type: 3}
+  carryStats: 0a0000000000000014000000140000000a0000000a0000000a0000001400000014000000f6ffffff140000000a000000
+  rollStats: 000000000a000000f6ffffff0a00000000000000f6ffffff0a000000f6ffffff0000000014000000ecffffff0a000000
+  costObj: {fileID: 8190829977671115567}
 --- !u!1 &5568197951122709154
 GameObject:
   m_ObjectHideFlags: 0
@@ -252,7 +293,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 58.999985, y: -8.000013}
+  m_AnchoredPosition: {x: 58.999985, y: -18}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5425711728385909
@@ -283,7 +324,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: +10 Carry +10 Roll
+  m_text: '+10 Carry
+
+    -10 Roll'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9c3f70a9ac6e8dc4c86845813ee24e59, type: 2}
   m_sharedMaterial: {fileID: 7547461315612174905, guid: 9c3f70a9ac6e8dc4c86845813ee24e59, type: 2}
@@ -318,7 +361,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -377,16 +420,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6094795227878171556}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.59695, y: 0.59695, z: 0.59695}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2976980202007013173}
+  m_Father: {fileID: 5887604811989275083}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -39, y: 108}
+  m_AnchoredPosition: {x: -136.99988, y: -2.9999084}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5399643273908427144
@@ -590,7 +633,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 7761147097540802941}
   m_Father: {fileID: 2976980202007013173}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -626,7 +670,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 2
+  m_text: 3
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9c3f70a9ac6e8dc4c86845813ee24e59, type: 2}
   m_sharedMaterial: {fileID: 7547461315612174905, guid: 9c3f70a9ac6e8dc4c86845813ee24e59, type: 2}

@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee3e8d16ea7cc4848ade743a16abf10c, type: 3}
+  m_Name: Hills 3
+  m_EditorClassIdentifier: 
+  layers:
+  - {fileID: 21300000, guid: 1fb3f9645e9b84746a412f3dd76f5677, type: 3}
+  - {fileID: 21300000, guid: e612ecb350c783f46b15b0a63a8a1777, type: 3}
+  - {fileID: 21300000, guid: 2ee65354cdacd204592fe745d3dfea0c, type: 3}
+  - {fileID: 21300000, guid: 1538c8f4a1c03684983cf5f50cabcd3b, type: 3}
+  moveRatios:
+  - 0.1
+  - 0.25
+  - 0.5
+  - 1
