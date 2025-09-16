@@ -94,6 +94,9 @@ public class Course : MonoBehaviour
     private float minX;
     private float maxX;
     public float childWidth;
+    public float keyboardScrollSpeed = 5f;
+    public float minKeyboardScrollSpeed = 5f;
+    public float maxKeyboardScrollSpeed = 25f;
 
     //status effects
     public int power = 0;
@@ -107,16 +110,15 @@ public class Course : MonoBehaviour
     public int currentRival = -1;
     public List<int> availRivals = new(); //tracks which rivals have already been played so no duplicates
 
-    //lose screen
-    public GameObject recapObj; //instantiate to recap each course played
 
     void Update()
     {
-        //Animate shot arc          
+        // Animate shot arc          
         float scrollSpeed = 1.5f;
         float offset = Time.time * scrollSpeed;
         GetComponent<LineRenderer>().material.SetTextureOffset("_MainTex", new Vector2(-offset, 0));
-        //Drag the course along x axis
+
+        // Handle mouse input
         Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (Input.GetMouseButtonDown(0))
         {
@@ -129,32 +131,43 @@ public class Course : MonoBehaviour
                     startMouseX = mouseWorldPos.x;
                     startChildX = courseDisplay.transform.localPosition.x;
                     GameObject.Find("BackgroundManager").GetComponent<backgroundManager>().StorePositions();
-                    float childCount = courseDisplay.transform.childCount;
-                    minX = childCount * childWidth * -1f + 16.5f;
-                    maxX = 0f;
                     break;
                 }
             }
         }
-
+        float movementDelta = 0f;
         if (isDragging && Input.GetMouseButton(0))
         {
             float currentMouseX = mouseWorldPos.x;
             float deltaX = currentMouseX - startMouseX;
-
-            // Drag the course
-            float targetX = startChildX + deltaX;
+            movementDelta = deltaX;
+        }
+        // Handle keyboard input
+        if (Input.GetKey(KeyCode.RightArrow))
+        {
+            movementDelta -= Time.deltaTime * keyboardScrollSpeed;
+            keyboardScrollSpeed = Mathf.Min(keyboardScrollSpeed * (1f + Time.deltaTime), maxKeyboardScrollSpeed);
+        }
+        else if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            movementDelta += Time.deltaTime * keyboardScrollSpeed;
+            keyboardScrollSpeed = Mathf.Min(keyboardScrollSpeed * (1f + Time.deltaTime), maxKeyboardScrollSpeed);
+        }
+        else
+        {
+            keyboardScrollSpeed = minKeyboardScrollSpeed;
+        }
+        if (isDragging || movementDelta != 0f)
+        {
+            float targetX = startChildX + movementDelta;
             float clampedX = Mathf.Clamp(targetX, minX, maxX);
             Vector3 newLocalPos = courseDisplay.transform.localPosition;
             newLocalPos.x = clampedX;
             courseDisplay.transform.localPosition = newLocalPos;
-
-            // Calculate how far the course has actually moved
             float courseDelta = clampedX - startChildX;
             GameObject bgm = GameObject.Find("BackgroundManager");
-            if(bgm != null)
+            if (bgm != null)
                 bgm.GetComponent<backgroundManager>().UpdatePositions(courseDelta);
-
             // Reset and redraw shot arc
             GetComponent<LineRenderer>().positionCount = 0;
             Destroy(currentDot);
@@ -164,6 +177,8 @@ public class Course : MonoBehaviour
                 int roll = selectedClub.GetComponent<Draggable>().Roll / 10;
                 HighlightHit();
             }
+            // Only update startChildX if dragging with mouse
+            if (!Input.GetMouseButton(0)) startChildX = courseDisplay.transform.localPosition.x;
         }
         if (Input.GetMouseButtonUp(0))
         {
@@ -249,9 +264,7 @@ public class Course : MonoBehaviour
         courseLayout = new List<GameObject>();
         power = 0;
         pinpoint = 0;
-        Vector3 newLocalPos = courseDisplay.transform.localPosition;
-        newLocalPos.x = 0;
-        courseDisplay.transform.localPosition = newLocalPos;
+        
         GameObject.Find("BackgroundManager").GetComponent<backgroundManager>().SetSprites((int)courseType);
         GetComponent<BoxCollider2D>().enabled = true;
         //Generate Fairway
@@ -388,6 +401,13 @@ public class Course : MonoBehaviour
         //make last piece of the course grass (so it doesnt end in water)
         ReplacePieceAt(courseLayout.Count - 1, (int)CoursePieces.FAIRWAY);
         DisplayCourse();
+        // Calculate drag limits for coursedisplay, based on screen size and hole size
+        Vector3 newLocalPos = courseDisplay.transform.localPosition;
+        maxX = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 0)).x + childWidth / 2;
+        float childCount = courseLayout.Count;
+        minX = maxX - childCount * childWidth - Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 0)).x * 2;
+        newLocalPos.x = maxX;
+        courseDisplay.transform.localPosition = newLocalPos;
     }
 
     //helper method that inputs pieceType at index
@@ -413,6 +433,7 @@ public class Course : MonoBehaviour
     public void DisplayCourse()
     {
         GameObject.Find("RivalDisplay").GetComponent<rivalDisplay>().idNum = currentRival;
+        GameObject.Find("RivalDisplay").GetComponent<rivalDisplay>().UpdateView();
         GameObject.Find("Stroke").GetComponent<TextMeshProUGUI>().text = "Hole: " + holeNum + "\nStrokes: " + strokeCount;
         GameObject.Find("TeeCount").GetComponent<TextMeshProUGUI>().text = tees.ToString();
         //Put pieces in their place
@@ -421,22 +442,32 @@ public class Course : MonoBehaviour
         {
             //set position
             GameObject go = courseLayout[i];
-            go.transform.localPosition = new Vector2(i * childWidth - 7.5f, 1.0f);
+            go.transform.localPosition = new Vector2(i * childWidth, 1.0f);
             //set art
+            //Type: 0 = Fairway, 1 = Rough, 2 = Sand, 3 = Water, 4 = Green, 5 = Hole, 6 = Out of Bounds
+            //Offset: 0 = single, 1 = small left, 2 = small right, 3 = large left, 4 = large middle, 5 = large right
             int myType = go.GetComponent<CoursePiece>().myType;
-            int offset = 1;
+            int offset = 4;
             if (prevPieceType != myType)
-                offset = 0; // this is the first piece of this type
+            {
+                offset = 3; // this is the first piece of this type
+                if (i < courseLayout.Count - 1 && myType != courseLayout[i + 1].GetComponent<CoursePiece>().myType)
+                {
+                    //this is a single piece
+                    offset = 0;
+                }
+            }
             else if (i < courseLayout.Count - 1 &&  myType != courseLayout[i+1].GetComponent<CoursePiece>().myType)
-                offset = 2; //this is the last piece
-            if (myType == 5) offset = 1; //hole is always middle piece
-            if(myType == 4 && courseLayout[i + 1].GetComponent<CoursePiece>().myType == 5) offset = 1; //green piece before hole
-            if(myType == 4 && courseLayout[i - 1].GetComponent<CoursePiece>().myType == 5) offset = 1; //green piece after hole
-            go.GetComponent<SpriteRenderer>().sprite = courseArt[myType * 3 + offset];
+                offset = 5; //this is the last piece
+            if (myType == 5) { offset = 4; myType = 4; } //hole is always middle piece
+            if(myType == 4 && courseLayout[i + 1].GetComponent<CoursePiece>().myType == 5) offset = 4; //green piece before hole
+            if(myType == 4 && courseLayout[i - 1].GetComponent<CoursePiece>().myType == 5) offset = 4; //green piece after hole
+            //if (i == 0) { myType = 0; offset = 0; }
+            go.GetComponent<SpriteRenderer>().sprite = courseArt[myType * 6 + offset];
             prevPieceType = myType;
         }
         //Put ball in its place
-        ballObj.transform.localPosition = new Vector3(ballPos * childWidth - 7.5f, 1.25f, -1);
+        ballObj.transform.localPosition = new Vector3(ballPos * childWidth, 1.5f, -1);
         //reset highlight
         GetComponent<LineRenderer>().positionCount = 0;
         Destroy(currentDot);
