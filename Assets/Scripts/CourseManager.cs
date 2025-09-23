@@ -86,6 +86,7 @@ public class Course : MonoBehaviour
     public bool comingFromShop; //set to true after shop so you know to create new course
     public CourseType courseType;
     public int nextCourse = 0; //if -1, choose random course. Otherwise use this
+    public bool canPlayBall = true; //set false by certain abilities
 
     //dragging the course
     private bool isDragging = false;
@@ -140,9 +141,25 @@ public class Course : MonoBehaviour
         {
             float currentMouseX = mouseWorldPos.x;
             float deltaX = currentMouseX - startMouseX;
-            movementDelta = deltaX;
+            Vector3 newLocalPos = courseDisplay.transform.localPosition;
+            newLocalPos.x = Mathf.Clamp(startChildX + deltaX, minX, maxX);
+            courseDisplay.transform.localPosition = newLocalPos;
+
+            float courseDelta = newLocalPos.x - startChildX;
+            GameObject bgm = GameObject.Find("BackgroundManager");
+            if (bgm != null)
+                bgm.GetComponent<backgroundManager>().UpdatePositions(courseDelta);
+
+            // Update startChildX to prevent snapping back
+            startChildX = newLocalPos.x;
+            startMouseX = currentMouseX;
         }
         // Handle keyboard input
+        if ((Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow)))
+        {
+            // Sync the startChildX with the current position to prevent snapping
+            startChildX = courseDisplay.transform.localPosition.x;
+        }
         if (Input.GetKey(KeyCode.RightArrow))
         {
             movementDelta -= Time.deltaTime * keyboardScrollSpeed;
@@ -517,6 +534,12 @@ public class Course : MonoBehaviour
         //add a stroke
         if(ballName != "Practice Ball" || GameObject.Find("GameManager").GetComponent<Hand>().hand.Count < 6)
             strokeCount++;
+        //card effects
+        if (selectedClub.GetComponent<Draggable>().cardName == "Dead Stop Iron")
+        { //draw 2 when swinging with no roll
+            if (swing.landIndex == swing.endIndex)
+                GameObject.Find("GameManager").GetComponent<Hand>().DrawCard(2);
+        }
         //if out of bounds
         if (swing.endIndex >= courseLayout.Count)
         {
@@ -546,6 +569,9 @@ public class Course : MonoBehaviour
                 //move up to next non water space and take stroke penalty (if not lucky)
                 while (courseLayout[ballPos].GetComponent<CoursePiece>().pieceName == "Water")
                     ballPos++;
+                //Item effects
+                if (GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Caddie A") > 0)
+                    tees += 2;
                 //Rubber Duck Ball ignores water
                 if (selectedBall == null || selectedBall.GetComponent<Draggable>().cardName != "Rubber Duck Ball")
                 {
@@ -564,11 +590,14 @@ public class Course : MonoBehaviour
             pinpoint = 0;
             if (courseLayout[ballPos].GetComponent<CoursePiece>().pieceName == "Fairway")
             {
+                //item effects
                 if (ballName == "Ace Ball")
                 {
                     //Draw 2
                     GameObject.Find("GameManager").GetComponent<Hand>().DrawCard(2);
                 }
+                if (selectedClub.GetComponent<Draggable>().cardName == "Club of Greed")
+                    tees += 2;
             }
         }
         //deselect current club and ball and update hand
@@ -623,6 +652,8 @@ public class Course : MonoBehaviour
                 //Draw 3
                 GameObject.Find("GameManager").GetComponent<Hand>().DrawCard(3);
             }
+            if (GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Caddie A") > 0)
+                tees += 2;
         }
         //If on green, perform a putt
         if (courseLayout[ballPos].GetComponent<CoursePiece>().pieceName == "Green")
@@ -639,6 +670,7 @@ public class Course : MonoBehaviour
             return;
         }
         //clean up
+        canPlayBall = true;
         handRef.DrawCard(1);
         if (GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Caddie 4") > 0)
             luck++;
@@ -775,8 +807,15 @@ public class Course : MonoBehaviour
                     if (luck - luckUsed > 0)
                         luckUsed++;
                     else
-                        swing.roughHits += 1; 
-                    rollAmount++;
+                    {
+                        if (currentRival == 6) //this rival stops rolling on rough
+                            i = end;
+                        else
+                        {
+                            rollAmount++;
+                            swing.roughHits += 1; 
+                        }
+                    }
                     break;
                 case "Fairway":
                 case "Green":
@@ -951,6 +990,8 @@ public class Course : MonoBehaviour
             GameObject.Find("GameManager").GetComponent<Hand>().RemoveDeck();
             GameObject.Find("GameManager").GetComponent<Hand>().CreateNewCardOptions();
             int teeReward = Mathf.Max(pars[holeNum - 1] - strokeCount + 3,1);
+            if (currentRival == 4 && pars[holeNum - 1] < scores[holeNum - 1]) //must par or better to get tees against rival 4
+                teeReward = 0;
             GameObject.Find("TeesText").GetComponent<TextMeshProUGUI>().text = "(     +" + teeReward + ")";
             GameObject.Find("SkipButton").GetComponent<Button>().onClick.AddListener
                 (GameObject.Find("GameManager").GetComponent<Hand>().SkipUpgrade);
@@ -993,6 +1034,9 @@ public class Course : MonoBehaviour
     {
         strokeCount++;
         GameObject.Find("GameManager").GetComponent<Hand>().DrawCard(1);
+        if (currentRival == 3)
+            power -= 30;
+        UpdateStatusEffectDisplay();
         DisplayCourse();
     }
 

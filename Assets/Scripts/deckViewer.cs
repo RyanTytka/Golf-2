@@ -16,7 +16,6 @@ public class deckViewer : MonoBehaviour
     //dragging card container
     private float scrollOffset = 0f;
     private float maxScroll = 0f;
-    private float scrollSpeed = 5f;
     private bool isScrolling = false;
     private float previousMouseY;
     private float startDragY;

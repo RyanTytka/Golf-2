@@ -164,6 +164,8 @@ public class Hand : MonoBehaviour
             hand.Add(currentDeck[0]);
             currentDeck[0].SetActive(true);
             currentDeck.RemoveAt(0);
+            if (currentDeck.Count == 0 && GameObject.Find("CourseManager").GetComponent<Course>().currentRival == 5)
+                GameObject.Find("CourseManager").GetComponent<Course>().strokeCount++;
         }
         DisplayHand();
     }
@@ -245,7 +247,8 @@ public class Hand : MonoBehaviour
     {
         //get tees for skipping
         Course course = GameObject.Find("CourseManager").GetComponent<Course>();
-        course.tees += Mathf.Max(course.pars[course.holeNum - 1] - course.strokeCount + 3, 1);
+        if (course.currentRival != 4 || course.pars[course.holeNum - 1] >= course.scores[course.holeNum - 1]) //must par or better to get tees against rival 4
+            course.tees += Mathf.Max(course.pars[course.holeNum - 1] - course.strokeCount + 3, 1);
         DeleteOptions(null);
         //Go back to the course and create a new deck and hole, or go to shop if hole 9
         if (GameObject.Find("CourseManager").GetComponent<Course>().holeNum >= 9)

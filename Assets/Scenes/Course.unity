@@ -9365,10 +9365,8 @@ MonoBehaviour:
   - {fileID: 6027947537781880624, guid: f75b3173c7abba54a934b7329e7f4513, type: 3}
   - {fileID: 6027947537781880624, guid: 534f8df268c76d84ab045d4cb387ecdb, type: 3}
   - {fileID: 6027947537781880624, guid: e8b7d5052bace534c957b6d4ce238f98, type: 3}
-  - {fileID: 6027947537781880624, guid: 6ea617080d784854c9f7739800214ab8, type: 3}
-  - {fileID: 6027947537781880624, guid: 25a01bf19dfd43a498450b23de347c4d, type: 3}
-  - {fileID: 6027947537781880624, guid: cae61f26d72793c45b53fc6dae5904e4, type: 3}
-  - {fileID: 6027947537781880624, guid: cae61f26d72793c45b53fc6dae5904e4, type: 3}
+  - {fileID: 6027947537781880624, guid: 1e8bc90b868c6fa4d98abc65267f078f, type: 3}
+  - {fileID: 6027947537781880624, guid: 1e8bc90b868c6fa4d98abc65267f078f, type: 3}
   baseDeck: []
   currentDeck: []
   discardPile: []
@@ -9501,6 +9499,7 @@ MonoBehaviour:
   comingFromShop: 0
   courseType: 0
   nextCourse: -1
+  canPlayBall: 1
   childWidth: 1
   keyboardScrollSpeed: 10
   minKeyboardScrollSpeed: 10
@@ -9509,21 +9508,33 @@ MonoBehaviour:
   pinpoint: 0
   rivalNames:
   - Timmy Two-Stroke
-  - Claire Longshot
+  - Natalie Rivers
   - Bob McCarry
-  - John A Golf
+  - Jack Fairway
+  - Ava Prescott
+  - Liam Bunker
+  - John Weekly
+  - Stacy Green
   rivalDescriptions:
   - Your driver has -30 Power
   - Lose an extra stroke for water penalties
   - Start each hole with 1 less card in hand
-  - Can only play 1 ability card per turn
-  rivalScores: 00000000ffffffff0300000002000000
+  - Lose 30 Power when you mulligan
+  - "Gain no Tees on holes that you don\u2019t par or better"
+  - Lose a stroke when your deck runs out of cards
+  - Rough stops your ball from rolling
+  - Lose 10 power when you play an ability
+  rivalScores: 00000000feffffff03000000fdffffff020000000000000002000000ffffffff
   rivalImages:
   - {fileID: 980424793, guid: 6b2c2bf6ef5731c4eb7faa73801d6516, type: 3}
   - {fileID: -1336406066, guid: 6b2c2bf6ef5731c4eb7faa73801d6516, type: 3}
   - {fileID: 427036884, guid: 6b2c2bf6ef5731c4eb7faa73801d6516, type: 3}
-  - {fileID: 21300000, guid: c6451fa8f7babae4b80d55231c2b81dc, type: 3}
-  currentRival: -1
+  - {fileID: -1178553323, guid: 6b2c2bf6ef5731c4eb7faa73801d6516, type: 3}
+  - {fileID: 247248076, guid: 6b2c2bf6ef5731c4eb7faa73801d6516, type: 3}
+  - {fileID: 1927250800, guid: 6b2c2bf6ef5731c4eb7faa73801d6516, type: 3}
+  - {fileID: 1408785562, guid: 6b2c2bf6ef5731c4eb7faa73801d6516, type: 3}
+  - {fileID: -392773968, guid: 6b2c2bf6ef5731c4eb7faa73801d6516, type: 3}
+  currentRival: 7
   availRivals: 
 --- !u!4 &1755189161
 Transform:

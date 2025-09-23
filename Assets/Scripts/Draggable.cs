@@ -35,6 +35,10 @@ public class Draggable : MonoBehaviour
     }
     public GameObject titleObj; //reference to the card's name obj
     public GameObject descObj; //reference to the card's description obj
+    public GameObject rollTextObj, carryTextObj;
+    public GameObject clubStatBlock; //top of description box that shows carry and roll icons for clubs
+    public GameObject typeIconObj;
+    public Sprite[] typeIcons; //list of icons for each type of card
     public bool selected; //If I am currently selected to be played
     public bool draggable; //True = Drag to play. False = Click to select
     public bool isUpgradeOption = false; //set to true when this is being displayed as an upgrade option
@@ -142,6 +146,8 @@ public class Draggable : MonoBehaviour
             //If I am a ball
             else if (cardType == CardTypes.Ball)
             {
+                if (!GameObject.Find("CourseManager").GetComponent<Course>().canPlayBall)
+                    return;
                 //deselect any current club
                 if (GameObject.Find("CourseManager").GetComponent<Course>().selectedBall != null)
                 {
@@ -259,14 +265,14 @@ public class Draggable : MonoBehaviour
             {
                 //if (cardType != CardTypes.Caddie ||
                     //GameObject.Find("GameManager").GetComponent<Hand>().playedCaddie == false) //one caddie per turn
-                {
-                    if (cardType != CardTypes.Ability || GameObject.Find("GameManager").GetComponent<Hand>().playedAbility == false ||
-                        GameObject.Find("CourseManager").GetComponent<Course>().currentRival != 3)
-                    {
+                //{
+                //    if (cardType != CardTypes.Ability || GameObject.Find("GameManager").GetComponent<Hand>().playedAbility == false ||
+                        //GameObject.Find("CourseManager").GetComponent<Course>().currentRival != 3)
+                    //{
                         //play this
                         StartCoroutine(PlayCard());
-                    }
-                } 
+                    //}
+                //} 
             }
         }
     }
@@ -303,22 +309,23 @@ public class Draggable : MonoBehaviour
         returnCoroutine = null;
     }
 
-    //Update Text on card
+    //Update Text and icons on card
     public void UpdateCard()
     {
         //get upgrade info
         GetComponent<upgrades>().UpdateView();
         
-        //set card data
+        //set text
         titleObj.GetComponent<TextMeshProUGUI>().text = cardName;
-        if(cardType == CardTypes.Club)
+        descObj.GetComponent<TextMeshProUGUI>().text = description;
+        clubStatBlock.SetActive(cardType == CardTypes.Club);
+        carryTextObj.SetActive(cardType == CardTypes.Club);
+        rollTextObj.SetActive(cardType == CardTypes.Club);
+        typeIconObj.GetComponent<SpriteRenderer>().sprite = typeIcons[(int)cardType];
+        if (cardType == CardTypes.Club)
         {
-            string s = "Carry: " + Carry + "\nRoll: " + Roll + "\n" + description;
-            descObj.GetComponent<TextMeshProUGUI>().text = s;
-        }
-        else
-        {
-            descObj.GetComponent<TextMeshProUGUI>().text = description;
+            carryTextObj.GetComponent<TextMeshProUGUI>().text = Carry.ToString();
+            rollTextObj.GetComponent<TextMeshProUGUI>().text = Roll.ToString();
         }
     }
 
@@ -362,6 +369,7 @@ public class Draggable : MonoBehaviour
     public IEnumerator PlayCard()
     {
         //Debug.Log(cardName + " played");
+        Course c = GameObject.Find("CourseManager").GetComponent<Course>();
         if (cardType == CardTypes.Caddie)
         {
             if (GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Caddie 2") > 0)
@@ -373,7 +381,15 @@ public class Draggable : MonoBehaviour
             this.gameObject.SetActive(false);
         }
         if (cardType == CardTypes.Ability)
+        {
             GameObject.Find("GameManager").GetComponent<Hand>().playedAbility = true;
+            if (c.currentRival == 7)
+            {
+                c.power -= 10;
+                c.DisplayCourse();
+                c.UpdateStatusEffectDisplay();
+            }
+        }
         switch (cardName)
         {
             case "Rangefinder":
@@ -472,6 +488,17 @@ public class Draggable : MonoBehaviour
                         GameObject.Find("GameManager").GetComponent<Hand>().hand.Add(newObj);
                     }
                 }
+                break;
+            case "Back to Basics":
+                //draw 2. disable balls until next swing
+                GameObject.Find("GameManager").GetComponent<Hand>().DrawCard(2);
+                if(GameObject.Find("CourseManager").GetComponent<Course>().selectedBall != null)
+                {
+                    GameObject.Find("CourseManager").GetComponent<Course>().selectedBall.GetComponent<Draggable>().selected = false;
+                    GameObject.Find("CourseManager").GetComponent<Course>().selectedBall.GetComponent<SpriteRenderer>().color = Color.white;
+                    GameObject.Find("CourseManager").GetComponent<Course>().selectedBall = null;
+                }
+                GameObject.Find("CourseManager").GetComponent<Course>().canPlayBall = false;
                 break;
         }
         //Update view

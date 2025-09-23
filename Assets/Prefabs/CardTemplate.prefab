@@ -34,8 +34,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.688, y: 0.009}
-  m_SizeDelta: {x: 45.3, y: 28.4}
+  m_AnchoredPosition: {x: -0.688, y: 0.004}
+  m_SizeDelta: {x: 16.8, y: 4.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &649655997573689263
 CanvasRenderer:
@@ -92,8 +92,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 4
-  m_fontSizeBase: 4
+  m_fontSize: 6
+  m_fontSizeBase: 6
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 10
@@ -401,14 +401,14 @@ RectTransform:
   m_GameObject: {fileID: 1364794106775747129}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1.1375, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 550981828315783560}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.012, y: 0.024}
+  m_AnchoredPosition: {x: 0.012, y: 0.04}
   m_SizeDelta: {x: 2.1555555, y: 0.22222222}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4410662263380905880
@@ -651,8 +651,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.752, y: 0.009}
-  m_SizeDelta: {x: 45.3, y: 28.4}
+  m_AnchoredPosition: {x: 0.752, y: 0.0040000007}
+  m_SizeDelta: {x: 14, y: 5.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &811733296965348827
 CanvasRenderer:
@@ -709,8 +709,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 4
-  m_fontSizeBase: 4
+  m_fontSize: 6
+  m_fontSizeBase: 6
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 10
@@ -927,12 +927,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 10
+  m_fontSize: 4.95
   m_fontSizeBase: 12
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 7
-  m_fontSizeMax: 10
+  m_fontSizeMin: 4
+  m_fontSizeMax: 5
   m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
@@ -963,7 +963,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: -3.626442, y: 0, z: 5.18062, w: 11.604606}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -1081,6 +1081,15 @@ MonoBehaviour:
   roll: 0
   titleObj: {fileID: 6677722421748955124}
   descObj: {fileID: 920205581350489303}
+  rollTextObj: {fileID: 6112712066517968774}
+  carryTextObj: {fileID: 149031067237151827}
+  clubStatBlock: {fileID: 1364794106775747129}
+  typeIconObj: {fileID: 7686303943640279502}
+  typeIcons:
+  - {fileID: -775231535, guid: 35d995df07189f343980c08c1de27262, type: 3}
+  - {fileID: 1371759671, guid: 35d995df07189f343980c08c1de27262, type: 3}
+  - {fileID: 574783982, guid: 35d995df07189f343980c08c1de27262, type: 3}
+  - {fileID: -2032929517, guid: 35d995df07189f343980c08c1de27262, type: 3}
   selected: 0
   draggable: 0
   isUpgradeOption: 0
