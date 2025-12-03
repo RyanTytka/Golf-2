@@ -309,7 +309,7 @@ public class Course : MonoBehaviour
                 fairwayType = CoursePieces.ROUGH;
                 break;
         }
-        int holeLength = 30 + courseNum * 6 + (pars[holeNum-1] - 4) * 10 + lengthMod + Random.Range(-2,3); //actual length
+        int holeLength = 30 + courseNum * 4 + (pars[holeNum-1] - 4) * 10 + lengthMod + Random.Range(-2,3); //actual length
         //int holeLength = 20 + courseNum * 6 + (pars[holeNum-1] - 4) * 10 + lengthMod + Random.Range(-2,3); //shorter test length
         for (int i = 0; i < holeLength; i++)
         {
@@ -321,8 +321,8 @@ public class Course : MonoBehaviour
         int currentPos = Random.Range(1, 10);
         int greenStartOffsetMin = 12;
         int greenStartOffsetMax = 18;
-        int greenLengthMin = 6;
-        int greenLengthMax = 10;
+        int greenLengthMin = 6 - courseNum / 3;
+        int greenLengthMax = 10 - courseNum / 3;
         switch (courseType)
         {
             case CourseType.plains:
