@@ -14,11 +14,11 @@ PrefabInstance:
       objectReference: {fileID: 21300000, guid: 4cdd371a575be8543b5b1e149dbde06d, type: 3}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: roll
-      value: 10
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: carry
-      value: 30
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: myCost
@@ -26,19 +26,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: cardName
-      value: Shovel Wedge
+      value: The Loner
       objectReference: {fileID: 0}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: clubType
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: description
-      value: Draw 3 after hitting out of the sand
+      value: Lose 10 power for each other card in your hand.
       objectReference: {fileID: 0}
     - target: {fileID: 7053857363415383679, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: m_Name
-      value: Shovel Wedge
+      value: _The Loner
       objectReference: {fileID: 0}
     - target: {fileID: 8307558494132384029, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: m_LocalPosition.x

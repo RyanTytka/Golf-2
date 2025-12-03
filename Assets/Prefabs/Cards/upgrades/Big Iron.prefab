@@ -11,35 +11,34 @@ PrefabInstance:
     - target: {fileID: 1683249602816217892, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: e7ab928af97b1cb4f812ff13cdd8c498, type: 3}
+      objectReference: {fileID: 21300000, guid: 4cdd371a575be8543b5b1e149dbde06d, type: 3}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: roll
-      value: 0
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: carry
-      value: 0
+      value: 70
+      objectReference: {fileID: 0}
+    - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
+      propertyPath: myCost
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: cardName
-      value: Practice Ball
+      value: Big Iron
       objectReference: {fileID: 0}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
-      propertyPath: cardType
+      propertyPath: clubType
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
-      propertyPath: draggable
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: description
-      value: If you have 6+ cards in hand, this shot does not count towards your
-        stroke count.
+      value: +50 Power if hitting out of the rough
       objectReference: {fileID: 0}
     - target: {fileID: 7053857363415383679, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: m_Name
-      value: _Practice Ball
+      value: Big Iron
       objectReference: {fileID: 0}
     - target: {fileID: 8307558494132384029, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: m_LocalPosition.x

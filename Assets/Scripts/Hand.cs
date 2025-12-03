@@ -48,8 +48,10 @@ public class Hand : MonoBehaviour
             newObj.SetActive(false);
         }
         //set up initial hand
+        Debug.Log("start hand 1");
         RemoveDeck();
         NewDeck();
+        Debug.Log("start hand 2");
     }
 
     //create new currentDeck and draw starting hand
@@ -59,10 +61,19 @@ public class Hand : MonoBehaviour
         foreach (GameObject go in baseDeck)
         {
             GameObject newObj = Instantiate(go, GameObject.Find("GameManager").transform.Find("CurrentDeck").transform);
+            newObj.GetComponent<Draggable>().baseReference = go;
             if (newObj.GetComponent<Draggable>().isDriver)
             {
-                //drivers go right to hand
-                hand.Add(newObj);
+                if(GameObject.Find("CourseManager").GetComponent<Course>().pars[GameObject.Find("CourseManager").GetComponent<Course>().holeNum] == 3)
+                {
+                    //par 3s do not get drivers
+                    Destroy(newObj);
+                }
+                else
+                {
+                    //drivers go right to hand
+                    hand.Add(newObj);
+                }
             }
             else
             {
@@ -182,6 +193,27 @@ public class Hand : MonoBehaviour
         DisplayHand();
     }
 
+    //removes a card from your deck (not the base deck)
+    public void Toss(GameObject card)
+    {
+        if (currentDeck.Contains(card))
+        {
+            currentDeck.Remove(card);
+        }
+        if (hand.Contains(card))
+        {
+            hand.Remove(card);
+        }
+        if (discardPile.Contains(card))
+        {
+            discardPile.Remove(card);
+        }
+        baseDeck.Remove(card.GetComponent<Draggable>().baseReference);
+        Destroy(card.GetComponent<Draggable>().baseReference);
+        Destroy(card);
+        DisplayHand();
+    }
+
     public void ShuffleDeck()
     {
         for (int i = 0; i < currentDeck.Count; i++)
@@ -195,6 +227,7 @@ public class Hand : MonoBehaviour
 
     public void DiscardCard(GameObject card)
     {
+        if (card == null) return;
         card.SetActive(false);
         hand.Remove(card);
         discardPile.Add(card);

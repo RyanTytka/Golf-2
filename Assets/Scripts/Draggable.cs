@@ -51,6 +51,7 @@ public class Draggable : MonoBehaviour
     public bool isUpgradeView = false; //true if selecting a card to upgrade
     public bool isPreviewing = false; //true if this is the card you are looking at to remove
     public int cardId; //index of the deck list. used to identify cards
+    public GameObject baseReference; //reference to the obj this is cloned from in the base deck
 
     //Internal Helper Variables
     //these are used for when dragging
@@ -369,20 +370,22 @@ public class Draggable : MonoBehaviour
     public IEnumerator PlayCard()
     {
         //Debug.Log(cardName + " played");
+        bool isStillActive = true; //turn to false if this card will be destroyed instead of discarded
         Course c = GameObject.Find("CourseManager").GetComponent<Course>();
+        Hand h = GameObject.Find("GameManager").GetComponent<Hand>();
         if (cardType == CardTypes.Caddie)
         {
-            if (GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Caddie 2") > 0)
-                GameObject.Find("GameManager").GetComponent<Hand>().DrawCard(1);
-            GameObject.Find("GameManager").GetComponent<Hand>().caddies.Add(this.gameObject);
-            GameObject.Find("GameManager").GetComponent<Hand>().playedCaddie = true;
+            if (h.HasCaddie("Caddie 2") > 0)
+                h.DrawCard(1);
+            h.caddies.Add(this.gameObject);
+            h.playedCaddie = true;
             //Caddies do not go into the discard
-            GameObject.Find("GameManager").GetComponent<Hand>().hand.Remove(this.gameObject);
+            h.hand.Remove(this.gameObject);
             this.gameObject.SetActive(false);
         }
         if (cardType == CardTypes.Ability)
         {
-            GameObject.Find("GameManager").GetComponent<Hand>().playedAbility = true;
+            h.playedAbility = true;
             if (c.currentRival == 7)
             {
                 c.power -= 10;
@@ -403,41 +406,41 @@ public class Draggable : MonoBehaviour
                     returnCoroutine = null;
                 }
                 //transform.localScale = Vector3.zero;
-                yield return GameObject.Find("GameManager").GetComponent<Hand>().WaitForDiscard();
+                yield return h.WaitForDiscard();
                 //transform.localScale = Vector3.one;
                 onDisplay = false;
                 // Now draw 2 cards after discarding
-                GameObject.Find("GameManager").GetComponent<Hand>().DrawCard(2);
+                h.DrawCard(2);
                 break;
             case "Backspin":
-                GameObject.Find("CourseManager").GetComponent<Course>().pinpoint += 30;
+                c.pinpoint += 30;
                 break;
             case "Chip Johnson":
                 //deselect selected club if its a woods
-                if (GameObject.Find("CourseManager").GetComponent<Course>().selectedClub != null &&
-                    GameObject.Find("CourseManager").GetComponent<Course>().selectedClub.GetComponent<Draggable>().clubType == ClubTypes.Wood)
+                if (c.selectedClub != null &&
+                    c.selectedClub.GetComponent<Draggable>().clubType == ClubTypes.Wood)
                 {
-                    GameObject.Find("CourseManager").GetComponent<Course>().selectedClub.GetComponent<Draggable>().selected = false;
-                    GameObject.Find("CourseManager").GetComponent<Course>().selectedClub.GetComponent<SpriteRenderer>().color = Color.white;
-                    GameObject.Find("CourseManager").GetComponent<Course>().selectedClub = null;
+                    c.selectedClub.GetComponent<Draggable>().selected = false;
+                    c.selectedClub.GetComponent<SpriteRenderer>().color = Color.white;
+                    c.selectedClub = null;
                 }
                 break;
             case "Dig Through Your Bag":
                 //discard all non-clubs then draw 3
-                List<GameObject> hand = GameObject.Find("GameManager").GetComponent<Hand>().hand;
-                GameObject.Find("GameManager").GetComponent<Hand>().DrawCard(3);
+                List<GameObject> hand = h.hand;
+                h.DrawCard(3);
                 for(int i = hand.Count - 1; i >= 0; i--)
                 {
                     if(hand[i].GetComponent<Draggable>().cardType != CardTypes.Club)
                     {
-                        GameObject.Find("GameManager").GetComponent<Hand>().DiscardCard(hand[i]);
+                        h.DiscardCard(hand[i]);
                     }
                 }
                 break;
             case "Find a Ball":
                 // Draw 2 random ball cards from the deck
                 List<GameObject> balls = new();
-                foreach (GameObject go in GameObject.Find("GameManager").GetComponent<Hand>().currentDeck)
+                foreach (GameObject go in h.currentDeck)
                 {
                     if (go.GetComponent<Draggable>().cardType == CardTypes.Ball)
                         balls.Add(go);
@@ -458,18 +461,17 @@ public class Draggable : MonoBehaviour
                 //draw the selected balls
                 foreach (GameObject go in toDraw)
                 {
-                    GameObject.Find("GameManager").GetComponent<Hand>().DrawCard(go);
+                    h.DrawCard(go);
                 }
                 break;
             case "Golf Glove":
-                //Gain 1 Luck and draw a card
-                GameObject.Find("CourseManager").GetComponent<Course>().luck++;
-                GameObject.Find("GameManager").GetComponent<Hand>().DrawCard(1);
+                //Gain 2 Luck 
+                c.luck += 2;
                 break;
             case "Phone a Friend":
                 //add a random caddie to your hand
                 List<GameObject> caddies = new();
-                foreach (GameObject go in GameObject.Find("GameManager").GetComponent<Hand>().upgradeCards)
+                foreach (GameObject go in h.upgradeCards)
                 {
                     //find all caddies available
                     if (go.GetComponent<Draggable>().cardType == CardTypes.Caddie)
@@ -477,37 +479,58 @@ public class Draggable : MonoBehaviour
                 }
                 //create new caddie card
                 GameObject newCaddie = Instantiate(caddies[Random.Range(0, caddies.Count - 1)], GameObject.Find("GameManager").transform);
-                GameObject.Find("GameManager").GetComponent<Hand>().hand.Add(newCaddie);
+                h.hand.Add(newCaddie);
                 break;
             case "Tee Up":
-                foreach (GameObject go in GameObject.Find("GameManager").GetComponent<Hand>().baseDeck)
+                //if in fairway, add all drivers to hand
+                if (c.courseLayout[c.ballPos].GetComponent<CoursePiece>().myType == 0)
+                foreach (GameObject go in h.baseDeck)
                 {
                     if (go.GetComponent<Draggable>().isDriver)
                     {
                         GameObject newObj = Instantiate(go, GameObject.Find("GameManager").transform);
-                        GameObject.Find("GameManager").GetComponent<Hand>().hand.Add(newObj);
+                        h.hand.Add(newObj);
                     }
                 }
                 break;
             case "Back to Basics":
                 //draw 2. disable balls until next swing
-                GameObject.Find("GameManager").GetComponent<Hand>().DrawCard(2);
-                if(GameObject.Find("CourseManager").GetComponent<Course>().selectedBall != null)
+                h.DrawCard(2);
+                if(c.selectedBall != null)
                 {
-                    GameObject.Find("CourseManager").GetComponent<Course>().selectedBall.GetComponent<Draggable>().selected = false;
-                    GameObject.Find("CourseManager").GetComponent<Course>().selectedBall.GetComponent<SpriteRenderer>().color = Color.white;
-                    GameObject.Find("CourseManager").GetComponent<Course>().selectedBall = null;
+                    c.selectedBall.GetComponent<Draggable>().selected = false;
+                    c.selectedBall.GetComponent<SpriteRenderer>().color = Color.white;
+                    c.selectedBall = null;
                 }
-                GameObject.Find("CourseManager").GetComponent<Course>().canPlayBall = false;
+                c.canPlayBall = false;
+                break;
+            case "Old Scorecard":
+                h.DrawCard(c.strokeCount);
+                break;
+            case "Reckless Swing":
+                List<GameObject> otherCards = h.hand.Where(card => card != this.gameObject).ToList();
+                if (otherCards.Count == 0)
+                    break;
+                GameObject cardToDiscard = otherCards[Random.Range(0, otherCards.Count)];
+                h.DiscardCard(cardToDiscard);
+                c.power += 30;
+                break;
+            case "Practice Swing":
+                if (h.hand.Count > 6)
+                {
+                    c.strokeCount--;
+                    h.Toss(this.gameObject);
+                    isStillActive = false;
+                }
                 break;
         }
         //Update view
-        GameObject.Find("CourseManager").GetComponent<Course>().DisplayCourse();
-        GameObject.Find("CourseManager").GetComponent<Course>().UpdateStatusEffectDisplay();
-        // Discard this card (caddies dont go to discard)
-        if (cardType != CardTypes.Caddie)
-            GameObject.Find("GameManager").GetComponent<Hand>().DiscardCard(this.gameObject);
-        GameObject.Find("GameManager").GetComponent<Hand>().DisplayHand();
+        c.DisplayCourse();
+        c.UpdateStatusEffectDisplay();
+        // Discard this card (caddies dont go to discard) (if it didnt toss itself)
+        if (cardType != CardTypes.Caddie && isStillActive)
+            h.DiscardCard(this.gameObject);
+        h.DisplayHand();
     }
 
     //This is called once the course scene is finished loading

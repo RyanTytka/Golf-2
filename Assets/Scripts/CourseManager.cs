@@ -40,7 +40,7 @@ public class Course : MonoBehaviour
         }
     }
 
-    private List<GameObject> courseLayout = new();
+    public List<GameObject> courseLayout = new();
     public List<GameObject> coursePieces;
     public GameObject courseDisplay; //the child object that holds all of the course pieces
     public Hand handRef;
@@ -205,8 +205,10 @@ public class Course : MonoBehaviour
 
     public void NewCourse()
     {
+        Debug.Log("start course");
+
         //set initial course data
-        holeNum = 0; //note: this will be incremented once before each hole
+        holeNum = 8; //note: this will be incremented once before each hole
         courseNum++;
         if (nextCourse == -1)
         {
@@ -523,22 +525,26 @@ public class Course : MonoBehaviour
         //card effects
         if (selectedClub.GetComponent<Draggable>().cardName == "Shovel Wedge")
             if (courseLayout[ballPos].GetComponent<CoursePiece>().pieceName == "Sand")
-                GameObject.Find("GameManager").GetComponent<Hand>().DrawCard(3);
+                GameObject.Find("GameManager").GetComponent<Hand>().DrawCard(2);
         //can play another caddie
         GameObject.Find("GameManager").GetComponent<Hand>().playedCaddie = false;
         GameObject.Find("GameManager").GetComponent<Hand>().playedAbility = false;
         //calculate swing
         SwingResult swing = CalculateSwing();
         string ballName = selectedBall != null ? selectedBall.GetComponent<Draggable>().cardName : "";
+        luck += swing.luckGained;
         luck -= swing.luckUsed;
-        //add a stroke
-        if(ballName != "Practice Ball" || GameObject.Find("GameManager").GetComponent<Hand>().hand.Count < 6)
-            strokeCount++;
+        strokeCount++;
         //card effects
+        //clubs
         if (selectedClub.GetComponent<Draggable>().cardName == "Dead Stop Iron")
         { //draw 2 when swinging with no roll
             if (swing.landIndex == swing.endIndex)
                 GameObject.Find("GameManager").GetComponent<Hand>().DrawCard(2);
+        }
+        if (selectedClub.GetComponent<Draggable>().cardName == "Swiss Army Wedge")
+        { //draw for each upgrade on this club
+            GameObject.Find("GameManager").GetComponent<Hand>().DrawCard(selectedClub.GetComponentsInChildren<upgradeBuy>().Length);
         }
         //if out of bounds
         if (swing.endIndex >= courseLayout.Count)
@@ -582,9 +588,15 @@ public class Course : MonoBehaviour
                     else
                     {
                         strokeCount++;
-                        if(currentRival == 1)
+                        if (currentRival == 1)
                             strokeCount++;
                     }
+                }
+                //Lead destroys itself in water
+                if (selectedBall != null && selectedBall.GetComponent<Draggable>().cardName == "Lead Ball")
+                {
+                    GameObject.Find("GameManager").GetComponent<Hand>().Toss(selectedBall);
+                    selectedBall = null;
                 }
             }
             pinpoint = 0;
@@ -600,10 +612,22 @@ public class Course : MonoBehaviour
                     tees += 2;
             }
         }
+        //card effects
+        if (courseLayout[ballPos].GetComponent<CoursePiece>().pieceName == "Hole")
+        {
+            //ball effects
+            if (selectedBall != null)
+            {
+                if (selectedBall.GetComponent<Draggable>().cardName == "The Finisher")
+                {
+                    tees += 3;
+                }
+            }
+        }
         //deselect current club and ball and update hand
         if (selectedClub != null)
         {
-            if(selectedClub.GetComponent<Draggable>().isDriver)
+            if (selectedClub.GetComponent<Draggable>().isDriver)
             {
                 handRef.hand.Remove(selectedClub);
                 Destroy(selectedClub);
@@ -644,7 +668,8 @@ public class Course : MonoBehaviour
             else
             {
                 Hand handObj = GameObject.Find("GameManager").GetComponent<Hand>();
-                handObj.DiscardCard(handObj.hand[Random.Range(0, handObj.hand.Count)]);
+                if (handObj.hand.Count > 0)
+                    handObj.DiscardCard(handObj.hand[Random.Range(0, handObj.hand.Count)]);
             }
             //Item Effects
             if (ballName == "Beach Ball")
@@ -665,7 +690,7 @@ public class Course : MonoBehaviour
         }
         //if in the hole, go to next hole
         if (courseLayout[ballPos].GetComponent<CoursePiece>().pieceName == "Hole")
-        { 
+        {
             GoToNextHole();
             return;
         }
@@ -711,6 +736,7 @@ public class Course : MonoBehaviour
         public int endIndex; //where the roll ends
         public int roughHits; //how many times the ball went through the rough
         public int luckUsed;
+        public int luckGained;
     }
     //called by both hitball and highlight hit to calculate the swing
     private SwingResult CalculateSwing()
@@ -723,13 +749,30 @@ public class Course : MonoBehaviour
         int carry = selectedClub.GetComponent<Draggable>().Carry/10;
         int roll = selectedClub.GetComponent<Draggable>().Roll/10;
         bool hasRoll = true; //false if an effect makes this shot have 0 roll
+        int tempLuck = 0; //luck that would be gained during this shot
         //card effects
         //clubs
         if (selectedClub.GetComponent<Draggable>().cardName == "Big Iron")
             if (courseLayout[ballPos].GetComponent<CoursePiece>().pieceName == "Rough")
-                carry += 4;
+                carry += 5;
         if (selectedClub.GetComponent<Draggable>().cardName == "Big Betty")
             carry += GameObject.Find("GameManager").GetComponent<Hand>().hand.Count;
+        if (selectedClub.GetComponent<Draggable>().cardName == "Long Ranger")
+        {
+            bool onlyClub = true;
+            foreach(GameObject go in GameObject.Find("GameManager").GetComponent<Hand>().hand)
+            {
+                if (go.GetComponent<Draggable>().cardType == Draggable.CardTypes.Club && go != selectedClub)
+                    onlyClub = false;
+            }
+            if(onlyClub)
+            {
+                carry += 5;
+                roll -= 2;
+            }
+        }
+        if (selectedClub.GetComponent<Draggable>().cardName == "The Loner")
+            carry = Mathf.Max(1, carry - GameObject.Find("GameManager").GetComponent<Hand>().hand.Count + 1);
         //caddies
         if (GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Chip Johnson") > 0 &&
             selectedClub.GetComponent<Draggable>().clubType == Draggable.ClubTypes.Iron)
@@ -762,6 +805,7 @@ public class Course : MonoBehaviour
                 case "Breakfast Ball":
                     if(selectedClub.GetComponent<Draggable>().clubType == Draggable.ClubTypes.Wood)
                         hasRoll = false;
+                    carry += 5;
                     break;
                 case "Ice Ball":
                     roll *= 2;
@@ -769,6 +813,12 @@ public class Course : MonoBehaviour
                 case "Square Ball":
                     carry -= 2;
                     hasRoll = false;
+                    break;
+                case "Lead Ball":
+                    carry += 5;
+                    break;
+                case "The Finisher":
+                    tempLuck++;
                     break;
             }
         }
@@ -796,7 +846,6 @@ public class Course : MonoBehaviour
             //Check to see if it rolls out of bounds
             if (i >= courseLayout.Count || i < 0)
             {
-                i = end;
                 break;
             }
             //Trigger effect of piece
@@ -804,8 +853,11 @@ public class Course : MonoBehaviour
             switch (piece.GetComponent<CoursePiece>().pieceName)
             {
                 case "Rough":
-                    if (luck - luckUsed > 0)
+                    if (luck + tempLuck - luckUsed > 0)
+                    {
                         luckUsed++;
+                        rollAmount++;
+                    }
                     else
                     {
                         if (currentRival == 6) //this rival stops rolling on rough
@@ -823,15 +875,14 @@ public class Course : MonoBehaviour
                     break;
                 case "Sand":
                 case "Water":
-                    if (selectedBall != null && selectedBall.GetComponent<Draggable>().cardName == "Rubber Duck Ball" &&
-                        piece.GetComponent<CoursePiece>().pieceName == "Water")
+                    if (selectedBall != null && selectedBall.GetComponent<Draggable>().cardName == "Rubber Duck Ball")
                     {
                         //Rubber Duck Ball ignores water
                         rollAmount++;
                     }
                     else
                     {
-                        if (luck - luckUsed > 0)
+                        if (luck + tempLuck - luckUsed > 0)
                         {
                             luckUsed++;
                             rollAmount++;
@@ -849,6 +900,7 @@ public class Course : MonoBehaviour
             }
         }
         swing.endIndex = swing.landIndex + rollAmount * direction;
+        swing.luckGained = tempLuck;
         swing.luckUsed = luckUsed;
         return swing;
     }

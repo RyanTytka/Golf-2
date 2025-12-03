@@ -21,7 +21,6 @@ public class shopManager : MonoBehaviour
 
     public GameObject upgradePreview, replaceUpgradePreview;
     public GameObject upgradePrefab;
-    public List<GameObject> shopCards;
     public List<GameObject> shopOptions;
     //public GameObject previewBg; //black overlay in preview canvas
 
@@ -43,7 +42,7 @@ public class shopManager : MonoBehaviour
     private void Start()
     {
         //generate shop items
-        List<GameObject> availableCards = shopCards.OrderBy(x => Random.value).Take(3).ToList();
+        List<GameObject> availableCards = GameObject.Find("GameManager").GetComponent<Hand>().upgradeCards.OrderBy(x => Random.value).Take(3).ToList();
         GameObject costObj = GameObject.Find("TeesCost");
         int index = 0;
         //new cards

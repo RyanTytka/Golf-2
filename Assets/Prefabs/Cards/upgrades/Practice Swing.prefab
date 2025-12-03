@@ -11,34 +11,35 @@ PrefabInstance:
     - target: {fileID: 1683249602816217892, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 4cdd371a575be8543b5b1e149dbde06d, type: 3}
+      objectReference: {fileID: 21300000, guid: e7ab928af97b1cb4f812ff13cdd8c498, type: 3}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: roll
-      value: 10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: carry
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
-      propertyPath: myCost
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: cardName
-      value: Shovel Wedge
+      value: Practice Swing
       objectReference: {fileID: 0}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
-      propertyPath: clubType
-      value: 2
+      propertyPath: cardType
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
+      propertyPath: draggable
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: description
-      value: Draw 3 after hitting out of the sand
+      value: 'If you have 6 or more other cards in hand, subtract a stroke and Toss
+        this.  '
       objectReference: {fileID: 0}
     - target: {fileID: 7053857363415383679, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: m_Name
-      value: Shovel Wedge
+      value: Practice Swing
       objectReference: {fileID: 0}
     - target: {fileID: 8307558494132384029, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: m_LocalPosition.x
