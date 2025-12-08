@@ -48,10 +48,8 @@ public class Hand : MonoBehaviour
             newObj.SetActive(false);
         }
         //set up initial hand
-        Debug.Log("start hand 1");
         RemoveDeck();
         NewDeck();
-        Debug.Log("start hand 2");
     }
 
     //create new currentDeck and draw starting hand
@@ -64,7 +62,7 @@ public class Hand : MonoBehaviour
             newObj.GetComponent<Draggable>().baseReference = go;
             if (newObj.GetComponent<Draggable>().isDriver)
             {
-                if(GameObject.Find("CourseManager").GetComponent<Course>().pars[GameObject.Find("CourseManager").GetComponent<Course>().holeNum] == 3)
+                if (GameObject.Find("CourseManager").GetComponent<Course>().pars[GameObject.Find("CourseManager").GetComponent<Course>().holeNum - 1] == 3)
                 {
                     //par 3s do not get drivers
                     Destroy(newObj);

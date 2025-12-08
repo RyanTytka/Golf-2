@@ -203,12 +203,16 @@ public class Course : MonoBehaviour
         }
     }
 
+    public void StartGame()
+    {
+        NewCourse();
+        GameObject.Find("GameManager").GetComponent<Hand>().StartGame();
+    }
+
     public void NewCourse()
     {
-        Debug.Log("start course");
-
         //set initial course data
-        holeNum = 8; //note: this will be incremented once before each hole
+        holeNum = 0; //note: this will be incremented once before each hole
         courseNum++;
         if (nextCourse == -1)
         {
@@ -292,7 +296,7 @@ public class Course : MonoBehaviour
         switch(courseType)
         {
             case CourseType.plains:
-                lengthMod = 5;
+                lengthMod = 3;
                 break;
             case CourseType.desert:
                 fairwayType = CoursePieces.SAND;
@@ -309,8 +313,8 @@ public class Course : MonoBehaviour
                 fairwayType = CoursePieces.ROUGH;
                 break;
         }
-        int holeLength = 30 + courseNum * 4 + (pars[holeNum-1] - 4) * 10 + lengthMod + Random.Range(-2,3); //actual length
-        //int holeLength = 20 + courseNum * 6 + (pars[holeNum-1] - 4) * 10 + lengthMod + Random.Range(-2,3); //shorter test length
+        int holeLength = 40 + courseNum * 4 + (pars[holeNum-1] - 4) * 10 + lengthMod + Random.Range(-2,3); //actual length
+        //int holeLength = 25 + courseNum * 6 + (pars[holeNum-1] - 4) * 10 + lengthMod + Random.Range(-2,3); //shorter test length
         for (int i = 0; i < holeLength; i++)
         {
             GameObject fairway = Instantiate(coursePieces[(int)fairwayType], courseDisplay.transform);
@@ -319,8 +323,8 @@ public class Course : MonoBehaviour
         }
         //Create Hazards
         int currentPos = Random.Range(1, 10);
-        int greenStartOffsetMin = 12;
-        int greenStartOffsetMax = 18;
+        int greenStartOffsetMin = 10; //space behind green before out of bounds
+        int greenStartOffsetMax = 16;
         int greenLengthMin = 6 - courseNum / 3;
         int greenLengthMax = 10 - courseNum / 3;
         switch (courseType)
@@ -335,8 +339,8 @@ public class Course : MonoBehaviour
                     currentPos += patchSize + Random.Range(0, 5);
                 }
                 //large green
-                greenStartOffsetMin = 14;
-                greenStartOffsetMax = 20;
+                greenStartOffsetMin = 12;
+                greenStartOffsetMax = 18;
                 greenLengthMin = 8;
                 greenLengthMax = 12;
                 break;
@@ -350,8 +354,8 @@ public class Course : MonoBehaviour
                     currentPos += patchSize + Random.Range(0, 5);
                 }
                 //large green
-                greenStartOffsetMin = 14;
-                greenStartOffsetMax = 20;
+                greenStartOffsetMin = 12;
+                greenStartOffsetMax = 18;
                 greenLengthMin = 8;
                 greenLengthMax = 12;
                 break;
@@ -407,15 +411,15 @@ public class Course : MonoBehaviour
         //Tee box is always fairway
         ReplacePieceAt(0, (int)CoursePieces.FAIRWAY);
         //Add in green
-        int startOfGreen = holeLength - Random.Range(greenStartOffsetMin, greenStartOffsetMax);
         int greenLength = Random.Range(greenLengthMin, greenLengthMax);
+        int startOfGreen = holeLength - Random.Range(greenStartOffsetMin, greenStartOffsetMax) - greenLength;
         for (int i = startOfGreen; i < Mathf.Min(startOfGreen + greenLength, courseLayout.Count); i++)
         {
             ReplacePieceAt(i, (int)CoursePieces.GREEN);
         }
         ReplacePieceAt(startOfGreen - 1, Random.Range(0,2)); //Dont let there be water before the green
         //Place Hole on the Green
-        int holePlacement = Mathf.Clamp(startOfGreen + Random.Range(2, 5), startOfGreen, courseLayout.Count - 1);
+        int holePlacement = Mathf.Clamp(startOfGreen + Random.Range(1, greenLength - 1), startOfGreen, courseLayout.Count - 1);
         ReplacePieceAt(holePlacement, (int)CoursePieces.HOLE);
         //make last piece of the course grass (so it doesnt end in water)
         ReplacePieceAt(courseLayout.Count - 1, (int)CoursePieces.FAIRWAY);
@@ -476,12 +480,19 @@ public class Course : MonoBehaviour
                     offset = 0;
                 }
             }
-            else if (i < courseLayout.Count - 1 &&  myType != courseLayout[i+1].GetComponent<CoursePiece>().myType)
+            else if (i < courseLayout.Count - 1 && myType != courseLayout[i + 1].GetComponent<CoursePiece>().myType)
                 offset = 5; //this is the last piece
             if (myType == 5) { offset = 4; myType = 4; } //hole is always middle piece
-            if(myType == 4 && courseLayout[i + 1].GetComponent<CoursePiece>().myType == 5) offset = 4; //green piece before hole
-            if(myType == 4 && courseLayout[i - 1].GetComponent<CoursePiece>().myType == 5) offset = 4; //green piece after hole
-            //if (i == 0) { myType = 0; offset = 0; }
+            if (myType == 4 && courseLayout[i + 1].GetComponent<CoursePiece>().myType == 5) //green piece before hole
+                if (courseLayout[i - 1].GetComponent<CoursePiece>().myType == 4)
+                    offset = 4;
+                else
+                    offset = 3;
+            if (myType == 4 && courseLayout[i - 1].GetComponent<CoursePiece>().myType == 5) //green piece after hole
+                if (courseLayout[i + 1].GetComponent<CoursePiece>().myType == 4)
+                    offset = 4;
+                else
+                    offset = 5;
             go.GetComponent<SpriteRenderer>().sprite = courseArt[myType * 6 + offset];
             prevPieceType = myType;
         }
