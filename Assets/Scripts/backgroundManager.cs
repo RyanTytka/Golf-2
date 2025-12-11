@@ -15,6 +15,7 @@ public class backgroundManager : MonoBehaviour
     public GameObject bgCanvas; //ref to bg canvas obj
     public GameObject bgElementPrefab; //prefab to instantiate as bg elements
     public float cloudSpeed; //constant cloud speed set for each hole
+    public RuntimeAnimatorController baseController; // animation controller that is used for each bg element
 
     public void SetSprites(int courseType)
     {
@@ -50,8 +51,11 @@ public class backgroundManager : MonoBehaviour
         for (int i = 0; i < 5; i++)
         {
             GameObject go = Instantiate(bgElementPrefab, bgCanvas.transform);
-            go.GetComponent<Animator>().anima = trees[Random.Range(0, trees.Length)];
-            go.GetComponent<Animator>().Play();
+            AnimationClip clip = trees[Random.Range(0, trees.Length)];
+            AnimatorOverrideController overrideController = new(baseController);
+            overrideController["DefaultClip"] = clip;
+            go.GetComponent<Animator>().runtimeAnimatorController = overrideController;
+            go.GetComponent<Animator>().Play("DefaultClip");
             treeObjs.Add(go);
         }
     }

@@ -5732,7 +5732,7 @@ Animator:
   m_GameObject: {fileID: 1030970351}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 6249a4cc213acb34cb1c22366ed0f113, type: 2}
+  m_Controller: {fileID: 9100000, guid: e6b0e5c1f85535040842e97d3edf50af, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -9198,6 +9198,7 @@ MonoBehaviour:
   bgCanvas: {fileID: 805594211}
   bgElementPrefab: {fileID: 8470362351538617523, guid: 91c3ef2b68721484cb0c3e800336cee7, type: 3}
   cloudSpeed: 1
+  baseController: {fileID: 9100000, guid: 3d97588083287954fa6df0b15bfbaacb, type: 2}
 --- !u!4 &1581651539
 Transform:
   m_ObjectHideFlags: 0
