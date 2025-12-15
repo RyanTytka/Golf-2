@@ -185,6 +185,7 @@ public class Course : MonoBehaviour
             GameObject bgm = GameObject.Find("BackgroundManager");
             if (bgm != null)
                 bgm.GetComponent<backgroundManager>().UpdatePositions(courseDelta);
+                bgm.GetComponent<backgroundManager>().UpdatePositions(courseDelta);
             // Reset and redraw shot arc
             GetComponent<LineRenderer>().positionCount = 0;
             Destroy(currentDot);

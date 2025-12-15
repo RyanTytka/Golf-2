@@ -9,8 +9,8 @@ public class backgroundManager : MonoBehaviour
     public backgroundSet[] backgrounds;
 
     public Sprite[] skyImages, cloudImages; //variety images to set bg elements to
-    public AnimationClip[] trees;
-    public List<GameObject> cloudObjs, treeObjs; //list of currently instantiated bg elements
+    public AnimationClip[] bgElementClips;
+    public List<GameObject> cloudObjs, bgObjs; //list of currently instantiated bg elements
     public GameObject skyObj; //ref to sky bg img obj
     public GameObject bgCanvas; //ref to bg canvas obj
     public GameObject bgElementPrefab; //prefab to instantiate as bg elements
@@ -19,79 +19,79 @@ public class backgroundManager : MonoBehaviour
 
     public void SetSprites(int courseType)
     {
-        //Set background
-        //foreach (ParallaxLayer pl in parallaxLayers)
-        //{
-        //    pl.layer.gameObject.SetActive(false);
-        //}
-        //int bgNum = courseType * 3 + Random.Range(0, 3); //0-2. 3 variants for each course type
-        //int index = 0;
-        //foreach (Sprite sprite in backgrounds[bgNum].layers)
-        //{
-        //    //bgParent.GetComponentsInChildren<>
-        //    parallaxLayers[index].layer.gameObject.SetActive(true);
-        //    parallaxLayers[index].layer.gameObject.GetComponent<Image>().sprite = sprite;
-        //    parallaxLayers[index].parallaxFactor = backgrounds[bgNum].moveRatios[index];
-        //    index++;
-        //}
-
-
-        //v2: create random objs to move across bg
+        //create random objs to move across bg
         //sky
         skyObj.GetComponent<Image>().sprite = skyImages[Random.Range(0, skyImages.Length)];
         //clouds
-        //cloudSpeed = Random.Range(1,2);
-        //for (int i = 0; i < 5; i++)
-        //{
-        //    GameObject go = Instantiate(bgElementPrefab, bgCanvas.transform);
-        //    go.GetComponent<Image>().sprite = cloudImages[Random.Range(0, cloudImages.Length)];
-        //    cloudObjs.Add(go); 
-        //}
-        //trees
+        cloudSpeed = Random.Range(1, 2) / 10000f;
+        int cloudType = Random.Range(0, cloudImages.Length);
         for (int i = 0; i < 5; i++)
         {
-            GameObject go = Instantiate(bgElementPrefab, bgCanvas.transform);
-            AnimationClip clip = trees[Random.Range(0, trees.Length)];
+            GameObject go = Instantiate(bgElementPrefab, this.transform);
+            go.GetComponent<SpriteRenderer>().sprite = cloudImages[cloudType];
+            go.GetComponent<Animator>().enabled = false;
+            go.transform.position = new Vector3(Random.Range(-10,10), Random.Range(20,50) / 10f, 10);
+            float size = Random.Range(100, 150) / 100f;
+            go.transform.localScale = new Vector3(size, size, Random.Range(0, 50)); //z scale is used as random speed mod per cloud
+            cloudObjs.Add(go);
+        }
+        //misc bg elements
+        for (int i = 0; i < 5; i++)
+        {
+            GameObject go = Instantiate(bgElementPrefab, GameObject.Find("CourseDisplay").transform);
+            go.transform.localPosition = new Vector3(i * 3 + Random.Range(0,20) / 10f, 2, 1);
+            go.GetComponent<backgroundElement>().startX = go.transform.localPosition.x;// - GameObject.Find("CourseDisplay").transform.position.x;
+            AnimationClip clip = bgElementClips[Random.Range(0, bgElementClips.Length)];
             AnimatorOverrideController overrideController = new(baseController);
             overrideController["DefaultClip"] = clip;
             go.GetComponent<Animator>().runtimeAnimatorController = overrideController;
             go.GetComponent<Animator>().Play("DefaultClip");
-            treeObjs.Add(go);
+            bgObjs.Add(go);
         }
     }
 
     public void Update()
     {
+        float halfHeight = Camera.main.orthographicSize;
+        float halfWidth = halfHeight * Camera.main.aspect;
+
         //move clouds
-        foreach(GameObject go in cloudObjs)
+        foreach (GameObject go in cloudObjs)
         {
-            go.GetComponent<RectTransform>().localPosition = 
-                new Vector3(go.GetComponent<RectTransform>().localPosition.y, go.GetComponent<RectTransform>().localPosition.x + cloudSpeed);
+            float speedMod = go.transform.localScale.z / 200000f;
+            go.transform.Translate(new Vector3(cloudSpeed + speedMod, 0));
+            float spriteWidth = go.GetComponent<SpriteRenderer>().bounds.size.x;
+            if (go.transform.position.x - spriteWidth > halfWidth)
+            {
+                //loop back to left side and change stats
+                float newYPos = Random.Range(20, 50) / 10f;
+                go.transform.position = new Vector3(-halfWidth - spriteWidth, newYPos, 10);
+                float size = Random.Range(100, 150) / 100f;
+                go.transform.localScale = new Vector3(size, size, Random.Range(0, 50)); //z scale is used as random speed mod per cloud
+            }
         }
     }
 
     public void StorePositions()
     {
-        // Cache each parallax layer's start position
-        foreach (var layer in parallaxLayers)
+        //cache CourseDisplay start pos
+        foreach (GameObject go in bgObjs)
         {
-            if (layer.layer != null)
-                layer.startX = layer.layer.localPosition.x;
+            if (go.GetComponent<backgroundElement>().courseStartX == 0)
+                go.GetComponent<backgroundElement>().courseStartX = GameObject.Find("CourseDisplay").transform.position.x;
         }
     }
 
     public void UpdatePositions(float courseDelta)
     {
-        //move them
-        foreach (var layer in parallaxLayers)
+        //move trees
+        foreach(GameObject go in bgObjs)
         {
-            if (layer.layer != null)
-            {
-                float parallaxX = layer.startX + courseDelta * layer.parallaxFactor * 3;
-                Vector3 pos = layer.layer.localPosition;
-                pos.x = parallaxX;
-                layer.layer.localPosition = pos;
-            }
+            float parallaxX = GameObject.Find("CourseDisplay").transform.position.x - go.GetComponent<backgroundElement>().courseStartX;
+            Vector3 pos = go.transform.localPosition;
+            pos.x = go.GetComponent<backgroundElement>().startX - parallaxX * 0.1f;
+            go.transform.localPosition = pos;
+
         }
     }
 }
