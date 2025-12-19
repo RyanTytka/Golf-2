@@ -9,11 +9,11 @@ public class backgroundManager : MonoBehaviour
     public backgroundSet[] backgrounds;
 
     public Sprite[] skyImages, cloudImages; //variety images to set bg elements to
-    public AnimationClip[] bgElementClips;
+    public List<GameObject> bgElements; //list of bg object prefabs to instantiate
     public List<GameObject> cloudObjs, bgObjs; //list of currently instantiated bg elements
     public GameObject skyObj; //ref to sky bg img obj
     public GameObject bgCanvas; //ref to bg canvas obj
-    public GameObject bgElementPrefab; //prefab to instantiate as bg elements
+    //public GameObject bgElementPrefab; //prefab to instantiate as bg elements
     public float cloudSpeed; //constant cloud speed set for each hole
     public RuntimeAnimatorController baseController; // animation controller that is used for each bg element
 
@@ -27,7 +27,7 @@ public class backgroundManager : MonoBehaviour
         int cloudType = Random.Range(0, cloudImages.Length);
         for (int i = 0; i < 5; i++)
         {
-            GameObject go = Instantiate(bgElementPrefab, this.transform);
+            GameObject go = Instantiate(bgElements[0], this.transform); //just use any bg object for clouds
             go.GetComponent<SpriteRenderer>().sprite = cloudImages[cloudType];
             go.GetComponent<Animator>().enabled = false;
             go.transform.position = new Vector3(Random.Range(-10,10), Random.Range(20,50) / 10f, 10);
@@ -38,10 +38,12 @@ public class backgroundManager : MonoBehaviour
         //misc bg elements
         for (int i = 0; i < 5; i++)
         {
-            GameObject go = Instantiate(bgElementPrefab, GameObject.Find("CourseDisplay").transform);
+            GameObject newElement = bgElements[Random.Range(0, bgElements.Count)];
+            GameObject go = Instantiate(newElement, GameObject.Find("CourseDisplay").transform);
             go.transform.localPosition = new Vector3(i * 3 + Random.Range(0,20) / 10f, 2, 1);
+            go.transform.localScale = new Vector3(go.GetComponent<backgroundElement>().size, go.GetComponent<backgroundElement>().size);
             go.GetComponent<backgroundElement>().startX = go.transform.localPosition.x;// - GameObject.Find("CourseDisplay").transform.position.x;
-            AnimationClip clip = bgElementClips[Random.Range(0, bgElementClips.Length)];
+            AnimationClip clip = newElement.GetComponent<backgroundElement>().animationClip;
             AnimatorOverrideController overrideController = new(baseController);
             overrideController["DefaultClip"] = clip;
             go.GetComponent<Animator>().runtimeAnimatorController = overrideController;
