@@ -30,24 +30,59 @@ public class backgroundManager : MonoBehaviour
             GameObject go = Instantiate(bgElements[0], this.transform); //just use any bg object for clouds
             go.GetComponent<SpriteRenderer>().sprite = cloudImages[cloudType];
             go.GetComponent<Animator>().enabled = false;
-            go.transform.position = new Vector3(Random.Range(-10,10), Random.Range(20,50) / 10f, 10);
-            float size = Random.Range(100, 150) / 100f;
+            go.transform.position = new Vector3(Random.Range(-10,10), Random.Range(2f,5f), 100);
+            float size = Random.Range(1f, 1.5f);
             go.transform.localScale = new Vector3(size, size, Random.Range(0, 50)); //z scale is used as random speed mod per cloud
             cloudObjs.Add(go);
         }
         //misc bg elements
-        for (int i = 0; i < 5; i++)
+        float totalDistance = Random.Range(0f,3f);
+        int courseLength = GameObject.Find("CourseManager").GetComponent<Course>().courseLayout.Count;
+        //calculate total weight
+        int totalWeight = 0;
+        foreach(GameObject go in bgElements)
         {
-            GameObject newElement = bgElements[Random.Range(0, bgElements.Count)];
+            totalWeight += (int)go.GetComponent<backgroundElement>().spawnWeight;
+        }
+        //spawn new objs
+        while (totalDistance < courseLength)
+        {
+            //caluclate random obj
+            int randValue = Random.Range(0, totalWeight);
+            GameObject newElement = null;
+            foreach(GameObject randomGo in bgElements)
+            {
+                randValue -= (int)randomGo.GetComponent<backgroundElement>().spawnWeight;
+                if (randValue < 0)
+                {
+                    newElement = randomGo;
+                    break;
+                }
+            }
+            //spawn it and init it
             GameObject go = Instantiate(newElement, GameObject.Find("CourseDisplay").transform);
-            go.transform.localPosition = new Vector3(i * 3 + Random.Range(0,20) / 10f, 2, 1);
-            go.transform.localScale = new Vector3(go.GetComponent<backgroundElement>().size, go.GetComponent<backgroundElement>().size);
-            go.GetComponent<backgroundElement>().startX = go.transform.localPosition.x;// - GameObject.Find("CourseDisplay").transform.position.x;
-            AnimationClip clip = newElement.GetComponent<backgroundElement>().animationClip;
-            AnimatorOverrideController overrideController = new(baseController);
-            overrideController["DefaultClip"] = clip;
-            go.GetComponent<Animator>().runtimeAnimatorController = overrideController;
-            go.GetComponent<Animator>().Play("DefaultClip");
+            backgroundElement be = go.GetComponent<backgroundElement>();
+            go.transform.localPosition = new Vector3(totalDistance, 1.25f + be.yBonus, 1 + be.distance);
+            be.startX = go.transform.localPosition.x;
+            float size = be.size + Random.Range(0f, be.sizeVariation);
+            be.parrallaxFactor = 1f / be.size * be.distance;
+            go.transform.localScale = new Vector3(size, size);
+            totalDistance += Random.Range(0.25f,5f);
+            if (be.sprite != null)
+            {
+                go.GetComponent<SpriteRenderer>().sprite = be.sprite;
+                go.GetComponent<Animator>().enabled = false;
+            }
+            else
+            {
+                AnimationClip clip = be.animationClip;
+                Animator animator = go.GetComponent<Animator>();
+                AnimatorOverrideController overrideController = new(animator.runtimeAnimatorController);
+                overrideController[overrideController.animationClips[0]] = clip;
+                animator.runtimeAnimatorController = overrideController;
+                animator.speed = Random.Range(0.5f, 1.25f);
+                animator.Play("DefaultClip", 0, Random.Range(0f, 1f));
+            }
             bgObjs.Add(go);
         }
     }
@@ -60,15 +95,15 @@ public class backgroundManager : MonoBehaviour
         //move clouds
         foreach (GameObject go in cloudObjs)
         {
-            float speedMod = go.transform.localScale.z / 200000f;
+            float speedMod = go.transform.localScale.z / 100000f;
             go.transform.Translate(new Vector3(cloudSpeed + speedMod, 0));
             float spriteWidth = go.GetComponent<SpriteRenderer>().bounds.size.x;
             if (go.transform.position.x - spriteWidth > halfWidth)
             {
                 //loop back to left side and change stats
-                float newYPos = Random.Range(20, 50) / 10f;
-                go.transform.position = new Vector3(-halfWidth - spriteWidth, newYPos, 10);
-                float size = Random.Range(100, 150) / 100f;
+                float newYPos = Random.Range(2f, 5f);
+                go.transform.position = new Vector3(-halfWidth - spriteWidth, newYPos, 100);
+                float size = Random.Range(1f, 1.5f);
                 go.transform.localScale = new Vector3(size, size, Random.Range(0, 50)); //z scale is used as random speed mod per cloud
             }
         }
@@ -91,7 +126,7 @@ public class backgroundManager : MonoBehaviour
         {
             float parallaxX = GameObject.Find("CourseDisplay").transform.position.x - go.GetComponent<backgroundElement>().courseStartX;
             Vector3 pos = go.transform.localPosition;
-            pos.x = go.GetComponent<backgroundElement>().startX - parallaxX * 0.1f;
+            pos.x = go.GetComponent<backgroundElement>().startX - parallaxX * go.GetComponent<backgroundElement>().parrallaxFactor;
             go.transform.localPosition = pos;
 
         }

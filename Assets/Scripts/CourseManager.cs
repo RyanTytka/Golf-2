@@ -289,7 +289,6 @@ public class Course : MonoBehaviour
         power = 0;
         pinpoint = 0;
         
-        GameObject.Find("BackgroundManager").GetComponent<backgroundManager>().SetSprites((int)courseType);
         GetComponent<BoxCollider2D>().enabled = true;
         //Generate Fairway
         CoursePieces fairwayType = CoursePieces.FAIRWAY;
@@ -432,6 +431,8 @@ public class Course : MonoBehaviour
         minX = maxX - childCount * childWidth - Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 0)).x * 2;
         newLocalPos.x = maxX;
         courseDisplay.transform.localPosition = newLocalPos;
+        //generate bg elements
+        GameObject.Find("BackgroundManager").GetComponent<backgroundManager>().SetSprites((int)courseType);
     }
 
     //helper method that inputs pieceType at index
