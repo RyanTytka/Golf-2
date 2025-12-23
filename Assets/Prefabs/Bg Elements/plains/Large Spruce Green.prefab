@@ -121,6 +121,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sprite: {fileID: 0}
   animationClip: {fileID: 7400000, guid: ae7c9f4dfd30e6f4d975ffe860311267, type: 2}
-  parrallaxFactor: 1
   size: 2
+  distance: 0
   sizeVariation: 1
+  yBonus: 0
+  spawnWeight: 5

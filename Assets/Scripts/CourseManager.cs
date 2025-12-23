@@ -1044,6 +1044,7 @@ public class Course : MonoBehaviour
         //Go to upgrade screen
         SceneManager.sceneLoaded += OnSceneLoaded;
         SceneManager.LoadScene("New Card");
+        GameObject.Find("BackgroundManager").GetComponent<backgroundManager>().RemoveSprites();
     }
 
     //This is called once the New Card scene is finished loading

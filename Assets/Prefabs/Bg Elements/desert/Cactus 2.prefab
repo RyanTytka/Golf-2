@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 709102584384248407}
   - component: {fileID: 5862280337907145313}
   m_Layer: 5
-  m_Name: Falling Leaf Spring
+  m_Name: Cactus 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -119,10 +119,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6d72db9282a5d745ad0544de3c071ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprite: {fileID: 0}
-  animationClip: {fileID: 7400000, guid: e62aaf7a255ea284188fd922214c444d, type: 2}
-  size: 4
+  sprite: {fileID: 21300000, guid: ff78b32dc21c51045ad50f5a8415c14c, type: 3}
+  animationClip: {fileID: 0}
+  size: 2
   distance: 0
-  sizeVariation: 1
-  yBonus: -0.1
+  sizeVariation: 0.5
+  yBonus: 0
   spawnWeight: 3

@@ -8,17 +8,29 @@ public class backgroundManager : MonoBehaviour
     public List<ParallaxLayer> parallaxLayers = new List<ParallaxLayer>();
     public backgroundSet[] backgrounds;
 
-    public Sprite[] skyImages, cloudImages; //variety images to set bg elements to
-    public List<GameObject> bgElements; //list of bg object prefabs to instantiate
+    public Sprite[] skyImages, cloudImages, bgGroundImages; //variety images to set bg elements to
+    //public List<GameObject> bgElements; //list of bg object prefabs to instantiate
     public List<GameObject> cloudObjs, bgObjs; //list of currently instantiated bg elements
     public GameObject skyObj; //ref to sky bg img obj
     public GameObject bgCanvas; //ref to bg canvas obj
+    public GameObject bgGroundObj; //ref to bg ground obj
     //public GameObject bgElementPrefab; //prefab to instantiate as bg elements
     public float cloudSpeed; //constant cloud speed set for each hole
     public RuntimeAnimatorController baseController; // animation controller that is used for each bg element
 
+    [System.Serializable]
+    public class GameObjectList
+    {
+        public List<GameObject> items = new List<GameObject>();
+    }
+    public GameObjectList[] bgElements;
+
     public void SetSprites(int courseType)
     {
+        //set bg ground in the distance
+        // 5 different course types, 3 bgs per type
+        // plains, forest, hills, beach, desert
+        bgGroundObj.GetComponent<Image>().sprite = bgGroundImages[courseType * 3 + Random.Range(0, 3)];
         //create random objs to move across bg
         //sky
         skyObj.GetComponent<Image>().sprite = skyImages[Random.Range(0, skyImages.Length)];
@@ -27,11 +39,11 @@ public class backgroundManager : MonoBehaviour
         int cloudType = Random.Range(0, cloudImages.Length);
         for (int i = 0; i < 5; i++)
         {
-            GameObject go = Instantiate(bgElements[0], this.transform); //just use any bg object for clouds
+            GameObject go = Instantiate(bgElements[0].items[0], this.transform); //just use any bg object for clouds
             go.GetComponent<SpriteRenderer>().sprite = cloudImages[cloudType];
             go.GetComponent<Animator>().enabled = false;
-            go.transform.position = new Vector3(Random.Range(-10,10), Random.Range(2f,5f), 100);
-            float size = Random.Range(1f, 1.5f);
+            go.transform.position = new Vector3(Random.Range(-10,10), Random.Range(3f,5f), 100);
+            float size = Random.Range(1f, 1.25f);
             go.transform.localScale = new Vector3(size, size, Random.Range(0, 50)); //z scale is used as random speed mod per cloud
             cloudObjs.Add(go);
         }
@@ -40,7 +52,7 @@ public class backgroundManager : MonoBehaviour
         int courseLength = GameObject.Find("CourseManager").GetComponent<Course>().courseLayout.Count;
         //calculate total weight
         int totalWeight = 0;
-        foreach(GameObject go in bgElements)
+        foreach(GameObject go in bgElements[courseType].items)
         {
             totalWeight += (int)go.GetComponent<backgroundElement>().spawnWeight;
         }
@@ -50,7 +62,7 @@ public class backgroundManager : MonoBehaviour
             //caluclate random obj
             int randValue = Random.Range(0, totalWeight);
             GameObject newElement = null;
-            foreach(GameObject randomGo in bgElements)
+            foreach(GameObject randomGo in bgElements[courseType].items)
             {
                 randValue -= (int)randomGo.GetComponent<backgroundElement>().spawnWeight;
                 if (randValue < 0)
@@ -101,9 +113,9 @@ public class backgroundManager : MonoBehaviour
             if (go.transform.position.x - spriteWidth > halfWidth)
             {
                 //loop back to left side and change stats
-                float newYPos = Random.Range(2f, 5f);
+                float newYPos = Random.Range(3f, 5f);
                 go.transform.position = new Vector3(-halfWidth - spriteWidth, newYPos, 100);
-                float size = Random.Range(1f, 1.5f);
+                float size = Random.Range(1f, 1.25f);
                 go.transform.localScale = new Vector3(size, size, Random.Range(0, 50)); //z scale is used as random speed mod per cloud
             }
         }
@@ -130,5 +142,20 @@ public class backgroundManager : MonoBehaviour
             go.transform.localPosition = pos;
 
         }
+    }
+
+    //delete all bg elements for this hole
+    public void RemoveSprites()
+    {
+        for (int i = 0; i < bgObjs.Count; i++)
+        {
+            Destroy(bgObjs[i]);
+        }
+        for (int i = 0; i < cloudObjs.Count; i++)
+        {
+            Destroy(cloudObjs[i]);
+        }
+        bgObjs.Clear();
+        cloudObjs.Clear();
     }
 }

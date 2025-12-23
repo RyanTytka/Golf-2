@@ -119,7 +119,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6d72db9282a5d745ad0544de3c071ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprite: {fileID: 0}
   animationClip: {fileID: 7400000, guid: 68e0dac6723e7804c973df01eb7ecfac, type: 2}
   size: 2
+  distance: 0
   sizeVariation: 1
   yBonus: 0.15
+  spawnWeight: 5
