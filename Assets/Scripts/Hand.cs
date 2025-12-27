@@ -248,31 +248,52 @@ public class Hand : MonoBehaviour
         go.SetActive(false);
     }
 
-    private List<GameObject> upgradeOptions = new();
-    public void CreateNewCardOptions()
+    //returns a random upgrade card
+    private List<int> upgradeOptions = new();
+    public GameObject RandomUpgrade()
     {
-        for (int i = 0; i < 3; i++)
-        {
-            int choice = Random.Range(0, upgradeCards.Count - 1);
-            GameObject go = Instantiate(upgradeCards[choice]);
-            upgradeOptions.Add(go);
-            go.transform.position = new Vector3(i * 5 - 5, 0, 0);
-            go.GetComponent<Draggable>().isUpgradeOption = true;
-            go.GetComponent<Draggable>().UpdateCard();
-            go.transform.parent = gameObject.transform;
-        }
+        //create new order of upgrades if it is currently empty
+        if(upgradeOptions.Count == 0)
+            upgradeOptions = Enumerable.Range(0, upgradeCards.Count)
+                        .OrderBy(i => Random.value)
+                        .ToList();
+        //pop the last upgrade and return it
+        int num = upgradeOptions[0];
+        upgradeOptions.RemoveAt(0);
+        return upgradeCards[num];
     }
 
-    //delete all upgrade options besides pickedObj
-    public void DeleteOptions(GameObject pickedObj)
+    //resets the list of cards that have been presented to the player
+    public void ClearUpgrades()
     {
-        foreach(GameObject go in upgradeOptions)
-        {
-            if(go != pickedObj)
-                Destroy(go);
-        }
         upgradeOptions.Clear();
     }
+
+    //private List<GameObject> upgradeOptions = new();
+    //public void CreateNewCardOptions()
+    //{
+    //    for (int i = 0; i < 3; i++)
+    //    {
+    //        int choice = Random.Range(0, upgradeCards.Count );
+    //        GameObject go = Instantiate(upgradeCards[choice]);
+    //        upgradeOptions.Add(go);
+    //        go.transform.position = new Vector3(i * 5 - 5, 0, 0);
+    //        go.GetComponent<Draggable>().isUpgradeOption = true;
+    //        go.GetComponent<Draggable>().UpdateCard();
+    //        go.transform.parent = gameObject.transform;
+    //    }
+    //}
+
+    ////delete all upgrade options besides pickedObj
+    //public void DeleteOptions(GameObject pickedObj)
+    //{
+    //    foreach(GameObject go in upgradeOptions)
+    //    {
+    //        if(go != pickedObj)
+    //            Destroy(go);
+    //    }
+    //    upgradeOptions.Clear();
+    //}
 
     public void SkipUpgrade()
     {
@@ -280,7 +301,7 @@ public class Hand : MonoBehaviour
         Course course = GameObject.Find("CourseManager").GetComponent<Course>();
         if (course.currentRival != 4 || course.pars[course.holeNum - 1] >= course.scores[course.holeNum - 1]) //must par or better to get tees against rival 4
             course.tees += Mathf.Max(course.pars[course.holeNum - 1] - course.strokeCount + 3, 1);
-        DeleteOptions(null);
+        //DeleteOptions(null);
         //Go back to the course and create a new deck and hole, or go to shop if hole 9
         if (GameObject.Find("CourseManager").GetComponent<Course>().holeNum >= 9)
         {

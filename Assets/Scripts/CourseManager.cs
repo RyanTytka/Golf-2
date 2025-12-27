@@ -22,7 +22,7 @@ public class Course : MonoBehaviour
     public void Awake()
     {
         //set up debug
-        GameObject.Find("SkipHoleButton").GetComponent<Button>().onClick.AddListener(GameObject.Find("CourseManager").GetComponent<Course>().SkipHole);
+        //GameObject.Find("SkipHoleButton").GetComponent<Button>().onClick.AddListener(GameObject.Find("CourseManager").GetComponent<Course>().SkipHole);
         //
         if (courseManagerObj == null)
         {
@@ -78,7 +78,7 @@ public class Course : MonoBehaviour
     public GameObject selectedBall;
     public GameObject dotPrefab; //dot obj for end of swing arc
     public GameObject boundsPrefab; //X obj for end of swing arc
-    private GameObject currentDot;
+    public GameObject currentDot;
     public GameObject ballObj;
     public int luck; //ignore a hazard then reduce luck by 1. Persists between shots but not holes
     public GameObject finishText; //the text obj that displays whether you got par/etc
@@ -985,6 +985,7 @@ public class Course : MonoBehaviour
         GoToNextHole();
     }
 
+    public GameObject continueObj;
     public void GoToNextHole()
     {
         if (GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Caddie 1") > 0)
@@ -993,58 +994,80 @@ public class Course : MonoBehaviour
         DisplayCourse();
         //Display Score
         string[] score = { "ACE", "HOLE IN ONE", "EAGLE", "BIRDIE", "PAR", "BOGEY", "DOUBLE BOGEY", "TRIPLE BOGEY" };
-        GameObject txtObj = Instantiate(finishText, GameObject.Find("MainCanvas").transform);
+        continueObj = Instantiate(finishText, GameObject.Find("MainCanvas").transform);
+        continueObj.transform.localPosition = new Vector3(0, 200, 80);
         if(strokeCount >= score.Length)
-            txtObj.GetComponent<TextMeshProUGUI>().text = "+" + (strokeCount - pars[holeNum - 1]);
+            continueObj.GetComponent<TextMeshProUGUI>().text = "+" + (strokeCount - pars[holeNum - 1]);
         else
-            txtObj.GetComponent<TextMeshProUGUI>().text = score[strokeCount + 4 - pars[holeNum - 1]];
+            continueObj.GetComponent<TextMeshProUGUI>().text = score[strokeCount + 4 - pars[holeNum - 1]];
         float t = Mathf.Min(Mathf.Max(strokeCount - 3,0), 7.0f) / 7.0f;
-        txtObj.GetComponent<TextMeshProUGUI>().color = Color.Lerp(Color.green, Color.red, t);
-        txtObj.GetComponentInChildren<Button>().onClick.AddListener(ContinueButtonClick);
+        continueObj.GetComponent<TextMeshProUGUI>().color = Color.Lerp(Color.green, Color.red, t);
+        continueObj.GetComponentInChildren<Button>().onClick.AddListener(ContinueButtonClick);
     }
 
+    //called after a hole is completed and the player clicks the continue button
     public void ContinueButtonClick()
     {
-        //clear current hole
-        foreach (GameObject go in courseLayout)
-        {
-            Destroy(go);
-        }
-        courseLayout.Clear();
-        ballObj.SetActive(false);
-        //reset highlight
-        GetComponent<LineRenderer>().positionCount = 0;
-        if (currentDot != null)
-            Destroy(currentDot);
+        //move the camera up
+        GameObject.Find("GameManager").GetComponent<mainMenuUI>().HideMainMenu();
+        GameObject.Find("GameManager").GetComponent<mainMenuUI>().ScrollUp();
+        //set up new card select
+        GetComponent<BoxCollider2D>().enabled = false;
+        GameObject.Find("GameManager").GetComponent<Hand>().RemoveDeck();
+        GameObject newCard = GameObject.Find("GameManager").GetComponent<Hand>().RandomUpgrade();
         scores.Add(strokeCount);
-        //If just finished a course, save course data and check for loss
-        if(holeNum >= 9)
-        {
-            currentPlaythrough.Add(GetCurrentCourseData());
-            int totalScore = 0;
-            foreach (int score in scores)
-                totalScore += score;
-            //if(courseNum >= 2) //debug test to end after 2nd hole
-            if(totalScore - 36 >= rivalScores[currentRival])
-            {
-                //you lost
-                SceneManager.sceneLoaded += OnSceneLoaded;
-                SceneManager.LoadScene("Lose");
-                currentPlaythrough[courseNum - 1].lostRun = true;
-                return;
-            }
-            if(courseNum >= 5)
-            {
-                //you won
-                SceneManager.sceneLoaded += OnSceneLoaded;
-                SceneManager.LoadScene("Lose");
-                return;
-            }
-        }
-        //Go to upgrade screen
-        SceneManager.sceneLoaded += OnSceneLoaded;
-        SceneManager.LoadScene("New Card");
-        GameObject.Find("BackgroundManager").GetComponent<backgroundManager>().RemoveSprites();
+        int teeReward = Mathf.Max(pars[holeNum - 1] - strokeCount + 3, 1);
+        if (currentRival == 4 && pars[holeNum - 1] < scores[holeNum - 1]) //must par or better to get tees against rival 4
+            teeReward = 0;
+        GameObject.Find("GameManager").GetComponent<NewCardManager>().ShowUI(teeReward, newCard);
+        //GameObject.Find("TeesText").GetComponent<TextMeshProUGUI>().text = "(     +" + teeReward + ")";
+        //GameObject.Find("SkipButton").GetComponent<Button>().onClick.AddListener
+        //    (GameObject.Find("GameManager").GetComponent<Hand>().SkipUpgrade);
+        //wait to clear the hole until the camera finished moving up
+
+
+
+
+        ////clear current hole
+        //foreach (GameObject go in courseLayout)
+        //{
+        //    Destroy(go);
+        //}
+        //courseLayout.Clear();
+        //ballObj.SetActive(false);
+        ////reset highlight
+        //GetComponent<LineRenderer>().positionCount = 0;
+        //if (currentDot != null)
+        //    Destroy(currentDot);
+        //scores.Add(strokeCount);
+        ////If just finished a course, save course data and check for loss
+        //if(holeNum >= 9)
+        //{
+        //    currentPlaythrough.Add(GetCurrentCourseData());
+        //    int totalScore = 0;
+        //    foreach (int score in scores)
+        //        totalScore += score;
+        //    //if(courseNum >= 2) //debug test to end after 2nd hole
+        //    if(totalScore - 36 >= rivalScores[currentRival])
+        //    {
+        //        //you lost
+        //        SceneManager.sceneLoaded += OnSceneLoaded;
+        //        SceneManager.LoadScene("Lose");
+        //        currentPlaythrough[courseNum - 1].lostRun = true;
+        //        return;
+        //    }
+        //    if(courseNum >= 5)
+        //    {
+        //        //you won
+        //        SceneManager.sceneLoaded += OnSceneLoaded;
+        //        SceneManager.LoadScene("Lose");
+        //        return;
+        //    }
+        //}
+        ////Go to upgrade screen
+        //SceneManager.sceneLoaded += OnSceneLoaded;
+        //SceneManager.LoadScene("New Card");
+        //GameObject.Find("BackgroundManager").GetComponent<backgroundManager>().RemoveSprites();
     }
 
     //This is called once the New Card scene is finished loading
@@ -1054,7 +1077,7 @@ public class Course : MonoBehaviour
         {
             GetComponent<BoxCollider2D>().enabled = false;
             GameObject.Find("GameManager").GetComponent<Hand>().RemoveDeck();
-            GameObject.Find("GameManager").GetComponent<Hand>().CreateNewCardOptions();
+            //GameObject.Find("GameManager").GetComponent<Hand>().CreateNewCardOptions();
             int teeReward = Mathf.Max(pars[holeNum - 1] - strokeCount + 3,1);
             if (currentRival == 4 && pars[holeNum - 1] < scores[holeNum - 1]) //must par or better to get tees against rival 4
                 teeReward = 0;

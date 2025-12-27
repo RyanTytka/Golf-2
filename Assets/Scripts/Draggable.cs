@@ -181,29 +181,29 @@ public class Draggable : MonoBehaviour
     {
         if (GameObject.Find("GameManager").GetComponent<Hand>().paused) return;
         if (isDeckView) return;
-        if (isUpgradeOption)
-        {
-            //add this to your deck
-            GameObject.Find("GameManager").GetComponent<Hand>().baseDeck.Add(this.gameObject);
-            gameObject.transform.parent = GameObject.Find("GameManager").transform.Find("BaseDeck");
-            //delete other upgrade options
-            GameObject.Find("GameManager").GetComponent<Hand>().DeleteOptions(this.gameObject);
-            gameObject.SetActive(false);
-            if (GameObject.Find("CourseManager").GetComponent<Course>().holeNum == 9)
-            {
-                //Go to the shop
-                isUpgradeOption = false;
-                SceneManager.LoadScene("Shop");
-            }
-            else
-            {
-                //Go back to the course, then create a new deck and hole
-                isUpgradeOption = false;
-                SceneManager.sceneLoaded += OnSceneLoaded;
-                SceneManager.LoadScene("Course");
-            }
-            return;
-        }
+        if (isUpgradeOption) return;
+        //{
+        //    //add this to your deck
+        //    GameObject.Find("GameManager").GetComponent<Hand>().baseDeck.Add(this.gameObject);
+        //    gameObject.transform.parent = GameObject.Find("GameManager").transform.Find("BaseDeck");
+        //    //delete other upgrade options
+        //    GameObject.Find("GameManager").GetComponent<Hand>().DeleteOptions(this.gameObject);
+        //    gameObject.SetActive(false);
+        //    if (GameObject.Find("CourseManager").GetComponent<Course>().holeNum == 9)
+        //    {
+        //        //Go to the shop
+        //        isUpgradeOption = false;
+        //        SceneManager.LoadScene("Shop");
+        //    }
+        //    else
+        //    {
+        //        //Go back to the course, then create a new deck and hole
+        //        isUpgradeOption = false;
+        //        SceneManager.sceneLoaded += OnSceneLoaded;
+        //        SceneManager.LoadScene("Course");
+        //    }
+        //    return;
+        //}
         if(isShopOption)
         {
             if (GameObject.Find("CourseManager").GetComponent<Course>().tees >= myCost)
