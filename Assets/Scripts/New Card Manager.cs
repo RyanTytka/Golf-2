@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -10,15 +11,32 @@ public class NewCardManager : MonoBehaviour
     public GameObject newCardCanvas;
     public GameObject addTeesText;
     public GameObject rerollCostText;
-    public GameObject cardOption;
     public GameObject rerollButton;
     public GameObject yourTees;
+    public GameObject takeTeesButton;
+    public GameObject takeCardButton;
+    public GameObject cardOption;
     public int currentRerollCost;
     private int currentTeeReward;
 
     public void ShowUI(int addTees, GameObject newCard)
     {
         currentRerollCost = 1;
+        //rebind references
+        newCardCanvas = GameObject.Find("ReferenceManager").GetComponent<referenceManager>().newCardCanvas;
+        addTeesText = GameObject.Find("ReferenceManager").GetComponent<referenceManager>().addTeesText;
+        rerollCostText = GameObject.Find("ReferenceManager").GetComponent<referenceManager>().rerollCostText;
+        rerollButton = GameObject.Find("ReferenceManager").GetComponent<referenceManager>().rerollButton;
+        yourTees = GameObject.Find("ReferenceManager").GetComponent<referenceManager>().yourTees;
+        takeCardButton = GameObject.Find("ReferenceManager").GetComponent<referenceManager>().takeCardButton;
+        takeTeesButton = GameObject.Find("ReferenceManager").GetComponent<referenceManager>().takeTeesButton;
+        //rebind onclicks for buttons
+        rerollButton.GetComponent<Button>().onClick.RemoveAllListeners();
+        rerollButton.GetComponent<Button>().onClick.AddListener(Reroll);
+        takeCardButton.GetComponent<Button>().onClick.RemoveAllListeners();
+        takeCardButton.GetComponent<Button>().onClick.AddListener(AddCardToDeck);
+        takeTeesButton.GetComponent<Button>().onClick.RemoveAllListeners();
+        takeTeesButton.GetComponent<Button>().onClick.AddListener(TakeTees);
         //update ui elements
         newCardCanvas.SetActive(true);
         rerollCostText.GetComponent<TextMeshProUGUI>().text = "Cost: " + currentRerollCost.ToString();
@@ -42,36 +60,7 @@ public class NewCardManager : MonoBehaviour
         GetComponent<Hand>().ClearUpgrades();
         cardOption.GetComponent<Draggable>().isUpgradeOption = false;
         cardOption.SetActive(false);
-        if (GameObject.Find("CourseManager").GetComponent<Course>().holeNum == 9)
-        {
-            //Go to the shop
-            SceneManager.LoadScene("Shop");
-        }
-        else
-        {
-            //clear last hole
-            foreach (GameObject go in GameObject.Find("CourseManager").GetComponent<Course>().courseLayout)
-            {
-                Destroy(go);
-            }
-            GameObject.Find("CourseManager").GetComponent<Course>().courseLayout.Clear();
-            //reset shot highlight
-            GameObject.Find("CourseManager").GetComponent<LineRenderer>().positionCount = 0;
-            if (GameObject.Find("CourseManager").GetComponent<Course>().currentDot != null)
-                Destroy(GameObject.Find("CourseManager").GetComponent<Course>().currentDot);
-            //clear continue text/button
-            Destroy(GameObject.Find("CourseManager").GetComponent<Course>().continueObj);
-            //clear bg elements
-            GameObject.Find("BackgroundManager").GetComponent<backgroundManager>().RemoveSprites();
-            //new hole
-            GameObject.Find("CourseManager").GetComponent<Course>().NewHole();
-            //updatestatus effects
-            GameObject.Find("CourseManager").GetComponent<Course>().UpdateStatusEffectDisplay();
-            //reset deck
-            GetComponent<Hand>().NewDeck();
-            //scroll down
-            GetComponent<mainMenuUI>().ScrollDown();
-        }
+        Continue();
     }
 
     public void Reroll()
@@ -102,31 +91,54 @@ public class NewCardManager : MonoBehaviour
         Destroy(cardOption);
         cardOption = null;
         //continue
-        if (GameObject.Find("CourseManager").GetComponent<Course>().holeNum == 9)
+        Continue();
+    }
+
+    //helper method that cleans up and goes to next hole/shop
+    private void Continue()
+    {
+        Course c = GameObject.Find("CourseManager").GetComponent<Course>();
+        //If just finished a course go to the shop
+        if (c.holeNum >= 9)
         {
-            //Go to the shop
+            //clear last hole
+            foreach (GameObject go in c.courseLayout)
+            {
+                Destroy(go);
+            }
+            c.courseLayout.Clear();
+            //reset shot highlight
+            GameObject.Find("CourseManager").GetComponent<LineRenderer>().positionCount = 0;
+            if (c.currentDot != null)
+                Destroy(c.currentDot);
+            //clear continue text/button
+            Destroy(c.continueObj);
+            //clear bg elements
+            GameObject.Find("BackgroundManager").GetComponent<backgroundManager>().RemoveSprites();
+            //go to shop
             SceneManager.LoadScene("Shop");
         }
         else
         {
+            //otherwise, go to next hole
             //clear last hole
-            foreach (GameObject go in GameObject.Find("CourseManager").GetComponent<Course>().courseLayout)
+            foreach (GameObject go in c.courseLayout)
             {
                 Destroy(go);
             }
-            GameObject.Find("CourseManager").GetComponent<Course>().courseLayout.Clear();
+            c.courseLayout.Clear();
             //reset shot highlight
             GameObject.Find("CourseManager").GetComponent<LineRenderer>().positionCount = 0;
-            if (GameObject.Find("CourseManager").GetComponent<Course>().currentDot != null)
-                Destroy(GameObject.Find("CourseManager").GetComponent<Course>().currentDot);
+            if (c.currentDot != null)
+                Destroy(c.currentDot);
             //clear continue text/button
-            Destroy(GameObject.Find("CourseManager").GetComponent<Course>().continueObj);
+            Destroy(c.continueObj);
             //clear bg elements
             GameObject.Find("BackgroundManager").GetComponent<backgroundManager>().RemoveSprites();
             //new hole
-            GameObject.Find("CourseManager").GetComponent<Course>().NewHole();
+            c.NewHole();
             //updatestatus effects
-            GameObject.Find("CourseManager").GetComponent<Course>().UpdateStatusEffectDisplay();
+            c.UpdateStatusEffectDisplay();
             //reset deck
             GetComponent<Hand>().NewDeck();
             //scroll down

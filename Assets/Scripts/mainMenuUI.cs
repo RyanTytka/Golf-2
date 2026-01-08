@@ -61,27 +61,38 @@ public class mainMenuUI : MonoBehaviour
     }
 
 
-    public void StartNewGame()
+    //public void StartNewGame()
+    //{
+    //    SceneManager.sceneLoaded += OnSceneLoaded;
+    //    SceneManager.LoadScene("Course");
+    //}
+    void Awake()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
-        SceneManager.LoadScene("Course");
     }
+
+    void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        //start new course
-        GameObject.Find("CourseManager").GetComponent<Course>().courseNum = 0;
-        GameObject.Find("CourseManager").GetComponent<Course>().tees = 0;
-        GameObject.Find("CourseManager").GetComponent<Course>().NewCourse();
-        GameObject.Find("CourseManager").GetComponent<Course>().comingFromShop = false;
+        mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
+        ////start new course
+        //GameObject.Find("CourseManager").GetComponent<Course>().courseNum = 0;
+        //GameObject.Find("CourseManager").GetComponent<Course>().tees = 0;
+        //GameObject.Find("CourseManager").GetComponent<Course>().NewCourse();
+        //GameObject.Find("CourseManager").GetComponent<Course>().comingFromShop = false;
 
-        //set up hand and UI
-        GameObject.Find("GameManager").GetComponent<Hand>().StartGame();
-        GameObject.Find("SwingButton").GetComponent<Button>().onClick.AddListener
-            (GameObject.Find("CourseManager").GetComponent<Course>().Swing);
-        GameObject.Find("MulliganButton").GetComponent<Button>().onClick.AddListener
-            (GameObject.Find("CourseManager").GetComponent<Course>().Mulligan);
-        // Unsubscribe to avoid duplicate calls in the future
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        ////set up hand and UI
+        //GameObject.Find("GameManager").GetComponent<Hand>().StartGame();
+        //GameObject.Find("SwingButton").GetComponent<Button>().onClick.AddListener
+        //    (GameObject.Find("CourseManager").GetComponent<Course>().Swing);
+        //GameObject.Find("MulliganButton").GetComponent<Button>().onClick.AddListener
+        //    (GameObject.Find("CourseManager").GetComponent<Course>().Mulligan);
+        //// Unsubscribe to avoid duplicate calls in the future
+        //SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     public void ExitGame()
@@ -93,6 +104,7 @@ public class mainMenuUI : MonoBehaviour
     {
         Destroy(GameObject.Find("GameManager"));
         Destroy(GameObject.Find("CourseManager"));
-        SceneManager.LoadScene("Main Menu");
+        Destroy(GameObject.Find("Music Manager"));
+        SceneManager.LoadScene("Course");
     }
 }

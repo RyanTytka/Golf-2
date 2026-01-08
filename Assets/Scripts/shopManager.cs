@@ -131,6 +131,8 @@ public class shopManager : MonoBehaviour
         // Only run logic if it's the "Course" scene
         if (scene.name == "Course")
         {
+            //move the camera down so we start on the course
+            GameObject.Find("Main Camera").transform.position = new Vector3(0, 0, -20);
             if (GameObject.Find("CourseManager").GetComponent<Course>().comingFromShop)
             {
                 //start new course

@@ -47,6 +47,35 @@ public class scorecard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         scorecardObj.SetActive(false);
     }
 
+    //updates this scorecards scores to the current course's scores
+    public void ShowCurrentCard()
+    {
+        //update scorecard text
+        Course course = GameObject.Find("CourseManager").GetComponent<Course>();
+        int parTotal = 0;
+        for (int i = 0; i < course.pars.Count; i++)
+        {
+            parTextObjs[i].GetComponent<TextMeshProUGUI>().text = course.pars[i].ToString();
+            parTotal+= course.pars[i];
+        }
+        for (int i = 0; i < course.scores.Count; i++)
+        {
+            int score = course.scores[i] - course.pars[i];
+            string mod = score > 0 ? "+" : "";
+            scoreTextObjs[i].GetComponent<TextMeshProUGUI>().text = mod + score;
+        }
+        //total par
+        parTextObjs[9].GetComponent<TextMeshProUGUI>().text = parTotal.ToString();
+        //total scores
+        int total = 0;
+        for (int i = 0; i < course.scores.Count; i++)
+        {
+            total += course.scores[i] - course.pars[i];
+        }
+        string totalMod = total > 0 ? "+" : "";
+        scoreTextObjs[9].GetComponent<TextMeshProUGUI>().text = totalMod + total;
+    }
+
     //update this obj to show the recap for specified course data
     public void ShowRecap(Course.CourseData courseData)
     {

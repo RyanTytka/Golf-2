@@ -1,10 +1,11 @@
-using UnityEngine;
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using System.Linq;
 
 public class Draggable : MonoBehaviour
 {
@@ -52,6 +53,7 @@ public class Draggable : MonoBehaviour
     public bool isPreviewing = false; //true if this is the card you are looking at to remove
     public int cardId; //index of the deck list. used to identify cards
     public GameObject baseReference; //reference to the obj this is cloned from in the base deck
+    public GameObject cardBack; //card back that is shown when card is face down and disabled when face up
 
     //Internal Helper Variables
     //these are used for when dragging
@@ -65,6 +67,8 @@ public class Draggable : MonoBehaviour
     private Vector3 displayPos; //where this should be displayed if onDisplay is true
     private Vector3 originalPosition;
     private Vector3 originalScale;
+    private bool indicatingPlay = false;
+    private Tween wiggleTween;
 
     public enum CardTypes
     {
@@ -81,8 +85,11 @@ public class Draggable : MonoBehaviour
         Putter
     }
 
-    void OnMouseDown()
+
+    public void ClickCard()
     {
+        if (GameObject.Find("CourseManager").GetComponent<Course>().paused) return;
+
         if (isRemoveView || isUpgradeView)
         {
             if (!isPreviewing)
@@ -175,35 +182,21 @@ public class Draggable : MonoBehaviour
             }
         }
         GameObject.Find("CourseManager").GetComponent<Course>().DisplayCourse();
+        GameObject.Find("GameManager").GetComponent<Hand>().DisplayHand();
     }
 
     void OnMouseUp()
     {
+        MouseReleased();
+    }
+
+    public void MouseReleased()
+    { 
+        if (GameObject.Find("CourseManager").GetComponent<Course>().paused) return;
         if (GameObject.Find("GameManager").GetComponent<Hand>().paused) return;
         if (isDeckView) return;
         if (isUpgradeOption) return;
-        //{
-        //    //add this to your deck
-        //    GameObject.Find("GameManager").GetComponent<Hand>().baseDeck.Add(this.gameObject);
-        //    gameObject.transform.parent = GameObject.Find("GameManager").transform.Find("BaseDeck");
-        //    //delete other upgrade options
-        //    GameObject.Find("GameManager").GetComponent<Hand>().DeleteOptions(this.gameObject);
-        //    gameObject.SetActive(false);
-        //    if (GameObject.Find("CourseManager").GetComponent<Course>().holeNum == 9)
-        //    {
-        //        //Go to the shop
-        //        isUpgradeOption = false;
-        //        SceneManager.LoadScene("Shop");
-        //    }
-        //    else
-        //    {
-        //        //Go back to the course, then create a new deck and hole
-        //        isUpgradeOption = false;
-        //        SceneManager.sceneLoaded += OnSceneLoaded;
-        //        SceneManager.LoadScene("Course");
-        //    }
-        //    return;
-        //}
+
         if(isShopOption)
         {
             if (GameObject.Find("CourseManager").GetComponent<Course>().tees >= myCost)
@@ -290,6 +283,25 @@ public class Draggable : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             Vector3 rayPoint = ray.GetPoint(distance);
             transform.position = rayPoint + startDist;
+            //indicate that this can be played (or stop indicating)
+            bool inPlayZone = transform.position.y > 0;
+            if (inPlayZone && !indicatingPlay)
+            {
+                indicatingPlay = true;
+                transform.DOKill(false);
+                wiggleTween = transform.DOPunchRotation(
+                    new Vector3(0, 0, 8f),   // wiggle angle
+                    0.4f,                    // duration
+                    6                        //Vibrato
+                ).SetLoops(-1, LoopType.Restart);
+            }
+            else if (!inPlayZone && indicatingPlay)
+            {
+                indicatingPlay = false;
+                if (wiggleTween != null)
+                    wiggleTween.Kill();
+                transform.DORotate(Vector3.zero, 0.15f).SetEase(Ease.OutQuad);
+            }
         }
     }
 
@@ -530,7 +542,7 @@ public class Draggable : MonoBehaviour
         // Discard this card (caddies dont go to discard) (if it didnt toss itself)
         if (cardType != CardTypes.Caddie && isStillActive)
             h.DiscardCard(this.gameObject);
-        h.DisplayHand();
+        //h.DisplayHand();
     }
 
     //This is called once the course scene is finished loading
@@ -566,5 +578,90 @@ public class Draggable : MonoBehaviour
             }
         }
         return null; //cant take this upgrade
+    }
+
+    //animate this card being drawn from bag to hand
+    public void AnimateDraw(Vector3 startPosition, Vector3 handPosition)
+    {
+        float moveDuration = 0.75f;
+        float flipDuration = 0.25f;
+        float arcHeight = 2f;
+        transform.position = startPosition;
+        transform.localScale = Vector3.zero;
+        Vector3 controlPoint = (startPosition + handPosition) / 2f + Vector3.up * arcHeight;
+        Sequence seq = DOTween.Sequence();
+        // Set sort order so it is in front of everything
+        GetComponentInChildren<Canvas>().sortingOrder = 1000;
+        GetComponent<SpriteRenderer>().sortingOrder = 1000;
+        //start face down
+        cardBack.SetActive(true);
+        typeIconObj.SetActive(false);
+        // Move in arc
+        seq.Append(
+            transform.DOPath(
+                new Vector3[] { startPosition, controlPoint, handPosition },
+                moveDuration,
+                PathType.CatmullRom
+            ).SetEase(Ease.OutCubic)
+                .OnComplete(() =>
+                {
+                    GameObject.Find("GameManager").GetComponent<Hand>().DisplayHand();
+                })
+        );
+        // Scale up during front half of the arc
+        seq.Insert(
+            0f,
+            transform.DOScale(Vector3.one, moveDuration * 0.5f)
+                .SetEase(Ease.OutBack)
+        );
+        // Flip midway
+        seq.Insert(
+            moveDuration * 0.6f,
+            transform.DOScaleX(0f, flipDuration / 2f).OnComplete(() =>
+            {
+                cardBack.SetActive(false);
+                typeIconObj.SetActive(true);
+                transform.DOScaleX(1f, flipDuration / 2f);
+            }
+        ));
+    }
+
+    //animate this card being discarded
+    public void AnimateDiscard()
+    {
+        float moveDuration = 0.75f;
+        float arcHeight = 5f;
+        Vector3 endPos = new(10f, -10f);
+        transform.localScale = Vector3.zero;
+        Vector3 controlPoint = (transform.position + endPos) / 2f + Vector3.up * arcHeight;
+        Sequence seq = DOTween.Sequence();
+        // Set sort order so it is in front of everything
+        GetComponentInChildren<Canvas>().sortingOrder = 1000;
+        GetComponent<SpriteRenderer>().sortingOrder = 1000;
+        // Move in arc
+        seq.Append(
+            transform.DOPath(
+                new Vector3[] { transform.position, controlPoint, endPos },
+                moveDuration,
+                PathType.CatmullRom
+            ).SetEase(Ease.OutCubic)
+        );
+
+        // Rotate upside down WHILE moving
+        seq.Join(
+            transform.DORotate(
+                new Vector3(0, 0, 180f),
+                moveDuration,
+                RotateMode.FastBeyond360
+            ).SetEase(Ease.InOutQuad)
+        );
+
+        seq.OnComplete(() =>
+        {
+            this.gameObject.SetActive(false);
+            GameObject.Find("GameManager").GetComponent<Hand>().hand.Remove(this.gameObject);
+            GameObject.Find("GameManager").GetComponent<Hand>().discardPile.Add(this.gameObject);
+            GameObject.Find("GameManager").GetComponent<Hand>().DisplayHand();
+        });
     }
 }

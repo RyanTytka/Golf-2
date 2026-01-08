@@ -22,7 +22,7 @@ public class Course : MonoBehaviour
     public void Awake()
     {
         //set up debug
-        //GameObject.Find("SkipHoleButton").GetComponent<Button>().onClick.AddListener(GameObject.Find("CourseManager").GetComponent<Course>().SkipHole);
+        GameObject.Find("SkipHoleButton").GetComponent<Button>().onClick.AddListener(GameObject.Find("CourseManager").GetComponent<Course>().SkipHole);
         //
         if (courseManagerObj == null)
         {
@@ -111,9 +111,19 @@ public class Course : MonoBehaviour
     public int currentRival = -1;
     public List<int> availRivals = new(); //tracks which rivals have already been played so no duplicates
 
+    //pause state
+    public bool paused = false;
+
 
     void Update()
     {
+        //escape key to pause
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if(holeNum > 0) //can't pause while at main menu
+                TogglePause();
+        }
+        if (paused) return;
         // Animate shot arc          
         float scrollSpeed = 1.5f;
         float offset = Time.time * scrollSpeed;
@@ -131,7 +141,9 @@ public class Course : MonoBehaviour
                     isDragging = true;
                     startMouseX = mouseWorldPos.x;
                     startChildX = courseDisplay.transform.localPosition.x;
-                    GameObject.Find("BackgroundManager").GetComponent<backgroundManager>().StorePositions();
+                    GameObject bgm = GameObject.Find("BackgroundManager");
+                    if (bgm != null)
+                        bgm.GetComponent<backgroundManager>().StorePositions();
                     break;
                 }
             }
@@ -185,7 +197,6 @@ public class Course : MonoBehaviour
             GameObject bgm = GameObject.Find("BackgroundManager");
             if (bgm != null)
                 bgm.GetComponent<backgroundManager>().UpdatePositions(courseDelta);
-                bgm.GetComponent<backgroundManager>().UpdatePositions(courseDelta);
             // Reset and redraw shot arc
             GetComponent<LineRenderer>().positionCount = 0;
             Destroy(currentDot);
@@ -202,6 +213,15 @@ public class Course : MonoBehaviour
         {
             isDragging = false;
         }
+    }
+
+    //public method to toggle pause and set pauseCanvas active
+    public void TogglePause()
+    {
+        paused = !paused;
+        GameObject.Find("ReferenceManager").GetComponent<referenceManager>().pauseCanvas.SetActive(paused);
+        GameObject.Find("ReferenceManager").GetComponent<referenceManager>().pauseScorecard.GetComponent<scorecard>().ShowCurrentCard();
+
     }
 
     public void StartGame()
@@ -459,7 +479,7 @@ public class Course : MonoBehaviour
     {
         GameObject.Find("RivalDisplay").GetComponent<rivalDisplay>().idNum = currentRival;
         GameObject.Find("RivalDisplay").GetComponent<rivalDisplay>().UpdateView();
-        GameObject.Find("Stroke").GetComponent<TextMeshProUGUI>().text = "Hole: " + holeNum + "\nStrokes: " + strokeCount;
+        GameObject.Find("Stroke").GetComponent<TextMeshProUGUI>().text = "Strokes: " + strokeCount + "  Hole: " + holeNum;
         GameObject.Find("TeeCount").GetComponent<TextMeshProUGUI>().text = tees.ToString();
         //Put pieces in their place
         int prevPieceType = 0;
@@ -981,7 +1001,7 @@ public class Course : MonoBehaviour
     //debug tool to quickly go through holes
     public void SkipHole()
     {
-        strokeCount = 4;
+        strokeCount += 4;
         GoToNextHole();
     }
 
@@ -1008,6 +1028,47 @@ public class Course : MonoBehaviour
     //called after a hole is completed and the player clicks the continue button
     public void ContinueButtonClick()
     {
+        scores.Add(strokeCount);
+        //if you lost or this is the last hole, go to the end screen
+        if (holeNum >= 9)
+        {
+            //save course data
+            currentPlaythrough.Add(GetCurrentCourseData());
+            //clear last hole
+            foreach (GameObject go in courseLayout)
+            {
+                Destroy(go);
+            }
+            courseLayout.Clear();
+            //reset shot highlight
+            GameObject.Find("CourseManager").GetComponent<LineRenderer>().positionCount = 0;
+            if (currentDot != null)
+                Destroy(currentDot);
+            //clear continue text/button
+            Destroy(continueObj);
+            //clear bg elements
+            GameObject.Find("BackgroundManager").GetComponent<backgroundManager>().RemoveSprites();
+            //check for loss
+            int totalScore = 0;
+            foreach (int score in scores)
+                totalScore += score;
+            //if(c.courseNum >= 2) //debug test to end after 2nd hole
+            if (totalScore - 36 >= rivalScores[currentRival])
+            {
+                //you lost
+                SceneManager.LoadScene("Lose");
+                currentPlaythrough[courseNum - 1].lostRun = true;
+                return;
+            }
+            //check for last course
+            if (courseNum >= 5)
+            {
+                //you won
+                SceneManager.LoadScene("Lose");
+                return;
+            }
+        }
+        //otherwise, go to the card reward screen
         //move the camera up
         GameObject.Find("GameManager").GetComponent<mainMenuUI>().HideMainMenu();
         GameObject.Find("GameManager").GetComponent<mainMenuUI>().ScrollUp();
@@ -1015,9 +1076,8 @@ public class Course : MonoBehaviour
         GetComponent<BoxCollider2D>().enabled = false;
         GameObject.Find("GameManager").GetComponent<Hand>().RemoveDeck();
         GameObject newCard = GameObject.Find("GameManager").GetComponent<Hand>().RandomUpgrade();
-        scores.Add(strokeCount);
         int teeReward = Mathf.Max(pars[holeNum - 1] - strokeCount + 3, 1);
-        if (currentRival == 4 && pars[holeNum - 1] < scores[holeNum - 1]) //must par or better to get tees against rival 4
+        if (currentRival == 4 && holeNum <= scores.Count && pars[holeNum - 1] < scores[holeNum - 1]) //must par or better to get tees against rival 4
             teeReward = 0;
         GameObject.Find("GameManager").GetComponent<NewCardManager>().ShowUI(teeReward, newCard);
         //GameObject.Find("TeesText").GetComponent<TextMeshProUGUI>().text = "(     +" + teeReward + ")";
@@ -1087,35 +1147,35 @@ public class Course : MonoBehaviour
             // Unsubscribe to avoid duplicate calls in the future
             SceneManager.sceneLoaded -= OnSceneLoaded;
         }
-        if (scene.name == "Lose")
-        {
-            if (currentPlaythrough[currentPlaythrough.Count - 1].lostRun)
-            {
-                GameObject.Find("EndMessage").GetComponent<TextMeshProUGUI>().text = "You Lost";
-            }
-            else
-            {
-                GameObject.Find("EndMessage").GetComponent<TextMeshProUGUI>().text = "You Won";
-            }
-            int index = 0;
-            foreach (scorecard sc in GameObject.Find("RecapParent").GetComponentsInChildren<scorecard>())
-            {
-                //update recap for each course played through
-                if(index < currentPlaythrough.Count)
-                {
-                    sc.gameObject.SetActive(true);
-                    sc.ShowRecap(currentPlaythrough[index]);
-                }
-                else
-                {
-                    sc.gameObject.SetActive(false);
-                }
-                index++;
-            }
-            courseDisplay.SetActive(false);
-            GameObject.Find("GameManager").GetComponent<Hand>().RemoveDeck();
-            SceneManager.sceneLoaded -= OnSceneLoaded;
-        }
+        //if (scene.name == "Lose")
+        //{
+        //    if (currentPlaythrough[currentPlaythrough.Count - 1].lostRun)
+        //    {
+        //        GameObject.Find("EndMessage").GetComponent<TextMeshProUGUI>().text = "You Lost";
+        //    }
+        //    else
+        //    {
+        //        GameObject.Find("EndMessage").GetComponent<TextMeshProUGUI>().text = "You Won";
+        //    }
+        //    int index = 0;
+        //    foreach (scorecard sc in GameObject.Find("RecapParent").GetComponentsInChildren<scorecard>())
+        //    {
+        //        //update recap for each course played through
+        //        if(index < currentPlaythrough.Count)
+        //        {
+        //            sc.gameObject.SetActive(true);
+        //            sc.ShowRecap(currentPlaythrough[index]);
+        //        }
+        //        else
+        //        {
+        //            sc.gameObject.SetActive(false);
+        //        }
+        //        index++;
+        //    }
+        //    courseDisplay.SetActive(false);
+        //    GameObject.Find("GameManager").GetComponent<Hand>().RemoveDeck();
+        //    SceneManager.sceneLoaded -= OnSceneLoaded;
+        //}
     }
 
     //Take 1 stroke to draw a card

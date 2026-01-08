@@ -1,11 +1,13 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
+using Unity.Collections.LowLevel.Unsafe;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using System.Linq;
-
 
 public class Hand : MonoBehaviour
 {
@@ -84,7 +86,7 @@ public class Hand : MonoBehaviour
             DrawCard(3);
         else
             DrawCard(4);
-        DisplayHand();
+        //DisplayHand();
     }
 
     //Delete all cards in hand, deck, and discard
@@ -114,8 +116,56 @@ public class Hand : MonoBehaviour
 
     public void DisplayHand()
     {
+        //control variables
+        float cardWidth = 2f;
+        float handWidth = 10f;
+        float maxFanAngle = 5f;
+        float curveHeight = 0.25f;
+        float moveDuration = 0.35f;
+        float xPos = -4f;
+        float yPos = -3.0f;
+
+        //display cards fanned out
+        int count = hand.Count;
+        if (count == 0) return;
+
+        for (int i = 0; i < count; i++)
+        {
+            hand[i].SetActive(true);
+            hand[i].GetComponent<Draggable>().UpdateCard();
+            float t = (count == 1) ? 0f : (float)i / (count - 1);
+            // Horizontal spread
+            float x = i * cardWidth;
+            if (cardWidth * count > handWidth)
+            {
+                x = t * handWidth;
+            }
+            // Fan rotation
+            float angle = Mathf.Lerp(maxFanAngle, -maxFanAngle, t);
+            // Vertical curve (parabola)
+            float y = Mathf.Sin(t * Mathf.PI) * curveHeight;
+            if (hand[i].GetComponent<Draggable>().selected)
+            {
+                y += 1f;
+            }
+            Vector3 targetPos = new(x + xPos, y + yPos, 0);
+            Quaternion targetRot = Quaternion.Euler(0, 0, angle);
+            Transform card = hand[i].transform;
+            //move cards
+            card.DOMove(targetPos, moveDuration).SetEase(Ease.OutQuad);
+            card.DORotateQuaternion(targetRot, moveDuration);
+            // Sorting so middle cards appear on top
+            card.GetComponentInChildren<Canvas>().sortingOrder = i + 100;
+            card.GetComponent<SpriteRenderer>().sortingOrder = i + 100;
+        }
+
+
+
+
+
+
         //Hide deck and discard
-        foreach(GameObject go in currentDeck)
+        foreach (GameObject go in currentDeck)
         {
             go.transform.position = new Vector3(-99, 99, 0);
         }
@@ -124,18 +174,20 @@ public class Hand : MonoBehaviour
             go.transform.position = new Vector3(99, 99, 0);
         }
         //draw hand
-        for (int i = 0; i < hand.Count; i++)
-        {
-            GameObject go = hand[i];
-            go.SetActive(true);
-            go.transform.position = new Vector3(i * 2.15f - 5.75f, -2.5f, -2);
-            go.transform.localScale = new Vector3(.85f,.85f,.85f);
-            go.GetComponent<Draggable>().UpdateCard();
-        }
+        //for (int i = 0; i < hand.Count; i++)
+        //{
+        //    GameObject go = hand[i];
+        //    go.SetActive(true);
+        //    float yPos = go.GetComponent<Draggable>().selected ? -2.25f : -2.5f;
+        //    float scale = go.GetComponent<Draggable>().selected ? 0.9f : 0.85f;
+        //    go.transform.position = new Vector3(i * 2.15f - 5.75f, yPos, -2);
+        //    go.transform.localScale = new Vector3(scale, scale);
+        //    go.GetComponent<Draggable>().UpdateCard();
+        //}
         //clear current caddies
-        foreach(GameObject go in caddieDisplays)
+        foreach (GameObject go in caddieDisplays)
         {
-            Destroy (go);
+            Destroy(go);
         }
         caddieDisplays.Clear();
         //draw caddies
@@ -147,7 +199,7 @@ public class Hand : MonoBehaviour
             caddieDisplays.Add(newCaddie);
         }
         //Update deck count
-        if(GameObject.Find("DeckCount") != null)
+        if (GameObject.Find("DeckCount") != null)
             GameObject.Find("DeckCount").GetComponent<TextMeshProUGUI>().text = currentDeck.Count.ToString();
     }
 
@@ -170,25 +222,33 @@ public class Hand : MonoBehaviour
             //draw a card
             if (currentDeck.Count == 0)
                 return; //if both deck and discard are empty, do nothing
-            hand.Add(currentDeck[0]);
+            GameObject drawnCard = currentDeck[0];
+            drawnCard.GetComponent<Draggable>().UpdateCard();
+            hand.Add(drawnCard);
             currentDeck[0].SetActive(true);
             currentDeck.RemoveAt(0);
             if (currentDeck.Count == 0 && GameObject.Find("CourseManager").GetComponent<Course>().currentRival == 5)
                 GameObject.Find("CourseManager").GetComponent<Course>().strokeCount++;
+            //animate drawing the card
+            Vector3 finalPos = new Vector3(-2, 0);
+            drawnCard.GetComponent<Draggable>().AnimateDraw(new Vector3(-8f, -8f), finalPos);
         }
-        DisplayHand();
+        //DisplayHand(); this is done when the draw animation completes
     }
 
     //draws a specific card
     public void DrawCard(GameObject card)
     {
-        if(currentDeck.Contains(card))
+        if (currentDeck.Contains(card))
         {
             currentDeck.Remove(card);
             hand.Add(card);
             card.SetActive(true);
+            //animate drawing the card
+            Vector3 finalPos = new Vector3(-2, 0);
+            card.GetComponent<Draggable>().AnimateDraw(new Vector3(-8f, -8f), finalPos);
         }
-        DisplayHand();
+        //DisplayHand();
     }
 
     //removes a card from your deck (not the base deck)
@@ -226,10 +286,7 @@ public class Hand : MonoBehaviour
     public void DiscardCard(GameObject card)
     {
         if (card == null) return;
-        card.SetActive(false);
-        hand.Remove(card);
-        discardPile.Add(card);
-        DisplayHand();
+        card.GetComponent<Draggable>().AnimateDiscard();
     }
 
     //private bool cardChosen = false;
@@ -253,7 +310,7 @@ public class Hand : MonoBehaviour
     public GameObject RandomUpgrade()
     {
         //create new order of upgrades if it is currently empty
-        if(upgradeOptions.Count == 0)
+        if (upgradeOptions.Count == 0)
             upgradeOptions = Enumerable.Range(0, upgradeCards.Count)
                         .OrderBy(i => Random.value)
                         .ToList();
@@ -347,11 +404,11 @@ public class Hand : MonoBehaviour
     public int HasCaddie(string name)
     {
         int amount = 0;
-        foreach(GameObject go in caddies)
+        foreach (GameObject go in caddies)
         {
-            if(go.GetComponent<Draggable>().cardName == name)
+            if (go.GetComponent<Draggable>().cardName == name)
                 amount++;
-        }    
+        }
         return amount;
     }
 
@@ -360,7 +417,7 @@ public class Hand : MonoBehaviour
     {
         foreach (GameObject card in baseDeck)
         {
-            if(card.GetComponent<Draggable>().cardId == id)
+            if (card.GetComponent<Draggable>().cardId == id)
             {
                 baseDeck.Remove(card);
                 Destroy(card);
@@ -379,5 +436,72 @@ public class Hand : MonoBehaviour
             }
         }
         return null;
+    }
+
+    private GameObject hoveringCard;
+    private GameObject draggingCard;
+    void Update()
+    {
+        //check the topmost object the mouse is on
+        Vector2 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        RaycastHit2D[] hits = Physics2D.RaycastAll(mouseWorld, Vector2.zero);
+        if (hits.Length == 0)
+        {
+            if (hoveringCard != null)
+            {
+                //stop hovering
+                hoveringCard.transform.DOScale(1f, 0.15f).SetEase(Ease.OutQuad);
+                hoveringCard = null;
+                DisplayHand();
+            }
+            return;
+        }
+        RaycastHit2D topHit = hits
+            .OrderByDescending(h =>
+                h.collider.GetComponent<SpriteRenderer>() != null ?
+                    h.collider.GetComponent<SpriteRenderer>().sortingOrder : int.MinValue
+            )
+            .First();
+        if (hoveringCard != null && hoveringCard != topHit.collider.gameObject)
+        {
+            //stop hovering
+            hoveringCard.transform.DOScale(1f, 0.15f).SetEase(Ease.OutQuad);
+            hoveringCard = null;
+            DisplayHand();
+        }
+        if (topHit.collider.GetComponent<Draggable>() != null)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                //click the card
+                draggingCard = topHit.collider.gameObject;
+                draggingCard.GetComponent<Draggable>().ClickCard();
+            }
+            else
+            {
+                if (hoveringCard == null)
+                {
+                    if (topHit.collider.GetComponent<Draggable>().isUpgradeOption == false)
+                    {
+                        //start hovering the card
+                        hoveringCard = topHit.collider.gameObject;
+                        hoveringCard.GetComponentInChildren<Canvas>().sortingOrder = 1000;
+                        hoveringCard.GetComponent<SpriteRenderer>().sortingOrder = 1000;
+                        hoveringCard.transform.DOKill();
+                        hoveringCard.transform.DOScale(1.2f, 0.15f).SetEase(Ease.OutQuad);
+                        hoveringCard.transform.DOLocalMoveY(hoveringCard.transform.localPosition.y + 0.25f, 0.15f).SetEase(Ease.OutQuad);
+                    }
+                }
+            }
+        }
+        //check if we need to release a card
+        if (Input.GetMouseButtonUp(0))
+        {
+            if (draggingCard != null)
+            {
+                draggingCard.GetComponent<Draggable>().MouseReleased();
+                draggingCard = null;
+            }
+        }
     }
 }
