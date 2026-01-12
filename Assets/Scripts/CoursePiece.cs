@@ -1,8 +1,10 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class CoursePiece : MonoBehaviour
 {
@@ -11,6 +13,8 @@ public class CoursePiece : MonoBehaviour
     public int myIndex;
     public int myType;
     public GameObject distanceDataObj;
+    public GameObject rollOverPrefab; //obj created when ball rolls over this piece
+    public Sprite rollOverSprite; //sprite to set for rollOverPrefab
     //private GameObject currentDataObj = null;
 
     void Update()
@@ -56,5 +60,19 @@ public class CoursePiece : MonoBehaviour
             GetComponent<SpriteRenderer>().color = Color.white;
             //Destroy(currentDataObj);
         }
+    }
+
+    //create pop up effect that triggers when landing on this piece
+    public void RolledOver()
+    {
+        GameObject obj = Instantiate(rollOverPrefab, transform);
+        obj.transform.localPosition = new Vector3(0, 1, 0);
+        obj.GetComponent<SpriteRenderer>().sprite = rollOverSprite;
+        obj.transform.DOLocalMoveY(transform.position.y + 1.25f, 2f)
+            .SetEase(Ease.OutCubic)
+            .OnComplete(() =>
+            {
+                Destroy(obj);
+            });
     }
 }

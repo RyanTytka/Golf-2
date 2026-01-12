@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -233,7 +234,7 @@ public class Course : MonoBehaviour
     public void NewCourse()
     {
         //set initial course data
-        holeNum = 0; //note: this will be incremented once before each hole
+        holeNum = 8; //note: this will be incremented once before each hole
         courseNum++;
         if (nextCourse == -1)
         {
@@ -519,7 +520,7 @@ public class Course : MonoBehaviour
             prevPieceType = myType;
         }
         //Put ball in its place
-        ballObj.transform.localPosition = new Vector3(ballPos * childWidth, 1.5f, -1);
+        ballObj.transform.localPosition = new Vector3(ballPos * childWidth, 1f, -1);
         //reset highlight
         GetComponent<LineRenderer>().positionCount = 0;
         Destroy(currentDot);
@@ -552,9 +553,76 @@ public class Course : MonoBehaviour
         return ballPos - startIndex;
     }
 
+    Vector3 lastPosition;
+    private void RollBall()
+    {
+        //calculate roll
+        float ballRadius = 0.5f;
+        Vector3 currentPos = ballObj.transform.position;
+        Vector3 delta = currentPos - lastPosition;
+
+        float distance = delta.magnitude;
+        if (distance > 0.0001f)
+        {
+            float rotationDegrees = (distance / (2f * Mathf.PI * ballRadius)) * -360f;
+
+            ballObj.transform.Rotate(Vector3.forward, rotationDegrees, Space.World);
+        }
+
+        lastPosition = currentPos;
+    }
+
     //Move the ball its carry distance then the roll distance
     public void HitBall()
     {
+        //animate the ball
+        LineRenderer line = GetComponent<LineRenderer>();
+        Vector3[] path = new Vector3[line.positionCount];
+        line.GetPositions(path);
+        if (!line.useWorldSpace)
+        {
+            for (int i = 0; i < path.Length; i++)
+                path[i] = line.transform.TransformPoint(path[i]);
+        }
+        SwingResult swing = CalculateSwing();
+        int lastTriggeredIndex = swing.landIndex - 1;
+        Vector3 rollStart = path[path.Length - 2];
+        Vector3 rollEnd = path[path.Length - 1];
+        float segmentLength = Vector3.Distance(rollStart, rollEnd);
+        Tween DOPath = null;
+        DOPath = ballObj.transform.DOPath(path, 2f, PathType.Linear).OnUpdate(() =>
+        {
+            //rotate ball
+            RollBall();
+
+            //reverse roll support
+            //int rollDirection = rollEndIndex > rollStartIndex ? 1 : -1;
+            //int rollTileCount = Mathf.Abs(rollEndIndex - rollStartIndex);
+            //int currentIndex = rollStartIndex +
+            //    rollDirection * Mathf.FloorToInt(rollT * rollTileCount);
+
+            //trigger tiles as your roll across them
+            float travelled = ballObj.transform.position.x - rollStart.x;
+            if (travelled < 0) return;
+            float rollT = Mathf.Clamp01(travelled / segmentLength);
+            int totalTiles = Mathf.Abs(swing.endIndex - swing.landIndex);
+            int rollDirection = swing.endIndex > swing.landIndex ? 1 : -1;
+            int currentIndex = swing.landIndex + rollDirection * Mathf.FloorToInt(rollT * (float)totalTiles);
+
+            if (currentIndex != lastTriggeredIndex)
+            {
+                lastTriggeredIndex = currentIndex;
+                courseLayout[currentIndex].GetComponent<CoursePiece>().RolledOver();
+            }
+        }).OnComplete(AfterHitBall);
+
+        
+    }
+
+    //called when the ball hit animation is complete
+    public void AfterHitBall()
+    {
+        SwingResult swing = CalculateSwing();
         //card effects
         if (selectedClub.GetComponent<Draggable>().cardName == "Shovel Wedge")
             if (courseLayout[ballPos].GetComponent<CoursePiece>().pieceName == "Sand")
@@ -563,7 +631,6 @@ public class Course : MonoBehaviour
         GameObject.Find("GameManager").GetComponent<Hand>().playedCaddie = false;
         GameObject.Find("GameManager").GetComponent<Hand>().playedAbility = false;
         //calculate swing
-        SwingResult swing = CalculateSwing();
         string ballName = selectedBall != null ? selectedBall.GetComponent<Draggable>().cardName : "";
         luck += swing.luckGained;
         luck -= swing.luckUsed;
@@ -687,7 +754,7 @@ public class Course : MonoBehaviour
             if (go.GetComponent<Draggable>().isDriver)
             {
                 handRef.hand.RemoveAt(i);
-                Destroy(go);
+                go.GetComponent<Draggable>().AnimateDiscard(true);
             }
         }
         //do sand after discarding used cards
@@ -732,8 +799,6 @@ public class Course : MonoBehaviour
         handRef.DrawCard(1);
         if (GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Caddie 4") > 0)
             luck++;
-        //Update scene graphics
-        UpdateStatusEffectDisplay();
         DisplayCourse();
     }
 
@@ -965,11 +1030,9 @@ public class Course : MonoBehaviour
     {
         float arcHeight = 2f;
         int arcSegments = 50;
-        int tailSegments = 20;         // Number of points in the straight line
-        int totalPoints = arcSegments + tailSegments + 1;
+        int totalPoints = arcSegments + 2;
         LineRenderer line = GetComponent<LineRenderer>();
         line.positionCount = totalPoints;
-
         //Arc points
         for (int i = 0; i <= arcSegments; i++)
         {
@@ -981,13 +1044,9 @@ public class Course : MonoBehaviour
         }
         //Straight tail points along the X-axis
         Vector3 lastArcPoint = line.GetPosition(arcSegments);
-        float dx = (targetX - lastArcPoint.x) / tailSegments;
-        for (int i = 1; i <= tailSegments; i++)
-        {
-            Vector3 tailPos = lastArcPoint;
-            tailPos.x += dx * i; // Move right along X
-            line.SetPosition(arcSegments + i, tailPos);
-        }
+        Vector3 tailEnd = lastArcPoint;
+        tailEnd.x = targetX;
+        line.SetPosition(arcSegments + 1, tailEnd);
         //Draw a dot at the end
         Vector3 endPoint = line.GetPosition(totalPoints - 1);
         endPoint.z = -1;

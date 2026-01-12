@@ -6,6 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.XR;
 
 public class Draggable : MonoBehaviour
 {
@@ -54,6 +55,7 @@ public class Draggable : MonoBehaviour
     public int cardId; //index of the deck list. used to identify cards
     public GameObject baseReference; //reference to the obj this is cloned from in the base deck
     public GameObject cardBack; //card back that is shown when card is face down and disabled when face up
+    public bool isHoverable = false; //do not enlarge card when hovered if this is false
 
     //Internal Helper Variables
     //these are used for when dragging
@@ -185,11 +187,6 @@ public class Draggable : MonoBehaviour
         GameObject.Find("GameManager").GetComponent<Hand>().DisplayHand();
     }
 
-    void OnMouseUp()
-    {
-        MouseReleased();
-    }
-
     public void MouseReleased()
     { 
         if (GameObject.Find("CourseManager").GetComponent<Course>().paused) return;
@@ -222,7 +219,7 @@ public class Draggable : MonoBehaviour
             return;
 
         // Start coroutine to return to start position
-        returnCoroutine = StartCoroutine(ReturnToStart());
+        //returnCoroutine = StartCoroutine(ReturnToStart());
         var hand = GameObject.Find("GameManager").GetComponent<Hand>();
         if (hand.waitingForDiscard)
         {
@@ -269,6 +266,7 @@ public class Draggable : MonoBehaviour
                 //} 
             }
         }
+        GameObject.Find("GameManager").GetComponent<Hand>().DisplayHand();
     }
 
     void Update()
@@ -334,7 +332,7 @@ public class Draggable : MonoBehaviour
         clubStatBlock.SetActive(cardType == CardTypes.Club);
         carryTextObj.SetActive(cardType == CardTypes.Club);
         rollTextObj.SetActive(cardType == CardTypes.Club);
-        typeIconObj.GetComponent<SpriteRenderer>().sprite = typeIcons[(int)cardType];
+        typeIconObj.GetComponent<Image>().sprite = typeIcons[(int)cardType];
         if (cardType == CardTypes.Club)
         {
             carryTextObj.GetComponent<TextMeshProUGUI>().text = Carry.ToString();
@@ -346,7 +344,6 @@ public class Draggable : MonoBehaviour
     public void SetSortOrder(int so)
     {
         GetComponent<SpriteRenderer>().sortingOrder = so; //put this in front of black background
-        foreach (var sr in GetComponentsInChildren<SpriteRenderer>()) sr.sortingOrder = so; //put icons in front of bg
         GetComponentInChildren<Canvas>().sortingOrder = so;
     }
 
@@ -581,12 +578,17 @@ public class Draggable : MonoBehaviour
     }
 
     //animate this card being drawn from bag to hand
-    public void AnimateDraw(Vector3 startPosition, Vector3 handPosition)
+    //drawAmount: if > 1, draw another card after done drawing this one
+    public void AnimateDraw(int drawAmount)
     {
-        float moveDuration = 0.75f;
+        isHoverable = false;
+        Vector3 startPosition = new(-8f, -8f);
+        Vector3 handPosition = new(-2f, 0f);
+        float moveDuration = 0.75f; 
         float flipDuration = 0.25f;
         float arcHeight = 2f;
         transform.position = startPosition;
+        transform.rotation = Quaternion.identity;
         transform.localScale = Vector3.zero;
         Vector3 controlPoint = (startPosition + handPosition) / 2f + Vector3.up * arcHeight;
         Sequence seq = DOTween.Sequence();
@@ -605,7 +607,13 @@ public class Draggable : MonoBehaviour
             ).SetEase(Ease.OutCubic)
                 .OnComplete(() =>
                 {
+                    isHoverable = true;
+                    //add this to the hand list then display hand
+                    GameObject.Find("GameManager").GetComponent<Hand>().hand.Add(this.gameObject);
                     GameObject.Find("GameManager").GetComponent<Hand>().DisplayHand();
+                    //start drawing another card if necessary
+                    if(drawAmount > 1)
+                        GameObject.Find("GameManager").GetComponent<Hand>().DrawCard(drawAmount - 1);
                 })
         );
         // Scale up during front half of the arc
@@ -627,18 +635,24 @@ public class Draggable : MonoBehaviour
     }
 
     //animate this card being discarded
-    public void AnimateDiscard()
+    //if toss = true, then this tosses instead of discard (animate to left)
+    public void AnimateDiscard(bool toss = false)
     {
-        float moveDuration = 0.75f;
-        float arcHeight = 5f;
-        Vector3 endPos = new(10f, -10f);
-        transform.localScale = Vector3.zero;
-        Vector3 controlPoint = (transform.position + endPos) / 2f + Vector3.up * arcHeight;
-        Sequence seq = DOTween.Sequence();
+        isHoverable = false;
+        //remove this now so and hand displays while moving wont touch this
+        GameObject.Find("GameManager").GetComponent<Hand>().hand.Remove(this.gameObject);
+        //animation variables
+        float moveDuration = 1.5f;
+        float rotateDuration = 0.75f;
+        float arcHeight = 3f;
+        Vector3 endPos = toss ? new(-10f, -10f) : new(10f, -10f);
+        Vector3 controlPoint = (transform.position + endPos) / 2f;
+        controlPoint.y = transform.position.y + arcHeight;
         // Set sort order so it is in front of everything
         GetComponentInChildren<Canvas>().sortingOrder = 1000;
         GetComponent<SpriteRenderer>().sortingOrder = 1000;
         // Move in arc
+        Sequence seq = DOTween.Sequence();
         seq.Append(
             transform.DOPath(
                 new Vector3[] { transform.position, controlPoint, endPos },
@@ -650,18 +664,25 @@ public class Draggable : MonoBehaviour
         // Rotate upside down WHILE moving
         seq.Join(
             transform.DORotate(
-                new Vector3(0, 0, 180f),
-                moveDuration,
+                new Vector3(0, 0, -180f),
+                rotateDuration,
                 RotateMode.FastBeyond360
             ).SetEase(Ease.InOutQuad)
         );
 
         seq.OnComplete(() =>
         {
-            this.gameObject.SetActive(false);
-            GameObject.Find("GameManager").GetComponent<Hand>().hand.Remove(this.gameObject);
-            GameObject.Find("GameManager").GetComponent<Hand>().discardPile.Add(this.gameObject);
+            if (toss)
+            {
+                GameObject.Find("GameManager").GetComponent<Hand>().Toss(this.gameObject);
+            }
+            else
+            {
+                this.gameObject.SetActive(false);
+                GameObject.Find("GameManager").GetComponent<Hand>().discardPile.Add(this.gameObject);
+            }
             GameObject.Find("GameManager").GetComponent<Hand>().DisplayHand();
         });
     }
+
 }

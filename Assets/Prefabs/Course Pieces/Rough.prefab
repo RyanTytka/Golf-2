@@ -148,3 +148,5 @@ MonoBehaviour:
   myIndex: 0
   myType: 1
   distanceDataObj: {fileID: 8740734744052633445, guid: 0c99cc31f48df4b40ba3d5b63c3818dd, type: 3}
+  rollOverPrefab: {fileID: 6512579119685032926, guid: 46ff576f1eb5252428d84a6599d2ade5, type: 3}
+  rollOverSprite: {fileID: 1774830039, guid: 25f593f459262724aab761ece0878ac2, type: 3}

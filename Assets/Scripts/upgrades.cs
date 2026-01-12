@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class upgrades : MonoBehaviour
 {
@@ -24,17 +25,17 @@ public class upgrades : MonoBehaviour
             roll += upgrade.rollStats[id];
             if (upgrade.type == upgradeBuy.upgradeType.GRIP)
             {
-                gripIcon.GetComponent<SpriteRenderer>().sprite = upgrade.icons[id];
+                gripIcon.GetComponent<Image>().sprite = upgrade.icons[id];
                 gripIcon.SetActive(true);
             }
             if (upgrade.type == upgradeBuy.upgradeType.SHAFT)
             {
-                shaftIcon.GetComponent<SpriteRenderer>().sprite = upgrade.icons[(int)upgrade.type * 4 + upgrade.ID];
+                shaftIcon.GetComponent<Image>().sprite = upgrade.icons[(int)upgrade.type * 4 + upgrade.ID];
                 shaftIcon.SetActive(true);
             }
             if (upgrade.type == upgradeBuy.upgradeType.CLUBHEAD)
             {
-                clubheadIcon.GetComponent<SpriteRenderer>().sprite = upgrade.icons[(int)upgrade.type * 4 + upgrade.ID];
+                clubheadIcon.GetComponent<Image>().sprite = upgrade.icons[(int)upgrade.type * 4 + upgrade.ID];
                 clubheadIcon.SetActive(true);
             }
         }

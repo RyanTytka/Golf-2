@@ -1,0 +1,38 @@
+scorecard headers
+status effect graphics
+need new view bag Icon
+view bag throws errors
+view bag does not hide course
+display course num in UI
+hole num should be flag icon
+need new tees Icon
+make cards more readable
+new ball sprite
+better shot preview arc
+more bg elements
+
+
+bug: waiting for discard needs to straighten oout displayed card (and show discard area)
+bug: while waiting for discard, need to disable card play wiggle indication
+bug: there is an error when no roll
+bug: breaks when scroll course while swinging
+add: ball move speed scale with shot length. also scale curve with roll length (no roll means ball slows down at end)
+bug: swing arc appears in front of ball while swinging
+add: camera track ball while moving
+add: support for reverse ball rolling
+add: make sand discard on roll over instead of at the end of roll
+add: roll over make it say luck used instead of penalty if you have luck
+bug: using arrow keys to move course before clicking makes bg jump
+bug: type icons not showing on cards
+bug: drawing an ability after playing it has permanent play indication wiggles and moved from off screen weirdly
+bug: had empty space in hand either from driver being tossed or from sand or from ability played
+bug: hovering over a card while it is being drawn (after arc but before moves to hand freezes it in place)
+bug: ball is visible in the shop
+bug: hit escape key in shop gives error. need settings menu anyways
+add: view bag button in shop
+add: animation/indicator for drivers
+bug: not using driver (tossing in general) removes it permanently?
+bug: "dig through bag" card has timing issues (discards before done drawing)
+bug: "lone ranger" card does not update its carry text when hand changes 
+bug: clouds can appear on screen
+add: better wait for discard graphics (transulcent black over everything but hand, drag card to middle of screen to discard)
