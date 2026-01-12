@@ -320,10 +320,10 @@ public class Course : MonoBehaviour
                 break;
             case CourseType.desert:
                 fairwayType = CoursePieces.SAND;
-                lengthMod = -2;
+                lengthMod = 0;
                 break;
             case CourseType.beach:
-                lengthMod = -3;
+                lengthMod = -2;
                 break;
             case CourseType.hills:
                 lengthMod = 1;
@@ -333,8 +333,9 @@ public class Course : MonoBehaviour
                 fairwayType = CoursePieces.ROUGH;
                 break;
         }
-        int holeLength = 40 + courseNum * 4 + (pars[holeNum-1] - 4) * 10 + lengthMod + Random.Range(-2,3); //actual length
-        //int holeLength = 25 + courseNum * 6 + (pars[holeNum-1] - 4) * 10 + lengthMod + Random.Range(-2,3); //shorter test length
+        int holeLength = Random.Range(42,46) + courseNum * 5 + lengthMod; //actual length
+        holeLength += + pars[holeNum-1] == 3 ? 10 : 0;
+        holeLength += + pars[holeNum-1] == 5 ? 12 : 0;
         for (int i = 0; i < holeLength; i++)
         {
             GameObject fairway = Instantiate(coursePieces[(int)fairwayType], courseDisplay.transform);
@@ -343,8 +344,8 @@ public class Course : MonoBehaviour
         }
         //Create Hazards
         int currentPos = Random.Range(1, 10);
-        int greenStartOffsetMin = 10; //space behind green before out of bounds
-        int greenStartOffsetMax = 16;
+        int greenStartOffsetMin = 8; //space behind green before out of bounds
+        int greenStartOffsetMax = 14;
         int greenLengthMin = 6 - courseNum / 3;
         int greenLengthMax = 10 - courseNum / 3;
         switch (courseType)
@@ -353,29 +354,37 @@ public class Course : MonoBehaviour
                 //small patches of various hazards
                 while (currentPos < courseLayout.Count)
                 {
-                    int patchSize = Random.Range(2, 5);
-                    int patchType = Random.Range(1, 3);
+                    int patchSize = Random.Range(1, 4 + courseNum / 2);
+                    int patchType = WeightedRandomInt(
+                        new List<int>{ 1, 2, 3 }, //rough, sand, water
+                        new List<int>{ 15, 10 + courseNum, 10 + courseNum });
+                    if(patchType == 1)
+                        patchSize += Random.Range(1,3);
                     AddHazardPatch(patchType, currentPos, patchSize);
-                    currentPos += patchSize + Random.Range(0, 5);
+                    currentPos += patchSize + Random.Range(5 - courseNum / 2, 10 - courseNum / 2);
                 }
                 //large green
-                greenStartOffsetMin = 12;
-                greenStartOffsetMax = 18;
+                greenStartOffsetMin = 10;
+                greenStartOffsetMax = 16;
                 greenLengthMin = 8;
                 greenLengthMax = 12;
                 break;
             case CourseType.desert:
-                //patches of rough and fairway
+                //large patches of rough and sand
                 while (currentPos < courseLayout.Count)
                 {
                     int patchSize = Random.Range(4, 8);
-                    int patchType = Random.Range(0, 2);
+                    int patchType = WeightedRandomInt(
+                        new List<int>{ 0, 1, 2 }, //fairway, rough, sand
+                        new List<int>{ 10, 5, 5 + courseNum * 2 });
+                    if(patchType == 2)
+                        patchSize -= Random.Range(1,3);
                     AddHazardPatch(patchType, currentPos, patchSize);
-                    currentPos += patchSize + Random.Range(0, 5);
+                    currentPos += patchSize + Random.Range(4 - courseNum / 3, 7);
                 }
                 //large green
-                greenStartOffsetMin = 12;
-                greenStartOffsetMax = 18;
+                greenStartOffsetMin = 10;
+                greenStartOffsetMax = 16;
                 greenLengthMin = 8;
                 greenLengthMax = 12;
                 break;
@@ -383,48 +392,50 @@ public class Course : MonoBehaviour
                 //patches of sand and water
                 while (currentPos < courseLayout.Count)
                 {
-                    int patchSize = Random.Range(1, 4);
-                    int patchType = Random.Range(0,5) == 0 ? 1 : Random.Range(2, 4);
+                    int patchSize = Random.Range(1, 4 + courseNum / 2);
+                    int patchType = WeightedRandomInt(
+                        new List<int>{ 1, 2, 3 }, //rough, sand, water
+                        new List<int>{ 1, 3, 4 });
                     AddHazardPatch(patchType, currentPos, patchSize);
-                    currentPos += patchSize + Random.Range(0, 5);
+                    currentPos += patchSize + Random.Range(3 - courseNum / 3, 9 - courseNum / 2);
                 }
                 //small green
-                greenStartOffsetMin = 10;
-                greenStartOffsetMax = 16;
+                greenStartOffsetMin = 8;
+                greenStartOffsetMax = 14;
                 greenLengthMax = 8;
                 break;
             case CourseType.hills:
-                //patches large patches of rough and water, small sand pits
+                //patches of water and large rough
                 while (currentPos < courseLayout.Count)
                 {
                     int patchSize = Random.Range(4, 8);
-                    int patchType = Random.Range(0, 3) == 0 ? 3 : 1;
-                    if (patchType == 3) patchSize -= 2; 
+                    int patchType = WeightedRandomInt(
+                        new List<int>{ 1, 3 }, //rough, water
+                        new List<int>{ 20, 10 + courseNum });
+                    if (patchType == 3) patchSize -= 3 - courseNum / 3; 
                     AddHazardPatch(patchType, currentPos, patchSize);
-                    currentPos += patchSize + Random.Range(1, 4);
-                    if(Random.Range(0,5) == 0)
-                    {
-                        //add small sand pit occasionally
-                        AddHazardPatch((int)CoursePieces.SAND, currentPos + Random.Range(0,5), Random.Range(1,4));
-                    }
+                    currentPos += patchSize + Random.Range(3 - courseNum / 3, 7 - courseNum / 3);
                 }
                 //larger green
-                greenStartOffsetMax = 20;
-                greenLengthMax = 12;
+                greenStartOffsetMax = 18;
+                greenLengthMax = 10;
                 break;
             case CourseType.forest:
-                //patches of fairway, sand, and water
+                //patches of rough, sand, and water
                 while (currentPos < courseLayout.Count)
                 {
-                    int patchSize = Random.Range(2, 5);
-                    int patchType = Random.Range(1, 4);
-                    if (patchType == 1) patchType = 0; //turn rough into fairway
+                    int patchSize = Random.Range(1 + courseNum / 3, 4);
+                    int patchType = WeightedRandomInt(
+                        new List<int>{ 1, 2, 3 }, //rough, sand, water
+                        new List<int>{ 30, 10 + courseNum, 10 + courseNum });
+                    if(patchType == 1)
+                        patchSize += 2;
                     AddHazardPatch(patchType, currentPos, patchSize);
-                    currentPos += patchSize + Random.Range(0, 5);
+                    currentPos += patchSize + Random.Range(1, 6 - courseNum / 2);
                 }
                 //small green
-                greenStartOffsetMin = 10;
-                greenStartOffsetMax = 16;
+                greenStartOffsetMin = 8;
+                greenStartOffsetMax = 14;
                 greenLengthMax = 8;
                 break;
         }
@@ -473,6 +484,25 @@ public class Course : MonoBehaviour
             if(startIndex + i < courseLayout.Count)
                 ReplacePieceAt(startIndex + i, hazardType);
         }
+    }
+
+    //helper method that gives you a random key based off weights
+    private int WeightedRandomInt(List<int> keys, List<int> weights)
+    {
+        int totalWeight = 0;
+        foreach(int weight in weights)
+        {
+            totalWeight += weight;
+        }
+        float f = Random.Range(0, (float)totalWeight);
+        int cumulative = 0;
+        for(int i = 0; i < weights.Count; i++)
+        {
+            cumulative += weights[i];
+            if(f < cumulative)
+                return keys[i];
+        }
+        return -1;
     }
 
     public void DisplayCourse()
