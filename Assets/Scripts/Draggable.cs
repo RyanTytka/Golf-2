@@ -1,7 +1,10 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Numerics;
+using System.Security.Cryptography.X509Certificates;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -24,6 +27,8 @@ public class Draggable : MonoBehaviour
         get 
         {
             GetComponent<upgrades>().UpdateView();
+            if(cardName == "Lone Ranger")
+                carry -= GameObject.Find("GameManager").GetComponent<Hand>().hand.count - 1;
             return carry + GetComponent<upgrades>().Stats()[0]; 
         } 
     }
@@ -382,6 +387,14 @@ public class Draggable : MonoBehaviour
         bool isStillActive = true; //turn to false if this card will be destroyed instead of discarded
         Course c = GameObject.Find("CourseManager").GetComponent<Course>();
         Hand h = GameObject.Find("GameManager").GetComponent<Hand>();
+        //stop play indication animation
+        indicatingPlay = false;
+        if (wiggleTween != null)
+        {
+            wiggleTween.Kill();
+            transform.DORotate(Vector3.zero, 0.15f).SetEase(Ease.OutQuad);
+        }
+        //do effect
         if (cardType == CardTypes.Caddie)
         {
             if (h.HasCaddie("Caddie 2") > 0)
@@ -389,8 +402,9 @@ public class Draggable : MonoBehaviour
             h.caddies.Add(this.gameObject);
             h.playedCaddie = true;
             //Caddies do not go into the discard
+            PlayCaddieAnimation();
             h.hand.Remove(this.gameObject);
-            this.gameObject.SetActive(false);
+            // this.gameObject.SetActive(false);
         }
         if (cardType == CardTypes.Ability)
         {
@@ -405,18 +419,21 @@ public class Draggable : MonoBehaviour
         switch (cardName)
         {
             case "Rangefinder":
-                // Wait for user to select a card to discard
+                //set this card to middle of screen and stop shaking
                 onDisplay = true;
                 displayPos = new Vector3(-2, 1.5f, -2);
+                indicatingPlay = false;
+                if (wiggleTween != null)
+                    wiggleTween.Kill();
+                transform.DORotate(Vector3.zero, 0.15f).SetEase(Ease.OutQuad);
                 // If it's currently returning, stop that coroutine
-                if (returnCoroutine != null)
-                {
-                    StopCoroutine(returnCoroutine);
-                    returnCoroutine = null;
-                }
-                //transform.localScale = Vector3.zero;
+                // if (returnCoroutine != null)
+                // {
+                //     StopCoroutine(returnCoroutine);
+                //     returnCoroutine = null;
+                // }
+                // Wait for user to select a card to discard
                 yield return h.WaitForDiscard();
-                //transform.localScale = Vector3.one;
                 onDisplay = false;
                 // Now draw 2 cards after discarding
                 h.DrawCard(2);
@@ -435,16 +452,18 @@ public class Draggable : MonoBehaviour
                 }
                 break;
             case "Dig Through Your Bag":
-                //discard all non-clubs then draw 3
+                //draw 3 then discard all non-clubs 
                 List<GameObject> hand = h.hand;
-                h.DrawCard(3);
-                for(int i = hand.Count - 1; i >= 0; i--)
-                {
-                    if(hand[i].GetComponent<Draggable>().cardType != CardTypes.Club)
+                h.DrawCard(3,() =>
+                {   
+                    for(int i = hand.Count - 1; i >= 0; i--)
                     {
-                        h.DiscardCard(hand[i]);
+                        if(hand[i].GetComponent<Draggable>().cardType != CardTypes.Club)
+                        {
+                            h.DiscardCard(hand[i]);
+                        }
                     }
-                }
+                });
                 break;
             case "Find a Ball":
                 // Draw 2 random ball cards from the deck
@@ -579,7 +598,7 @@ public class Draggable : MonoBehaviour
 
     //animate this card being drawn from bag to hand
     //drawAmount: if > 1, draw another card after done drawing this one
-    public void AnimateDraw(int drawAmount)
+    public void AnimateDraw(int drawAmount, Action completeCallback = null)
     {
         isHoverable = false;
         Vector3 startPosition = new(-8f, -8f);
@@ -607,13 +626,15 @@ public class Draggable : MonoBehaviour
             ).SetEase(Ease.OutCubic)
                 .OnComplete(() =>
                 {
-                    isHoverable = true;
                     //add this to the hand list then display hand
                     GameObject.Find("GameManager").GetComponent<Hand>().hand.Add(this.gameObject);
                     GameObject.Find("GameManager").GetComponent<Hand>().DisplayHand();
                     //start drawing another card if necessary
                     if(drawAmount > 1)
                         GameObject.Find("GameManager").GetComponent<Hand>().DrawCard(drawAmount - 1);
+                    else if (completeCallback != null)
+                        completeCallback.Invoke();
+
                 })
         );
         // Scale up during front half of the arc
@@ -685,4 +706,35 @@ public class Draggable : MonoBehaviour
         });
     }
 
+    //sends this to the caddie area while shrinking it, then pop up a caddie icon
+    public void PlayCaddieAnimation()
+    {
+        isHoverable = false;
+        //animation variables
+        float moveDuration = 1.5f;
+        Vector3 endPos = toss ? new(-10f, -10f) : new(10f, -10f); //find correct end pos
+        // Set sort order so it is in front of everything
+        GetComponentInChildren<Canvas>().sortingOrder = 1000;
+        GetComponent<SpriteRenderer>().sortingOrder = 1000;
+        //move the card while scaling it down
+        Sequence seq = DOTween.Sequence(); 
+        seq.Join(transform.DOMove(endPos, duration)); 
+        seq.Join(transform.DOScale(endPos, duration).SetEase(Ease.InQuad)); 
+        // seq.Play();
+        //create the caddie icon when done
+        Hand h = GameObject.Find("GameManager").GetComponent<Hand>();
+        seq.OnComplete(() =>
+        {
+            GameObject newCaddie = Instantiate(h.caddieDisplayObj, GameObject.Find("MainCanvas").transform);
+            newCaddie.GetComponent<RectTransform>().anchoredPosition = new Vector3(-300 + h.caddieDisplays.Count * 75, 150, 0);
+            newCaddie.GetComponent<RectTransform>().scale = new Vector3(0,0,0);
+            newCaddie.GetComponent<caddieDisplay>().caddieRef = this.gameObject;
+            h.caddieDisplays.Add(newCaddie);
+            this.gameObject.SetActive(false);
+            //animate caddie appearing
+            newCaddie.transform.DOScale(Vector.one, 1f).Ease(Ease.Bounce__);
+            // refresh hand
+            GameObject.Find("GameManager").GetComponent<Hand>().DisplayHand();
+        });
+    }
 }

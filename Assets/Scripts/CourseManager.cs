@@ -2,6 +2,7 @@ using DG.Tweening;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -99,6 +100,7 @@ public class Course : MonoBehaviour
     public float keyboardScrollSpeed = 5f;
     public float minKeyboardScrollSpeed = 5f;
     public float maxKeyboardScrollSpeed = 25f;
+    private bool isBallMoving = false;
 
     //status effects
     public int power = 0;
@@ -129,7 +131,8 @@ public class Course : MonoBehaviour
         float scrollSpeed = 1.5f;
         float offset = Time.time * scrollSpeed;
         GetComponent<LineRenderer>().material.SetTextureOffset("_MainTex", new Vector2(-offset, 0));
-
+        //do not let user move course while swinging
+        if(isBallMoving) return;
         // Handle mouse input
         Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (Input.GetMouseButtonDown(0))
@@ -584,14 +587,15 @@ public class Course : MonoBehaviour
     }
 
     Vector3 lastPosition;
-    private void RollBall()
+    private void RollBall(bool isRolling)
     {
         //calculate roll
         float ballRadius = 0.5f;
         Vector3 currentPos = ballObj.transform.position;
         Vector3 delta = currentPos - lastPosition;
-
-        float distance = delta.magnitude;
+        //ball rolls much slower in the air
+        float distance = isRolling ? delta.magnitude : delta.magnitude * 0.1f;
+        //TODO: need to calculate if going forwards or backwards
         if (distance > 0.0001f)
         {
             float rotationDegrees = (distance / (2f * Mathf.PI * ballRadius)) * -360f;
@@ -605,6 +609,7 @@ public class Course : MonoBehaviour
     //Move the ball its carry distance then the roll distance
     public void HitBall()
     {
+        isBallMoving = true;
         //animate the ball
         LineRenderer line = GetComponent<LineRenderer>();
         Vector3[] path = new Vector3[line.positionCount];
@@ -620,38 +625,47 @@ public class Course : MonoBehaviour
         Vector3 rollEnd = path[path.Length - 1];
         float segmentLength = Vector3.Distance(rollStart, rollEnd);
         Tween DOPath = null;
-        DOPath = ballObj.transform.DOPath(path, 2f, PathType.Linear).OnUpdate(() =>
+        bool isRolling = false;
+        //calculate shot timing
+        float ratio;
+        if(swing.landIndex - swing.endIndex == 0)
+            ratio = 0;
+        else
+            ratio = (swing.landIndex - swing.startIndex) / (swing.landIndex - swing.endIndex);
+        AnimationCurve curve = new AnimationCurve(new Keyframe(0f,1f,0f,-2f), new Keyframe(1f + ratio, 0f, -2f, 0f));
+        float shotLength = swing.endIndex - swing.startIndex / 10f;
+        //send the ball on its path
+        DOPath = ballObj.transform.DOPath(path, shotLength, PathType.Linear).SetEase(Ease.OutCubic).OnUpdate(() =>
         {
-            //rotate ball
-            RollBall();
-
-            //reverse roll support
-            //int rollDirection = rollEndIndex > rollStartIndex ? 1 : -1;
-            //int rollTileCount = Mathf.Abs(rollEndIndex - rollStartIndex);
-            //int currentIndex = rollStartIndex +
-            //    rollDirection * Mathf.FloorToInt(rollT * rollTileCount);
-
-            //trigger tiles as your roll across them
+            RollBall(isRolling);
+            //check if the ball is still in the air
             float travelled = ballObj.transform.position.x - rollStart.x;
-            if (travelled < 0) return;
+            if (travelled < 0) return; 
+            //trigger tiles as your roll across them
+            isRolling = true;
             float rollT = Mathf.Clamp01(travelled / segmentLength);
             int totalTiles = Mathf.Abs(swing.endIndex - swing.landIndex);
             int rollDirection = swing.endIndex > swing.landIndex ? 1 : -1;
             int currentIndex = swing.landIndex + rollDirection * Mathf.FloorToInt(rollT * (float)totalTiles);
-
             if (currentIndex != lastTriggeredIndex)
             {
                 lastTriggeredIndex = currentIndex;
                 courseLayout[currentIndex].GetComponent<CoursePiece>().RolledOver();
             }
         }).OnComplete(AfterHitBall);
-
-        
+        //make the camera move with the ball
+        //first, move the camera to where the ball is
+        Vector3 cameraMoveTo = new Vector3(0,0,0);
+        float cameraMoveDuration = 2f;
+        courseDisplay.transform.DOMove(cameraMoveTo, cameraMoveDuration);
+        //if the shot goes far enough, the camera travels with the ball
+        //finally, settle the camera where the ball lies
     }
 
     //called when the ball hit animation is complete
     public void AfterHitBall()
     {
+        isBallMoving = false;
         SwingResult swing = CalculateSwing();
         //card effects
         if (selectedClub.GetComponent<Draggable>().cardName == "Shovel Wedge")

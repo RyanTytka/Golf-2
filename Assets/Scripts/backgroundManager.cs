@@ -130,7 +130,7 @@ public class backgroundManager : MonoBehaviour
         go.GetComponent<SpriteRenderer>().sprite = cloudImages[cloudType];
         go.GetComponent<Animator>().enabled = false;
         if(leftSide)
-            go.transform.position = new Vector3(-10f, Random.Range(3f, 15f), 100);
+            go.transform.position = new Vector3(-15f, Random.Range(3f, 15f), 100);
         else
             go.transform.position = new Vector3(Random.Range(-15f, 10f), Random.Range(3f, 15f), 100);
         float size = Random.Range(1f, 1.25f);

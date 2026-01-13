@@ -2,6 +2,7 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using TMPro;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.VisualScripting;
@@ -158,33 +159,37 @@ public class Hand : MonoBehaviour
             Quaternion targetRot = Quaternion.Euler(0, 0, angle);
             Transform card = hand[i].transform;
             //move cards
-            card.DOMove(targetPos, moveDuration).SetEase(Ease.OutQuad);
+            card.DOMove(targetPos, moveDuration).SetEase(Ease.OutQuad).OnComplete(() =>
+            {
+              card.isHoverable = true;  
+            });
             card.DORotateQuaternion(targetRot, moveDuration);
             // Sorting so middle cards appear on top
             card.GetComponentInChildren<Canvas>().sortingOrder = i + 100;
             card.GetComponent<SpriteRenderer>().sortingOrder = i + 100;
         }
         //clear current caddies
-        foreach (GameObject go in caddieDisplays)
-        {
-            Destroy(go);
-        }
-        caddieDisplays.Clear();
+        // foreach (GameObject go in caddieDisplays)
+        // {
+        //     Destroy(go);
+        // }
+        // caddieDisplays.Clear();
         //draw caddies
-        foreach (GameObject go in caddies)
-        {
-            GameObject newCaddie = Instantiate(caddieDisplayObj, GameObject.Find("MainCanvas").transform);
-            newCaddie.GetComponent<RectTransform>().anchoredPosition = new Vector3(-300 + caddieDisplays.Count * 75, 150, 0);
-            newCaddie.GetComponent<caddieDisplay>().caddieRef = go;
-            caddieDisplays.Add(newCaddie);
-        }
+        // foreach (GameObject go in caddies)
+        // {
+        //     GameObject newCaddie = Instantiate(caddieDisplayObj, GameObject.Find("MainCanvas").transform);
+        //     newCaddie.GetComponent<RectTransform>().anchoredPosition = new Vector3(-300 + caddieDisplays.Count * 75, 150, 0);
+        //     newCaddie.GetComponent<caddieDisplay>().caddieRef = go;
+        //     caddieDisplays.Add(newCaddie);
+        // }
         //Update deck count
         if (GameObject.Find("DeckCount") != null)
             GameObject.Find("DeckCount").GetComponent<TextMeshProUGUI>().text = currentDeck.Count.ToString();
     }
 
-    //Draw 'amount' cards to your hand
-    public void DrawCard(int amount)
+    //Draw 'amount' cards to your hand, one at a time
+    //completeCallaback is called after all cards are drawn
+    public void DrawCard(int amount, Action completeCallback = null)
     {
         //draw card
         //for (int i = 0; i < amount; i++)
@@ -209,9 +214,8 @@ public class Hand : MonoBehaviour
             if (currentDeck.Count == 0 && GameObject.Find("CourseManager").GetComponent<Course>().currentRival == 5)
                 GameObject.Find("CourseManager").GetComponent<Course>().strokeCount++;
             //animate drawing the card
-            drawnCard.GetComponent<Draggable>().AnimateDraw(amount);
+            drawnCard.GetComponent<Draggable>().AnimateDraw(amount, completeCallback);
         }
-        //DisplayHand(); this is done when the draw animation completes
     }
 
     //draws a specific card
@@ -240,8 +244,8 @@ public class Hand : MonoBehaviour
         {
             discardPile.Remove(card);
         }
-        baseDeck.Remove(card.GetComponent<Draggable>().baseReference);
-        Destroy(card.GetComponent<Draggable>().baseReference);
+        // baseDeck.Remove(card.GetComponent<Draggable>().baseReference);
+        // Destroy(card.GetComponent<Draggable>().baseReference);
         Destroy(card);
     }
 
@@ -269,14 +273,16 @@ public class Hand : MonoBehaviour
 
     public IEnumerator WaitForDiscard()
     {
+        //create instruction obj
         GameObject go = Instantiate(instructionTextObj, GameObject.Find("MainCanvas").transform);
         go.transform.position = new Vector3(-75, 50, 100);
         go.SetActive(true);
         go.GetComponentInChildren<TextMeshProUGUI>().text = "Drag a card here to discard it";
         waitingForDiscard = true;
+        //wait for card to be dragged to discard
         while (waitingForDiscard)
             yield return null;
-        go.SetActive(false);
+        Destroy(go);
     }
 
     //returns a random upgrade card
@@ -436,6 +442,7 @@ public class Hand : MonoBehaviour
                     h.collider.GetComponent<SpriteRenderer>().sortingOrder : int.MinValue
             )
             .First();
+        //if we started hovering a different card
         if (hoveringCard != null && hoveringCard != topHit.collider.gameObject)
         {
             //stop hovering
@@ -443,6 +450,7 @@ public class Hand : MonoBehaviour
             hoveringCard = null;
             DisplayHand();
         }
+        //only care about hovering cards
         if (topHit.collider.GetComponent<Draggable>() != null)
         {
             if (Input.GetMouseButtonDown(0))

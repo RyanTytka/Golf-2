@@ -14,6 +14,8 @@ public class scorecard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     public GameObject courseTypeImageObj, rivalImageObj, rivalNameObj, rivalScoreObj;
     public bool hoverDisplay;
     public List<Sprite> courseImages;
+    public List<Sprite> headerImages;
+    public GameObject headerObj;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -74,6 +76,8 @@ public class scorecard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         }
         string totalMod = total > 0 ? "+" : "";
         scoreTextObjs[9].GetComponent<TextMeshProUGUI>().text = totalMod + total;
+        //scorecard header
+        headerObj.GetComponent<SpriteRenderer>().sprite = headerImages[(int)course.courseType];
     }
 
     //update this obj to show the recap for specified course data
