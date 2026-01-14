@@ -1,15 +1,11 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Numerics;
-using System.Security.Cryptography.X509Certificates;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using UnityEngine.XR;
 
 public class Draggable : MonoBehaviour
 {
@@ -28,7 +24,7 @@ public class Draggable : MonoBehaviour
         {
             GetComponent<upgrades>().UpdateView();
             if(cardName == "Lone Ranger")
-                carry -= GameObject.Find("GameManager").GetComponent<Hand>().hand.count - 1;
+                carry -= GameObject.Find("GameManager").GetComponent<Hand>().hand.Count - 1;
             return carry + GetComponent<upgrades>().Stats()[0]; 
         } 
     }
@@ -598,7 +594,7 @@ public class Draggable : MonoBehaviour
 
     //animate this card being drawn from bag to hand
     //drawAmount: if > 1, draw another card after done drawing this one
-    public void AnimateDraw(int drawAmount, Action completeCallback = null)
+    public void AnimateDraw(int drawAmount, System.Action completeCallback = null)
     {
         isHoverable = false;
         Vector3 startPosition = new(-8f, -8f);
@@ -711,15 +707,15 @@ public class Draggable : MonoBehaviour
     {
         isHoverable = false;
         //animation variables
-        float moveDuration = 1.5f;
-        Vector3 endPos = toss ? new(-10f, -10f) : new(10f, -10f); //find correct end pos
+        float moveDuration = 1.0f;
+        Vector3 endPos =  new(-5f, 5f); //find correct end pos
         // Set sort order so it is in front of everything
         GetComponentInChildren<Canvas>().sortingOrder = 1000;
         GetComponent<SpriteRenderer>().sortingOrder = 1000;
         //move the card while scaling it down
         Sequence seq = DOTween.Sequence(); 
-        seq.Join(transform.DOMove(endPos, duration)); 
-        seq.Join(transform.DOScale(endPos, duration).SetEase(Ease.InQuad)); 
+        seq.Join(transform.DOMove(endPos, moveDuration)); 
+        seq.Join(transform.DOScale(new Vector3(0,0), moveDuration).SetEase(Ease.InQuad)); 
         // seq.Play();
         //create the caddie icon when done
         Hand h = GameObject.Find("GameManager").GetComponent<Hand>();
@@ -727,12 +723,12 @@ public class Draggable : MonoBehaviour
         {
             GameObject newCaddie = Instantiate(h.caddieDisplayObj, GameObject.Find("MainCanvas").transform);
             newCaddie.GetComponent<RectTransform>().anchoredPosition = new Vector3(-300 + h.caddieDisplays.Count * 75, 150, 0);
-            newCaddie.GetComponent<RectTransform>().scale = new Vector3(0,0,0);
+            newCaddie.GetComponent<RectTransform>().localScale = new Vector3(0,0,0);
             newCaddie.GetComponent<caddieDisplay>().caddieRef = this.gameObject;
             h.caddieDisplays.Add(newCaddie);
             this.gameObject.SetActive(false);
             //animate caddie appearing
-            newCaddie.transform.DOScale(Vector.one, 1f).Ease(Ease.Bounce__);
+            newCaddie.transform.DOScale(Vector3.one, 1f).SetEase(Ease.InBounce);
             // refresh hand
             GameObject.Find("GameManager").GetComponent<Hand>().DisplayHand();
         });

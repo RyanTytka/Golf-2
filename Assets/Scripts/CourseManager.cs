@@ -2,7 +2,6 @@ using DG.Tweening;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Numerics;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -237,7 +236,7 @@ public class Course : MonoBehaviour
     public void NewCourse()
     {
         //set initial course data
-        holeNum = 8; //note: this will be incremented once before each hole
+        holeNum = 0; //note: this will be incremented once before each hole
         courseNum++;
         if (nextCourse == -1)
         {
@@ -633,7 +632,7 @@ public class Course : MonoBehaviour
         else
             ratio = (swing.landIndex - swing.startIndex) / (swing.landIndex - swing.endIndex);
         AnimationCurve curve = new AnimationCurve(new Keyframe(0f,1f,0f,-2f), new Keyframe(1f + ratio, 0f, -2f, 0f));
-        float shotLength = swing.endIndex - swing.startIndex / 10f;
+        float shotLength = (swing.endIndex - swing.startIndex) / 5f; // need less linear curve. short shots too fast and long shots too slow
         //send the ball on its path
         DOPath = ballObj.transform.DOPath(path, shotLength, PathType.Linear).SetEase(Ease.OutCubic).OnUpdate(() =>
         {
@@ -657,7 +656,7 @@ public class Course : MonoBehaviour
         //first, move the camera to where the ball is
         Vector3 cameraMoveTo = new Vector3(0,0,0);
         float cameraMoveDuration = 2f;
-        courseDisplay.transform.DOMove(cameraMoveTo, cameraMoveDuration);
+        //courseDisplay.transform.DOMove(cameraMoveTo, cameraMoveDuration);
         //if the shot goes far enough, the camera travels with the ball
         //finally, settle the camera where the ball lies
     }

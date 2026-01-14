@@ -1056,6 +1056,8 @@ MonoBehaviour:
   rivalScoreObj: {fileID: 0}
   hoverDisplay: 1
   courseImages: []
+  headerImages: []
+  headerObj: {fileID: 0}
 --- !u!61 &105830636
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5889,6 +5891,13 @@ MonoBehaviour:
   rivalScoreObj: {fileID: 0}
   hoverDisplay: 0
   courseImages: []
+  headerImages:
+  - {fileID: 376699155, guid: 63434eced0bf7eb4aaf262b4d6226e2b, type: 3}
+  - {fileID: -2138586194, guid: 63434eced0bf7eb4aaf262b4d6226e2b, type: 3}
+  - {fileID: -1654507113, guid: 63434eced0bf7eb4aaf262b4d6226e2b, type: 3}
+  - {fileID: -267354448, guid: 63434eced0bf7eb4aaf262b4d6226e2b, type: 3}
+  - {fileID: -1153679343, guid: 63434eced0bf7eb4aaf262b4d6226e2b, type: 3}
+  headerObj: {fileID: 685129607}
 --- !u!1 &726561682
 GameObject:
   m_ObjectHideFlags: 0

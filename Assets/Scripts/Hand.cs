@@ -2,10 +2,7 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
 using TMPro;
-using Unity.Collections.LowLevel.Unsafe;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -161,7 +158,7 @@ public class Hand : MonoBehaviour
             //move cards
             card.DOMove(targetPos, moveDuration).SetEase(Ease.OutQuad).OnComplete(() =>
             {
-              card.isHoverable = true;  
+              card.GetComponent<Draggable>().isHoverable = true;  
             });
             card.DORotateQuaternion(targetRot, moveDuration);
             // Sorting so middle cards appear on top
@@ -189,7 +186,7 @@ public class Hand : MonoBehaviour
 
     //Draw 'amount' cards to your hand, one at a time
     //completeCallaback is called after all cards are drawn
-    public void DrawCard(int amount, Action completeCallback = null)
+    public void DrawCard(int amount, System.Action completeCallback = null)
     {
         //draw card
         //for (int i = 0; i < amount; i++)

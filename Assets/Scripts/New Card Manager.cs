@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class NewCardManager : MonoBehaviour
 {
@@ -80,9 +80,9 @@ public class NewCardManager : MonoBehaviour
                 cardOption.GetComponent<Draggable>().UpdateCard();
                 cardOption.transform.parent = gameObject.transform;
                 //start face down
-                cardOption.GetComponent<Draggable>().cardBack.SetActive(true);
-                cardOption.GetComponent<Draggable>().typeIconObj.SetActive(false);
-                cardOption.transform.localScale.x = Vector3.zero;
+                //cardOption.GetComponent<Draggable>().cardBack.SetActive(true);
+                //cardOption.GetComponent<Draggable>().typeIconObj.SetActive(false);
+                cardOption.transform.localScale = new Vector3(0,1,1);
                 cardOption.transform.DOScaleX(1f, 0.5f).OnComplete(() =>
                 {
                     //spend tees

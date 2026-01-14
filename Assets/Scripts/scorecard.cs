@@ -77,7 +77,7 @@ public class scorecard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         string totalMod = total > 0 ? "+" : "";
         scoreTextObjs[9].GetComponent<TextMeshProUGUI>().text = totalMod + total;
         //scorecard header
-        headerObj.GetComponent<SpriteRenderer>().sprite = headerImages[(int)course.courseType];
+        headerObj.GetComponent<Image>().sprite = headerImages[(int)course.courseType];
     }
 
     //update this obj to show the recap for specified course data
