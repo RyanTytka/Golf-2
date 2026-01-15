@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -279,47 +280,51 @@ public class Draggable : MonoBehaviour
         }
         if (dragging && (draggable || GameObject.Find("GameManager").GetComponent<Hand>().waitingForDiscard))
         {
+            //snap card to mouse
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             Vector3 rayPoint = ray.GetPoint(distance);
             transform.position = rayPoint + startDist;
             //indicate that this can be played (or stop indicating)
-            bool inPlayZone = transform.position.y > 0;
-            if (inPlayZone && !indicatingPlay)
+            if(GameObject.Find("GameManager").GetComponent<Hand>().waitingForDiscard == false)
             {
-                indicatingPlay = true;
-                transform.DOKill(false);
-                wiggleTween = transform.DOPunchRotation(
-                    new Vector3(0, 0, 8f),   // wiggle angle
-                    0.4f,                    // duration
-                    6                        //Vibrato
-                ).SetLoops(-1, LoopType.Restart);
-            }
-            else if (!inPlayZone && indicatingPlay)
-            {
-                indicatingPlay = false;
-                if (wiggleTween != null)
-                    wiggleTween.Kill();
-                transform.DORotate(Vector3.zero, 0.15f).SetEase(Ease.OutQuad);
+                bool inPlayZone = transform.position.y > 0;
+                if (inPlayZone && !indicatingPlay)
+                {
+                    indicatingPlay = true;
+                    transform.DOKill(false);
+                    wiggleTween = transform.DOPunchRotation(
+                        new Vector3(0, 0, 8f),   // wiggle angle
+                        0.4f,                    // duration
+                        6                        //Vibrato
+                    ).SetLoops(-1, LoopType.Restart);
+                }
+                else if (!inPlayZone && indicatingPlay)
+                {
+                    indicatingPlay = false;
+                    if (wiggleTween != null)
+                        wiggleTween.Kill();
+                    transform.DORotate(Vector3.zero, 0.15f).SetEase(Ease.OutQuad);
+                }
             }
         }
     }
 
-    private IEnumerator ReturnToStart()
-    {
-        Vector3 currentPos = transform.position;
-        float elapsed = 0f;
+    // private IEnumerator ReturnToStart()
+    // {
+    //     Vector3 currentPos = transform.position;
+    //     float elapsed = 0f;
 
-        while (elapsed < returnDuration)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / returnDuration);
-            transform.position = Vector3.Lerp(currentPos, startPos, t);
-            yield return null;
-        }
+    //     while (elapsed < returnDuration)
+    //     {
+    //         elapsed += Time.deltaTime;
+    //         float t = Mathf.Clamp01(elapsed / returnDuration);
+    //         transform.position = Vector3.Lerp(currentPos, startPos, t);
+    //         yield return null;
+    //     }
 
-        transform.position = startPos;
-        returnCoroutine = null;
-    }
+    //     transform.position = startPos;
+    //     returnCoroutine = null;
+    // }
 
     //Update Text and icons on card
     public void UpdateCard()
@@ -547,6 +552,27 @@ public class Draggable : MonoBehaviour
                     isStillActive = false;
                 }
                 break;
+            // following are not yet implemented:
+            case "Pocket Aces":
+                //Toss 2 cards from your deck then gain 2 luck
+                // h.Toss(h.currentDeck[0]);
+                c.luck += 2;
+                break;
+            case "Unburden":
+                //toss each card left in your deck. Gain 10 power for each
+                // while(h.currentDeck.Count > 0)
+                // {
+                    // h.Toss(h.currentDeck[0]);
+                    // c.power += 10;
+                // }
+                break;
+            case "Recycle":
+                //toss your hand. then draw your deck
+                // while(h.hand.Count > 0)
+                // {
+                //     h.Toss(h.hand[0]);
+                // }
+                // h.DrawCard(h.currentDeck.Count);
         }
         //Update view
         c.DisplayCourse();
@@ -599,7 +625,7 @@ public class Draggable : MonoBehaviour
         isHoverable = false;
         Vector3 startPosition = new(-8f, -8f);
         Vector3 handPosition = new(-2f, 0f);
-        float moveDuration = 0.75f; 
+        float moveDuration = 0.5f; 
         float flipDuration = 0.25f;
         float arcHeight = 2f;
         transform.position = startPosition;
@@ -653,7 +679,8 @@ public class Draggable : MonoBehaviour
 
     //animate this card being discarded
     //if toss = true, then this tosses instead of discard (animate to left)
-    public void AnimateDiscard(bool toss = false)
+    //completeCallback will call a function when complete
+    public void AnimateDiscard(bool toss = false, System.Action completeCallback = null)
     {
         isHoverable = false;
         //remove this now so and hand displays while moving wont touch this
@@ -662,6 +689,7 @@ public class Draggable : MonoBehaviour
         float moveDuration = 1.5f;
         float rotateDuration = 0.75f;
         float arcHeight = 3f;
+        Vector3 rotation = toss ? new Vector3(0, 0, 180f) : new Vector3(0, 0, -180f);
         Vector3 endPos = toss ? new(-10f, -10f) : new(10f, -10f);
         Vector3 controlPoint = (transform.position + endPos) / 2f;
         controlPoint.y = transform.position.y + arcHeight;
@@ -681,7 +709,7 @@ public class Draggable : MonoBehaviour
         // Rotate upside down WHILE moving
         seq.Join(
             transform.DORotate(
-                new Vector3(0, 0, -180f),
+                rotation,
                 rotateDuration,
                 RotateMode.FastBeyond360
             ).SetEase(Ease.InOutQuad)
@@ -699,6 +727,8 @@ public class Draggable : MonoBehaviour
                 GameObject.Find("GameManager").GetComponent<Hand>().discardPile.Add(this.gameObject);
             }
             GameObject.Find("GameManager").GetComponent<Hand>().DisplayHand();
+            if (completeCallback != null)
+                completeCallback.Invoke();
         });
     }
 
@@ -706,9 +736,10 @@ public class Draggable : MonoBehaviour
     public void PlayCaddieAnimation()
     {
         isHoverable = false;
+        Hand h = GameObject.Find("GameManager").GetComponent<Hand>();
         //animation variables
         float moveDuration = 1.0f;
-        Vector3 endPos =  new(-5f, 5f); //find correct end pos
+        Vector3 endPos =  new(h.caddieDisplays.Count * 1 - 5, 2f);
         // Set sort order so it is in front of everything
         GetComponentInChildren<Canvas>().sortingOrder = 1000;
         GetComponent<SpriteRenderer>().sortingOrder = 1000;
@@ -718,12 +749,12 @@ public class Draggable : MonoBehaviour
         seq.Join(transform.DOScale(new Vector3(0,0), moveDuration).SetEase(Ease.InQuad)); 
         // seq.Play();
         //create the caddie icon when done
-        Hand h = GameObject.Find("GameManager").GetComponent<Hand>();
         seq.OnComplete(() =>
         {
-            GameObject newCaddie = Instantiate(h.caddieDisplayObj, GameObject.Find("MainCanvas").transform);
-            newCaddie.GetComponent<RectTransform>().anchoredPosition = new Vector3(-300 + h.caddieDisplays.Count * 75, 150, 0);
-            newCaddie.GetComponent<RectTransform>().localScale = new Vector3(0,0,0);
+            int NeedToChangePrefabToUseSpriteRendererInsteadOfUIImage;
+            GameObject newCaddie = Instantiate(h.caddieDisplayObj, GameObject.Find("CourseDisplay").transform);
+            newCaddie.transform.position = endPos;
+            newCaddie.transform.localScale = new Vector3(0,0,0);
             newCaddie.GetComponent<caddieDisplay>().caddieRef = this.gameObject;
             h.caddieDisplays.Add(newCaddie);
             this.gameObject.SetActive(false);

@@ -2,6 +2,7 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -135,6 +136,7 @@ public class Hand : MonoBehaviour
 
         for (int i = 0; i < count; i++)
         {
+            if(hand[i].GetComponent<Draggable>().onDisplay) continue; //dont move displayed cards
             hand[i].SetActive(true);
             hand[i].GetComponent<Draggable>().UpdateCard();
             float t = (count == 1) ? 0f : (float)i / (count - 1);
@@ -152,6 +154,13 @@ public class Hand : MonoBehaviour
             {
                 y += 1f;
             }
+            //hovering
+            Vector3 scale = Vector3.One;
+            if(hand[i] == hoveringCard)
+            {
+                y += 0.25f;
+                scale = new Vector3(1.2f, 1.2f, 1);
+            }
             Vector3 targetPos = new(x + xPos, y + yPos, 0);
             Quaternion targetRot = Quaternion.Euler(0, 0, angle);
             Transform card = hand[i].transform;
@@ -162,23 +171,9 @@ public class Hand : MonoBehaviour
             });
             card.DORotateQuaternion(targetRot, moveDuration);
             // Sorting so middle cards appear on top
-            card.GetComponentInChildren<Canvas>().sortingOrder = i + 100;
-            card.GetComponent<SpriteRenderer>().sortingOrder = i + 100;
+            card.GetComponentInChildren<Canvas>().sortingOrder = card.gameObject == hoveringCard ? 1000 : i + 100;
+            card.GetComponent<SpriteRenderer>().sortingOrder = card.gameObject == hoveringCard ? 1000 : i + 100;
         }
-        //clear current caddies
-        // foreach (GameObject go in caddieDisplays)
-        // {
-        //     Destroy(go);
-        // }
-        // caddieDisplays.Clear();
-        //draw caddies
-        // foreach (GameObject go in caddies)
-        // {
-        //     GameObject newCaddie = Instantiate(caddieDisplayObj, GameObject.Find("MainCanvas").transform);
-        //     newCaddie.GetComponent<RectTransform>().anchoredPosition = new Vector3(-300 + caddieDisplays.Count * 75, 150, 0);
-        //     newCaddie.GetComponent<caddieDisplay>().caddieRef = go;
-        //     caddieDisplays.Add(newCaddie);
-        // }
         //Update deck count
         if (GameObject.Find("DeckCount") != null)
             GameObject.Find("DeckCount").GetComponent<TextMeshProUGUI>().text = currentDeck.Count.ToString();
@@ -466,11 +461,12 @@ public class Hand : MonoBehaviour
                         {
                             //start hovering the card
                             hoveringCard = topHit.collider.gameObject;
-                            hoveringCard.GetComponentInChildren<Canvas>().sortingOrder = 1000;
-                            hoveringCard.GetComponent<SpriteRenderer>().sortingOrder = 1000;
-                            hoveringCard.transform.DOKill();
-                            hoveringCard.transform.DOScale(1.2f, 0.15f).SetEase(Ease.OutQuad);
-                            hoveringCard.transform.DOLocalMoveY(hoveringCard.transform.localPosition.y + 0.25f, 0.15f).SetEase(Ease.OutQuad);
+                            DisplayHand();
+                            // hoveringCard.GetComponentInChildren<Canvas>().sortingOrder = 1000;
+                            // hoveringCard.GetComponent<SpriteRenderer>().sortingOrder = 1000;
+                            // hoveringCard.transform.DOKill();
+                            // hoveringCard.transform.DOScale(1.2f, 0.15f).SetEase(Ease.OutQuad);
+                            // hoveringCard.transform.DOLocalMoveY(hoveringCard.transform.localPosition.y + 0.25f, 0.15f).SetEase(Ease.OutQuad);
                         }
                     }
                 }

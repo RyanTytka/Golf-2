@@ -14,26 +14,27 @@ more bg elements
 
 high priority:
 add: camera track ball while moving
-bug: using arrow keys to move course before clicking makes bg jump
-bug: type icons not showing on cards
+bug: using arrow keys to move course before clicking makes bg jump (not always)
 bug: had empty space in hand either from driver being tossed or from sand or from ability played
 bug: ball is visible in the shop
 bug: there is an error when no roll
 bug: breaks when scroll course while swinging
 bug: hit escape key in shop gives error. need settings menu anyways
 add: view bag button in shop
-add: add back in new distance markers (one above ball, one when mouse highlights course piece)
-bug: dragging card while waiting for discard triggers playable wiggles
-bug: waiting for discard needs to straighten oout displayed card (and show discard area)
-bug: selecting card in hand resets it sort order
+add: add new distance markers (one above ball, one when mouse highlights course piece)
+bug: waiting for discard does not show instructions 
 low:
 bug: swing arc appears in front of ball while swinging
 add: roll over make it say luck used instead of penalty if you have luck
 add: animation/indicator for drivers
-bug: clicking on a card in hand will lower it slightly while keeping it large
 add: better wait for discard graphics (transulcent black over everything but hand, drag card to middle of screen to discard)
 
 ready for test:
+--bug: type icons not showing on cards
+--bug: waiting for discard needs to straighten out displayed card 
+--bug: clicking on a card in hand will lower it slightly while keeping it large
+--bug: selecting card in hand resets it sort order
+--bug: dragging card while waiting for discard triggers playable wiggles
 -- (this was intended. need to update card desc)--bug: "dig through bag" card has timing issues (discards before done drawing)  
 --bug: "lone ranger" card does not update its carry text when hand changes 
 --bug: clouds can appear on screen
@@ -45,9 +46,7 @@ ready for test:
 
 card ideas:
 toss synergy
-	-ability: Toss the top 3 cards of your deck. Gain 3 Luck.
-	-ability: Toss a card from your hand. Gain 50 Power.
 	-club: Toss this after use
-	-caddie: when you toss one or more cards, draw a card
-	-ability: if you have 5 or more tossed cards, lose 1 stroke. Toss this.
+	-caddie: when you toss a card, gain 10 power.
+	-Ability: Can't be played. When this is tossed, draw 2.
 club: +10 carry  for each card drawn while this is in your hand
