@@ -65,9 +65,9 @@ public class Draggable : MonoBehaviour
     private float distance;
     private Vector3 startDist;
     private Vector3 startPos;
-    private float returnDuration = 0.25f;
+    //private float returnDuration = 0.25f;
     private Coroutine returnCoroutine;
-    private bool onDisplay = false; //true if this card is being displayed and not interactable
+    public bool onDisplay = false; //true if this card is being displayed and not interactable
     private Vector3 displayPos; //where this should be displayed if onDisplay is true
     private Vector3 originalPosition;
     private Vector3 originalScale;
@@ -573,6 +573,7 @@ public class Draggable : MonoBehaviour
                 //     h.Toss(h.hand[0]);
                 // }
                 // h.DrawCard(h.currentDeck.Count);
+                break;
         }
         //Update view
         c.DisplayCourse();
@@ -751,15 +752,15 @@ public class Draggable : MonoBehaviour
         //create the caddie icon when done
         seq.OnComplete(() =>
         {
-            int NeedToChangePrefabToUseSpriteRendererInsteadOfUIImage;
-            GameObject newCaddie = Instantiate(h.caddieDisplayObj, GameObject.Find("CourseDisplay").transform);
-            newCaddie.transform.position = endPos;
-            newCaddie.transform.localScale = new Vector3(0,0,0);
+            GameObject newCaddie = Instantiate(h.caddieDisplayObj, GameObject.Find("MainCanvas").transform);
+            newCaddie.GetComponent<RectTransform>().position = endPos;
+            newCaddie.GetComponent<RectTransform>().localScale = new Vector3(0,0,0);
             newCaddie.GetComponent<caddieDisplay>().caddieRef = this.gameObject;
+            newCaddie.GetComponent<Image>().sprite = GameObject.Find("GameManager").GetComponent<caddieManager>().caddieIcons[0];
             h.caddieDisplays.Add(newCaddie);
             this.gameObject.SetActive(false);
             //animate caddie appearing
-            newCaddie.transform.DOScale(Vector3.one, 1f).SetEase(Ease.InBounce);
+            newCaddie.GetComponent<RectTransform>().DOScale(Vector3.one, 1f).SetEase(Ease.OutElastic);
             // refresh hand
             GameObject.Find("GameManager").GetComponent<Hand>().DisplayHand();
         });

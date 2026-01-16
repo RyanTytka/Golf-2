@@ -2,7 +2,6 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -155,7 +154,7 @@ public class Hand : MonoBehaviour
                 y += 1f;
             }
             //hovering
-            Vector3 scale = Vector3.One;
+            Vector3 scale = Vector3.one;
             if(hand[i] == hoveringCard)
             {
                 y += 0.25f;
