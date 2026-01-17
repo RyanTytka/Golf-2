@@ -58,6 +58,7 @@ public class Draggable : MonoBehaviour
     public GameObject baseReference; //reference to the obj this is cloned from in the base deck
     public GameObject cardBack; //card back that is shown when card is face down and disabled when face up
     public bool isHoverable = false; //do not enlarge card when hovered if this is false
+    public Sprite caddieIcon; //if this is a caddie and is played, this image will be the caddie icon
 
     //Internal Helper Variables
     //these are used for when dragging
@@ -756,7 +757,7 @@ public class Draggable : MonoBehaviour
             newCaddie.GetComponent<RectTransform>().position = endPos;
             newCaddie.GetComponent<RectTransform>().localScale = new Vector3(0,0,0);
             newCaddie.GetComponent<caddieDisplay>().caddieRef = this.gameObject;
-            newCaddie.GetComponent<Image>().sprite = GameObject.Find("GameManager").GetComponent<caddieManager>().caddieIcons[0];
+            newCaddie.GetComponent<Image>().sprite = caddieIcon;
             h.caddieDisplays.Add(newCaddie);
             this.gameObject.SetActive(false);
             //animate caddie appearing

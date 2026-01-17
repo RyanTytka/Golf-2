@@ -121,6 +121,7 @@ public class NewCardManager : MonoBehaviour
                 Destroy(go);
             }
             c.courseLayout.Clear();
+            c.ballObj.SetActive(false);
             //reset shot highlight
             GameObject.Find("CourseManager").GetComponent<LineRenderer>().positionCount = 0;
             if (c.currentDot != null)

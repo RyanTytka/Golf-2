@@ -37,6 +37,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
+      propertyPath: caddieIcon
+      value: 
+      objectReference: {fileID: 21300000, guid: 289ce49d040e3924aa7bbffb0e92b61d, type: 3}
+    - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: description
       value: Your Irons have +20 Power and 20 Pinpoint
       objectReference: {fileID: 0}

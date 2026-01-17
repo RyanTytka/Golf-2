@@ -37,6 +37,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
+      propertyPath: caddieIcon
+      value: 
+      objectReference: {fileID: 21300000, guid: aee0a26138cba044e94f7a78e4785215, type: 3}
+    - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: description
       value: ' Gain 1 Luck after each shot'
       objectReference: {fileID: 0}

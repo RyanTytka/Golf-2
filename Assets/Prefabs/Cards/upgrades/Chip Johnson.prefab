@@ -37,6 +37,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
+      propertyPath: caddieIcon
+      value: 
+      objectReference: {fileID: 21300000, guid: 8f10ee6adf36bfd459cb5603898a270f, type: 3}
+    - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: description
       value: Double the carry of your Irons. You cannot use Woods.
       objectReference: {fileID: 0}

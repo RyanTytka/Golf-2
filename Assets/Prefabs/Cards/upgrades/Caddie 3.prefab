@@ -37,6 +37,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
+      propertyPath: caddieIcon
+      value: 
+      objectReference: {fileID: 21300000, guid: 80cf96395d295154cb95a956f0261f77, type: 3}
+    - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: description
       value: You gain 10 power for each caddie you have in play
       objectReference: {fileID: 0}

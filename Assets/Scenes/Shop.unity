@@ -1526,10 +1526,6 @@ MonoBehaviour:
   upgradePreview: {fileID: 1973585048}
   replaceUpgradePreview: {fileID: 1063008697}
   upgradePrefab: {fileID: 3645904731073294418, guid: f1a2268188345d84cac8c79e7712b827, type: 3}
-  shopCards:
-  - {fileID: 6027947537781880624, guid: f4f5473a9302d7546af47d567ecf7f0e, type: 3}
-  - {fileID: 6027947537781880624, guid: 03345574780e4d24493136b59ff60d16, type: 3}
-  - {fileID: 6027947537781880624, guid: 934db0cfdb4bed0499e64fcc59688167, type: 3}
   shopOptions: []
   courseImagesObj: {fileID: 687116613}
   courseImages:
@@ -2217,7 +2213,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3645904731073294418, guid: f1a2268188345d84cac8c79e7712b827, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8313937880697611977, guid: f1a2268188345d84cac8c79e7712b827, type: 3}

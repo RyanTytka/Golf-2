@@ -1,10 +1,7 @@
 scorecard headers
 status effect graphics
-need new view bag Icon
-view bag throws errors
 view bag does not hide course
 display course num in UI
-hole num should be flag icon
 need new tees Icon
 make cards more readable
 new ball sprite
@@ -13,33 +10,32 @@ more bg elements
 
 
 high priority:
-add: camera track ball while moving
-bug: using arrow keys to move course before clicking makes bg jump (not always)
-bug: had empty space in hand either from driver being tossed or from sand or from ability played
-bug: ball is visible in the shop
-bug: there is an error when no roll
-bug: breaks when scroll course while swinging
-bug: hit escape key in shop gives error. need settings menu anyways
-add: view bag button in shop
-add: add new distance markers (one above ball, one when mouse highlights course piece)
-bug: waiting for discard does not show instructions 
-bug: ball is behind course while moving
-bug: caddie display does not delete between holes
-add: update caddie display with pic of caddie
+hit escape key in shop gives error. need settings menu anyways
+add view bag button in shop
+add add new distance markers (one above ball, one when mouse highlights course piece)
+waiting for discard does not show instructions 
+desert course is almost all sand
+view deck is behind hand and ball
+view deck breaks when you click X button
+disable selecting cards once hole is done
+holes have too much space behind the green
+cannot go to next hole on course 2
 low:
-bug: swing arc appears in front of ball while swinging
-add: roll over make it say luck used instead of penalty if you have luck
-add: animation/indicator for drivers
-add: better wait for discard graphics (transulcent black over everything but hand, drag card to middle of screen to discard)
-
+using arrow keys to move course before clicking makes bg jump (not always based on bg element distance maybe?)
+roll over make it say luck used instead of penalty if you have luck
+add animation/indicator for drivers
+add better wait for discard graphics (transulcent black over everything but hand, drag card to middle of screen to discard)
+when play a caddie, make the move duration scale with distance moved
+dont delete hand/caddie/hole displays after hole until screen moves up
+change view bag button from a button to just clicking the bag
+add camera track ball while moving
+rivaly display is behind course
 
 ready for test:
--- (this was intended. need to update card desc)--bug: "dig through bag" card has timing issues (discards before done drawing)  
---bug: "lone ranger" card does not update its carry text when hand changes 
---bug: clouds can appear on screen
---add: ball move speed scale with shot length. also scale curve with roll length (no roll means ball slows down at end)
---add: support for reverse ball rolling
---better caddie art/animation
+(this was intended. need to update card desc)--bug: "dig through bag" card has timing issues (discards before done drawing)  
+bug: "lone ranger" card does not update its carry text when hand changes 
+bug: clouds can appear on screen
+add: support for reverse ball rolling
 
 
 card ideas:

@@ -112,10 +112,15 @@ public class Hand : MonoBehaviour
         {
             Destroy(go);
         }
-        currentDeck = new List<GameObject>();
-        hand = new List<GameObject>();
-        discardPile = new List<GameObject>();
-        caddies = new List<GameObject>();
+        foreach (GameObject go in caddieDisplays)
+        {
+            Destroy(go);
+        }
+        currentDeck = new();
+        hand = new();
+        discardPile = new();
+        caddies = new();
+        caddieDisplays = new();
     }
 
     public void DisplayHand()

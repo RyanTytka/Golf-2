@@ -236,7 +236,8 @@ public class Course : MonoBehaviour
     public void NewCourse()
     {
         //set initial course data
-        holeNum = 0; //note: this will be incremented once before each hole
+        ballObj.SetActive(true);
+        holeNum = 8; //note: this will be incremented once before each hole
         courseNum++;
         if (nextCourse == -1)
         {
@@ -512,7 +513,8 @@ public class Course : MonoBehaviour
     {
         GameObject.Find("RivalDisplay").GetComponent<rivalDisplay>().idNum = currentRival;
         GameObject.Find("RivalDisplay").GetComponent<rivalDisplay>().UpdateView();
-        GameObject.Find("Stroke").GetComponent<TextMeshProUGUI>().text = "Strokes: " + strokeCount + "  Hole: " + holeNum;
+        GameObject.Find("StrokeCount").GetComponent<TextMeshProUGUI>().text = strokeCount.ToString();
+        GameObject.Find("HoleCount").GetComponent<TextMeshProUGUI>().text = holeNum.ToString();
         GameObject.Find("TeeCount").GetComponent<TextMeshProUGUI>().text = tees.ToString();
         //Put pieces in their place
         int prevPieceType = 0;
@@ -654,9 +656,10 @@ public class Course : MonoBehaviour
         }).OnComplete(AfterHitBall);
         //make the camera move with the ball
         //first, move the camera to where the ball is
-        Vector3 cameraMoveTo = new Vector3(0,0,0);
-        float cameraMoveDuration = 2f;
-        //courseDisplay.transform.DOMove(cameraMoveTo, cameraMoveDuration);
+        //Vector3 courseMoveTo = courseDisplay.transform.position;
+        //courseMoveTo.x -= swing.endIndex - swing.startIndex;
+        //float cameraMoveDuration = 2f;
+        //courseDisplay.transform.DOMove(courseMoveTo, cameraMoveDuration);
         //if the shot goes far enough, the camera travels with the ball
         //finally, settle the camera where the ball lies
     }
@@ -1076,6 +1079,8 @@ public class Course : MonoBehaviour
         int totalPoints = arcSegments + 2;
         LineRenderer line = GetComponent<LineRenderer>();
         line.positionCount = totalPoints;
+        start.z = -1;
+        end.z = -1;
         //Arc points
         for (int i = 0; i <= arcSegments; i++)
         {
@@ -1117,7 +1122,7 @@ public class Course : MonoBehaviour
         //Display Score
         string[] score = { "ACE", "HOLE IN ONE", "EAGLE", "BIRDIE", "PAR", "BOGEY", "DOUBLE BOGEY", "TRIPLE BOGEY" };
         continueObj = Instantiate(finishText, GameObject.Find("MainCanvas").transform);
-        continueObj.transform.localPosition = new Vector3(0, 200, 80);
+        continueObj.transform.localPosition = new Vector3(0, 200, 50);
         if(strokeCount >= score.Length)
             continueObj.GetComponent<TextMeshProUGUI>().text = "+" + (strokeCount - pars[holeNum - 1]);
         else
