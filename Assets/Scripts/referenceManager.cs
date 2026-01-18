@@ -16,4 +16,5 @@ public class referenceManager : MonoBehaviour
     //pause canvas
     public GameObject pauseCanvas;
     public GameObject pauseScorecard;
+    public GameObject pauseButton; //resume button
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -223,7 +224,14 @@ public class Course : MonoBehaviour
     {
         paused = !paused;
         GameObject.Find("ReferenceManager").GetComponent<referenceManager>().pauseCanvas.SetActive(paused);
-        GameObject.Find("ReferenceManager").GetComponent<referenceManager>().pauseScorecard.GetComponent<scorecard>().ShowCurrentCard();
+        if (SceneManager.GetActiveScene().name == "Course")
+        {
+            //show scorecard
+            GameObject.Find("ReferenceManager").GetComponent<referenceManager>().pauseScorecard.GetComponent<scorecard>().ShowCurrentCard();
+        }
+        //add unpause function to resume button
+        GameObject.Find("ReferenceManager").GetComponent<referenceManager>().pauseButton.GetComponent<Button>().onClick.RemoveAllListeners();
+        GameObject.Find("ReferenceManager").GetComponent<referenceManager>().pauseButton.GetComponent<Button>().onClick.AddListener(TogglePause);
 
     }
 

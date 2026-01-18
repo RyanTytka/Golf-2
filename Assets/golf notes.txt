@@ -10,7 +10,6 @@ more bg elements
 
 
 high priority:
-hit escape key in shop gives error. need settings menu anyways
 add view bag button in shop
 add add new distance markers (one above ball, one when mouse highlights course piece)
 waiting for discard does not show instructions 
@@ -20,6 +19,7 @@ view deck breaks when you click X button
 disable selecting cards once hole is done
 holes have too much space behind the green
 cannot go to next hole on course 2
+help screen is behind course and ball and hand
 low:
 using arrow keys to move course before clicking makes bg jump (not always based on bg element distance maybe?)
 roll over make it say luck used instead of penalty if you have luck

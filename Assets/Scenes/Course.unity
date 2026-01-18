@@ -703,6 +703,7 @@ MonoBehaviour:
   takeCardButton: {fileID: 215681516}
   pauseCanvas: {fileID: 1107545206}
   pauseScorecard: {fileID: 712727944}
+  pauseButton: {fileID: 1498769144}
 --- !u!4 &47671540
 Transform:
   m_ObjectHideFlags: 0
