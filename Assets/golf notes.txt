@@ -15,7 +15,8 @@ add add new distance markers (one above ball, one when mouse highlights course p
 waiting for discard does not show instructions 
 desert course is almost all sand
 view deck is behind hand and ball
-view deck breaks when you click X button
+view deck can still drag course display
+remove a card button in shop scales on hover
 disable selecting cards once hole is done
 holes have too much space behind the green
 cannot go to next hole on course 2

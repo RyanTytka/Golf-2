@@ -4,8 +4,9 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.XR;
 using System.Linq;
+using DG.Tweening;
 
-public class deckViewer : MonoBehaviour
+public class deckViewer : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public GameObject backgroundPanel;
 
@@ -56,7 +57,7 @@ public class deckViewer : MonoBehaviour
     //create background and copies of cards in deck for player to look at
     private void OpenDeckView(List<GameObject> list, bool isRemoving = false, bool isUpgrading = false)
     {
-        //paus game
+        //pause game
         GameObject.Find("GameManager").GetComponent<Hand>().paused = true;
         //show black bg
         backgroundPanel.SetActive(true);
@@ -109,6 +110,23 @@ public class deckViewer : MonoBehaviour
         scrollOffset = 0f;
         cardContainer.transform.localPosition = Vector3.zero;
     }
+
+
+    private Tween scaleTween;
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        //scale this obj up on hover
+        scaleTween?.Kill();
+        scaleTween = transform.DOScale(new Vector3(1.2f, 1.2f, 1), 0.1f);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        //stop scaling this up
+        scaleTween?.Kill();
+        scaleTween = transform.DOScale(Vector3.one, 0.1f);
+    }
+
     void Update()
     {
         if (!backgroundPanel.activeSelf) return;
@@ -121,6 +139,8 @@ public class deckViewer : MonoBehaviour
             pointerData.position = Input.mousePosition;
 
             List<RaycastResult> results = new List<RaycastResult>();
+            raycaster = GetComponentInParent<Canvas>()
+                        .GetComponent<GraphicRaycaster>();
             raycaster.Raycast(pointerData, results);
 
             foreach (RaycastResult result in results)
