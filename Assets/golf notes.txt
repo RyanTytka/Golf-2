@@ -1,27 +1,26 @@
 scorecard headers
 status effect graphics
-view bag does not hide course
 display course num in UI
 need new tees Icon
 make cards more readable
 new ball sprite
 better shot preview arc
 more bg elements
-
+view discard pile
 
 high priority:
-add view bag button in shop
 add add new distance markers (one above ball, one when mouse highlights course piece)
 waiting for discard does not show instructions 
 desert course is almost all sand
-view deck is behind hand and ball
 view deck can still drag course display
-remove a card button in shop scales on hover
 disable selecting cards once hole is done
-holes have too much space behind the green
-cannot go to next hole on course 2
+holes have too much space behind the green (gameplay wise not ui wise)
 help screen is behind course and ball and hand
+rivaly display is behind course
+
 low:
+pause can still hover cards in hand (but not click them)
+clicking take card before camera is done scrolling after hole breaks shop
 using arrow keys to move course before clicking makes bg jump (not always based on bg element distance maybe?)
 roll over make it say luck used instead of penalty if you have luck
 add animation/indicator for drivers
@@ -30,7 +29,6 @@ when play a caddie, make the move duration scale with distance moved
 dont delete hand/caddie/hole displays after hole until screen moves up
 change view bag button from a button to just clicking the bag
 add camera track ball while moving
-rivaly display is behind course
 
 ready for test:
 (this was intended. need to update card desc)--bug: "dig through bag" card has timing issues (discards before done drawing)  

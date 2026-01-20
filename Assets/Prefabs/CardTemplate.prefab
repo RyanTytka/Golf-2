@@ -1081,6 +1081,8 @@ MonoBehaviour:
   baseReference: {fileID: 0}
   cardBack: {fileID: 8808256642606992661}
   isHoverable: 0
+  caddieIcon: {fileID: 0}
+  onDisplay: 0
 --- !u!61 &8151426438713169010
 BoxCollider2D:
   m_ObjectHideFlags: 0

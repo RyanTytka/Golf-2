@@ -94,6 +94,7 @@ public class deckViewer : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             newCard.GetComponent<Draggable>().isUpgradeView = isUpgrading;
             newCard.GetComponent<Draggable>().SetSortOrder(10);
             newCard.GetComponent<Draggable>().cardId = i;
+            newCard.GetComponent<Draggable>().SetSortOrder(2000);
             list[i].GetComponent<Draggable>().cardId = i;
             displayedObjs.Add(newCard);
             int row = i / columns;
@@ -139,8 +140,7 @@ public class deckViewer : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             pointerData.position = Input.mousePosition;
 
             List<RaycastResult> results = new List<RaycastResult>();
-            raycaster = GetComponentInParent<Canvas>()
-                        .GetComponent<GraphicRaycaster>();
+            raycaster = GameObject.Find("ViewDeckCanvas").GetComponent<Canvas>().GetComponent<GraphicRaycaster>();
             raycaster.Raycast(pointerData, results);
 
             foreach (RaycastResult result in results)

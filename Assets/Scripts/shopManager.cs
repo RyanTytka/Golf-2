@@ -197,7 +197,7 @@ public class shopManager : MonoBehaviour
         previewCard = card;
         previewCardPos = card.transform.localPosition;
         previewCardScale = card.transform.localScale;
-        previewCard.GetComponent<Draggable>().SetSortOrder(25);
+        previewCard.GetComponent<Draggable>().SetSortOrder(3000);
         yesButton.GetComponent<Button>().onClick.RemoveAllListeners();
         yesButton.SetActive(true);
         noButton.SetActive(true);
@@ -232,7 +232,7 @@ public class shopManager : MonoBehaviour
     {
         isPreviewing = false;
         previewCanvas.SetActive(false);
-        previewCard.GetComponent<Draggable>().SetSortOrder(10);
+        previewCard.GetComponent<Draggable>().SetSortOrder(2000);
         previewCard.GetComponent<Draggable>().StartCoroutine(previewCard.GetComponent<Draggable>().
             AnimateToPoint(previewCardPos, previewCardScale, true, false));
         previewCard = null;

@@ -1130,7 +1130,7 @@ public class Course : MonoBehaviour
         //Display Score
         string[] score = { "ACE", "HOLE IN ONE", "EAGLE", "BIRDIE", "PAR", "BOGEY", "DOUBLE BOGEY", "TRIPLE BOGEY" };
         continueObj = Instantiate(finishText, GameObject.Find("MainCanvas").transform);
-        continueObj.transform.localPosition = new Vector3(0, 200, 50);
+        continueObj.transform.localPosition = new Vector3(0, 200, 56);
         if(strokeCount >= score.Length)
             continueObj.GetComponent<TextMeshProUGUI>().text = "+" + (strokeCount - pars[holeNum - 1]);
         else
