@@ -1,32 +1,28 @@
 scorecard headers
 status effect graphics
-display course num in UI
 need new tees Icon
 make cards more readable
 new ball sprite
 better shot preview arc
 more bg elements
 view discard pile
+add putting mechanic
 
 high priority:
-add add new distance markers (one above ball, one when mouse highlights course piece)
+add new distance markers (one above ball, one when mouse highlights course piece)
 waiting for discard does not show instructions 
-desert course is almost all sand
 view deck can still drag course display
 disable selecting cards once hole is done
-holes have too much space behind the green (gameplay wise not ui wise)
 help screen is behind course and ball and hand
-rivaly display is behind course
+rival display is behind course
 
 low:
 pause can still hover cards in hand (but not click them)
-clicking take card before camera is done scrolling after hole breaks shop
 using arrow keys to move course before clicking makes bg jump (not always based on bg element distance maybe?)
 roll over make it say luck used instead of penalty if you have luck
 add animation/indicator for drivers
 add better wait for discard graphics (transulcent black over everything but hand, drag card to middle of screen to discard)
 when play a caddie, make the move duration scale with distance moved
-dont delete hand/caddie/hole displays after hole until screen moves up
 change view bag button from a button to just clicking the bag
 add camera track ball while moving
 
@@ -35,6 +31,9 @@ ready for test:
 bug: "lone ranger" card does not update its carry text when hand changes 
 bug: clouds can appear on screen
 add: support for reverse ball rolling
+desert course is almost all sand (fairway was set to sand, I undid this)
+clicking take card before camera is done scrolling after hole breaks shop
+dont delete hand/caddie/hole displays after hole until screen moves up
 
 
 card ideas:
@@ -43,3 +42,14 @@ toss synergy
 	-caddie: when you toss a card, gain 10 power.
 	-Ability: Can't be played. When this is tossed, draw 2.
 club: +10 carry  for each card drawn while this is in your hand
+
+
+misc notes:
+call nani
+deckbuilder fest in may 18-25
+add apex devast to glarb
+https://assetstore.unity.com/packages/2d/gui/icons/low-poly-pixel-ui-169751
+https://moxfield.com/decks/qh0n0I0vBEGtctP0CXK_Nw
+https://moxfield.com/decks/L088VAS-TEKk0-4BH0EmbQ
+https://moxfield.com/decks/vIqbX1YtykSoauuntSW3zA
+https://moxfield.com/decks/8JGeI90Pt02XtSP2O9qHwQ

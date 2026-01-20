@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using DG.Tweening;
+using System.Runtime.InteropServices;
 
 public class NewCardManager : MonoBehaviour
 {
@@ -55,6 +56,8 @@ public class NewCardManager : MonoBehaviour
     //move upgrade card to the deck obj and hide it.then continue to next hole/shop
     public void AddCardToDeck()
     {
+        //make sure we have finished scrolling up before doing anything
+        if (GameObject.Find("CourseManager").GetComponent<Course>().gamestate != Course.NEW_CARD_SELECT) return;
         GetComponent<Hand>().baseDeck.Add(cardOption);
         cardOption.transform.parent = GameObject.Find("BaseDeck").transform;
         GetComponent<Hand>().ClearUpgrades();
@@ -65,6 +68,8 @@ public class NewCardManager : MonoBehaviour
 
     public void Reroll()
     {
+        //make sure we have finished scrolling up before doing anything
+        if (GameObject.Find("CourseManager").GetComponent<Course>().gamestate != Course.NEW_CARD_SELECT) return;
         //flip current card over then flip new card over
         Sequence seq = DOTween.Sequence();
         seq.Append(
@@ -82,7 +87,7 @@ public class NewCardManager : MonoBehaviour
                 //start face down
                 //cardOption.GetComponent<Draggable>().cardBack.SetActive(true);
                 //cardOption.GetComponent<Draggable>().typeIconObj.SetActive(false);
-                cardOption.transform.localScale = new Vector3(0,1,1);
+                cardOption.transform.localScale = new Vector3(0, 1, 1);
                 cardOption.transform.DOScaleX(1f, 0.5f).OnComplete(() =>
                 {
                     //spend tees
@@ -99,6 +104,8 @@ public class NewCardManager : MonoBehaviour
 
     public void TakeTees()
     {
+        //make sure we have finished scrolling up before doing anything
+        if (GameObject.Find("CourseManager").GetComponent<Course>().gamestate != Course.NEW_CARD_SELECT) return;
         //add tees
         GameObject.Find("CourseManager").GetComponent<Course>().tees += currentTeeReward;
         //delete upgrade option
@@ -115,6 +122,7 @@ public class NewCardManager : MonoBehaviour
         //If just finished a course go to the shop
         if (c.holeNum >= 9)
         {
+            c.gameState = Course.GameState.SHOP;
             //clear last hole
             foreach (GameObject go in c.courseLayout)
             {
@@ -135,6 +143,7 @@ public class NewCardManager : MonoBehaviour
         }
         else
         {
+            c.gameState = Course.GameState.PLAYING;
             //otherwise, go to next hole
             //clear last hole
             foreach (GameObject go in c.courseLayout)

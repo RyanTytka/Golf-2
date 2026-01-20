@@ -26,6 +26,20 @@ public class backgroundManager : MonoBehaviour
     }
     public GameObjectList[] bgElements;
 
+    public void Debug_CycleBgs()
+    {
+        //cycle through bgs to check what they look like
+        StartCoroutine(CycleBgs());
+    }
+    private IEnumerator CycleBgs()
+    {
+        for (int i = 0; i < bgGroundImages.Length; i++)
+        {
+            bgGroundObj.GetComponent<Image>().sprite = bgGroundImages[i];
+            yield return new WaitForSeconds(2f);
+        }
+    }
+
     public void SetSprites(int courseType)
     {
         //set bg ground in the distance
@@ -36,11 +50,11 @@ public class backgroundManager : MonoBehaviour
         //sky
         //skyObj.GetComponent<Image>().sprite = skyImages[Random.Range(0, skyImages.Length)];
         //misc bg elements
-        float totalDistance = Random.Range(0f,3f);
+        float totalDistance = Random.Range(0f, 3f);
         int courseLength = GameObject.Find("CourseManager").GetComponent<Course>().courseLayout.Count;
         //calculate total weight
         int totalWeight = 0;
-        foreach(GameObject go in bgElements[courseType].items)
+        foreach (GameObject go in bgElements[courseType].items)
         {
             totalWeight += (int)go.GetComponent<backgroundElement>().spawnWeight;
         }
@@ -50,7 +64,7 @@ public class backgroundManager : MonoBehaviour
             //caluclate random obj
             int randValue = Random.Range(0, totalWeight);
             GameObject newElement = null;
-            foreach(GameObject randomGo in bgElements[courseType].items)
+            foreach (GameObject randomGo in bgElements[courseType].items)
             {
                 randValue -= (int)randomGo.GetComponent<backgroundElement>().spawnWeight;
                 if (randValue < 0)
@@ -67,7 +81,7 @@ public class backgroundManager : MonoBehaviour
             float size = be.size + Random.Range(0f, be.sizeVariation);
             be.parrallaxFactor = 1f / be.size * be.distance;
             go.transform.localScale = new Vector3(size, size);
-            totalDistance += Random.Range(0.25f,5f);
+            totalDistance += Random.Range(0.25f, 5f);
             if (be.sprite != null)
             {
                 go.GetComponent<SpriteRenderer>().sprite = be.sprite;
@@ -129,7 +143,7 @@ public class backgroundManager : MonoBehaviour
         GameObject go = Instantiate(bgElements[0].items[0], this.transform); //just use any bg object for clouds
         go.GetComponent<SpriteRenderer>().sprite = cloudImages[cloudType];
         go.GetComponent<Animator>().enabled = false;
-        if(leftSide)
+        if (leftSide)
             go.transform.position = new Vector3(-15f, Random.Range(3f, 15f), 100);
         else
             go.transform.position = new Vector3(Random.Range(-15f, 10f), Random.Range(3f, 15f), 100);
@@ -151,7 +165,7 @@ public class backgroundManager : MonoBehaviour
     public void UpdatePositions(float courseDelta)
     {
         //move trees
-        foreach(GameObject go in bgObjs)
+        foreach (GameObject go in bgObjs)
         {
             float parallaxX = GameObject.Find("CourseDisplay").transform.position.x - go.GetComponent<backgroundElement>().courseStartX;
             Vector3 pos = go.transform.localPosition;

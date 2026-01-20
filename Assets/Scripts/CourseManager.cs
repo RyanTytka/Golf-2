@@ -50,6 +50,7 @@ public class Course : MonoBehaviour
     public int holeNum = 0; //what number hole you are on
     public List<int> scores = new List<int>();
     public List<int> pars = new List<int>();
+    public GameState gameState = GameState.MAIN_MENU;
     public enum CourseType
     {
         plains,
@@ -57,6 +58,15 @@ public class Course : MonoBehaviour
         hills,
         beach,
         desert,
+    }
+    public enum GameState
+    {
+        MAIN_MENU,
+        PLAYING,
+        SHOWING_SCORE,
+        NEW_CARD_SELECT,
+        SHOP,
+        END_SCREEN
     }
     private enum CoursePieces
     {
@@ -237,6 +247,7 @@ public class Course : MonoBehaviour
 
     public void StartGame()
     {
+        gameState = GameState.PLAYING;
         NewCourse();
         GameObject.Find("GameManager").GetComponent<Hand>().StartGame();
     }
@@ -331,7 +342,7 @@ public class Course : MonoBehaviour
                 lengthMod = 3;
                 break;
             case CourseType.desert:
-                fairwayType = CoursePieces.SAND;
+                // fairwayType = CoursePieces.SAND;
                 lengthMod = 0;
                 break;
             case CourseType.beach:
@@ -342,7 +353,7 @@ public class Course : MonoBehaviour
                 break;
             case CourseType.forest:
                 lengthMod = -1;
-                fairwayType = CoursePieces.ROUGH;
+                // fairwayType = CoursePieces.ROUGH;
                 break;
         }
         int holeLength = Random.Range(42,46) + courseNum * 5 + lengthMod; //actual length
@@ -356,8 +367,8 @@ public class Course : MonoBehaviour
         }
         //Create Hazards
         int currentPos = Random.Range(1, 10);
-        int greenStartOffsetMin = 8; //space behind green before out of bounds
-        int greenStartOffsetMax = 14;
+        int greenStartOffsetMin = 6; //space behind green before out of bounds
+        int greenStartOffsetMax = 10;
         int greenLengthMin = 6 - courseNum / 3;
         int greenLengthMax = 10 - courseNum / 3;
         switch (courseType)
@@ -376,10 +387,10 @@ public class Course : MonoBehaviour
                     currentPos += patchSize + Random.Range(5 - courseNum / 2, 10 - courseNum / 2);
                 }
                 //large green
-                greenStartOffsetMin = 10;
-                greenStartOffsetMax = 16;
-                greenLengthMin = 8;
-                greenLengthMax = 12;
+                greenStartOffsetMin += 2;
+                greenStartOffsetMax += 2;
+                greenLengthMin += 2;
+                greenLengthMax += 2;
                 break;
             case CourseType.desert:
                 //large patches of rough and sand
@@ -395,10 +406,9 @@ public class Course : MonoBehaviour
                     currentPos += patchSize + Random.Range(4 - courseNum / 3, 7);
                 }
                 //large green
-                greenStartOffsetMin = 10;
-                greenStartOffsetMax = 16;
-                greenLengthMin = 8;
-                greenLengthMax = 12;
+                greenStartOffsetMin = 8;
+                greenLengthMin += 2;
+                greenLengthMax += 2;
                 break;
             case CourseType.beach:
                 //patches of sand and water
@@ -412,9 +422,8 @@ public class Course : MonoBehaviour
                     currentPos += patchSize + Random.Range(3 - courseNum / 3, 9 - courseNum / 2);
                 }
                 //small green
-                greenStartOffsetMin = 8;
-                greenStartOffsetMax = 14;
-                greenLengthMax = 8;
+                greenStartOffsetMax -= 2;
+                greenLengthMax -= 2;
                 break;
             case CourseType.hills:
                 //patches of water and large rough
@@ -429,8 +438,8 @@ public class Course : MonoBehaviour
                     currentPos += patchSize + Random.Range(3 - courseNum / 3, 7 - courseNum / 3);
                 }
                 //larger green
-                greenStartOffsetMax = 18;
-                greenLengthMax = 10;
+                greenStartOffsetMax += 2;
+                greenLengthMax += 2;
                 break;
             case CourseType.forest:
                 //patches of rough, sand, and water
@@ -445,10 +454,9 @@ public class Course : MonoBehaviour
                     AddHazardPatch(patchType, currentPos, patchSize);
                     currentPos += patchSize + Random.Range(1, 6 - courseNum / 2);
                 }
-                //small green
-                greenStartOffsetMin = 8;
-                greenStartOffsetMax = 14;
-                greenLengthMax = 8;
+                //small behind green
+                greenStartOffsetMin -= 2;
+                greenStartOffsetMax -= 2;
                 break;
         }
         //Tee box is always fairway
@@ -1123,6 +1131,7 @@ public class Course : MonoBehaviour
     public GameObject continueObj;
     public void GoToNextHole()
     {
+        gameState = GameState.SHOWING_SCORE;
         if (GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Caddie 1") > 0)
             if (GameObject.Find("GameManager").GetComponent<Hand>().hand.Count >= 6)
                 strokeCount--;
@@ -1150,19 +1159,19 @@ public class Course : MonoBehaviour
             //save course data
             currentPlaythrough.Add(GetCurrentCourseData());
             //clear last hole
-            foreach (GameObject go in courseLayout)
-            {
-                Destroy(go);
-            }
-            courseLayout.Clear();
+            // foreach (GameObject go in courseLayout)
+            // {
+            //     Destroy(go);
+            // }
+            // courseLayout.Clear();
             //reset shot highlight
             GameObject.Find("CourseManager").GetComponent<LineRenderer>().positionCount = 0;
             if (currentDot != null)
                 Destroy(currentDot);
             //clear continue text/button
-            Destroy(continueObj);
+            // Destroy(continueObj);
             //clear bg elements
-            GameObject.Find("BackgroundManager").GetComponent<backgroundManager>().RemoveSprites();
+            // GameObject.Find("BackgroundManager").GetComponent<backgroundManager>().RemoveSprites();
             //check for loss
             int totalScore = 0;
             foreach (int score in scores)
@@ -1186,7 +1195,11 @@ public class Course : MonoBehaviour
         //otherwise, go to the card reward screen
         //move the camera up
         GameObject.Find("GameManager").GetComponent<mainMenuUI>().HideMainMenu();
-        GameObject.Find("GameManager").GetComponent<mainMenuUI>().ScrollUp();
+        GameObject.Find("GameManager").GetComponent<mainMenuUI>().ScrollUp(() =>
+        {
+            //set gamestate to card select once done moving up
+            gameState = GameState.NEW_CARD_SELECT;
+        });
         //set up new card select
         GetComponent<BoxCollider2D>().enabled = false;
         GameObject.Find("GameManager").GetComponent<Hand>().RemoveDeck();

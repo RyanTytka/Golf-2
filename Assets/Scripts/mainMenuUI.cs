@@ -8,27 +8,27 @@ using UnityEngine.UI;
 public class mainMenuUI : MonoBehaviour
 {
     public float scrollDistance = 5f;
-    public float duration = 2f;
+    public float duration = 1.5f;
     public AnimationCurve easeCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
     public Camera mainCamera;
 
     private bool isMoving = false;
 
-    public void ScrollDown()
+    public void ScrollDown(System.Action action = null)
     {
         scrollDistance = 10;
         if (!isMoving)
-            StartCoroutine(ScrollRoutine());
+            StartCoroutine(ScrollRoutine(action));
     }
 
-    public void ScrollUp()
+    public void ScrollUp(System.Action action = null)
     {
         scrollDistance = -10;
         if (!isMoving)
-            StartCoroutine(ScrollRoutine());
+            StartCoroutine(ScrollRoutine(action));
     }
 
-    private IEnumerator ScrollRoutine()
+    private IEnumerator ScrollRoutine(System.Action action = null)
     {
         isMoving = true;
 
@@ -49,6 +49,11 @@ public class mainMenuUI : MonoBehaviour
 
         mainCamera.transform.position = targetPos;
         isMoving = false;
+
+        if(action != null)
+        {
+            action.Invoke();
+        }
     }
 
     public void HideMainMenu()
