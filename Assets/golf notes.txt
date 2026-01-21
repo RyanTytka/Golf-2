@@ -25,15 +25,14 @@ add better wait for discard graphics (transulcent black over everything but hand
 when play a caddie, make the move duration scale with distance moved
 change view bag button from a button to just clicking the bag
 add camera track ball while moving
+dont delete hand/caddie/hole displays after hole until screen moves up
+
 
 ready for test:
 (this was intended. need to update card desc)--bug: "dig through bag" card has timing issues (discards before done drawing)  
 bug: "lone ranger" card does not update its carry text when hand changes 
 bug: clouds can appear on screen
 add: support for reverse ball rolling
-desert course is almost all sand (fairway was set to sand, I undid this)
-clicking take card before camera is done scrolling after hole breaks shop
-dont delete hand/caddie/hole displays after hole until screen moves up
 
 
 card ideas:
