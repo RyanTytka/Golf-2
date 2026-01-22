@@ -7,6 +7,7 @@ better shot preview arc
 more bg elements
 view discard pile
 add putting mechanic
+should caddies be unique? but what about random caddie generation?
 
 high priority:
 add new distance markers (one above ball, one when mouse highlights course piece)
@@ -36,18 +37,22 @@ clicking take card before camera is done scrolling after hole breaks shop
 dont delete hand/caddie/hole displays after hole until screen moves up
 
 
-card ideas:
-toss synergy
-	-club: Toss this after use
-	-caddie: when you toss a card, gain 10 power.
-	-Ability: Can't be played. When this is tossed, draw 2.
-club: +10 carry  for each card drawn while this is in your hand
+idea: cart path tile that makes ball roll further, or bounce on it to get more distance
 
+card ideas:
+
+
+ideas for upgrades:
+-hat or something. add to caddie and makes it level 2 caddie
+-similar upgrade for upgrades. Or have specific ones that draw, give extra stats, etc
+
+Or remove upgrades entirely and do artifact system (although this requires more artwork) and refactoring
+
+add upgrades to new card select? Or cart girl comes with upgrades mid hole? Or in shop, can't buy any cards, but can reroll upgrades as much as you want (same as new card select, although you can buy each time)
 
 misc notes:
 call nani
 deckbuilder fest in may 18-25
-add apex devast to glarb
 https://assetstore.unity.com/packages/2d/gui/icons/low-poly-pixel-ui-169751
 https://moxfield.com/decks/qh0n0I0vBEGtctP0CXK_Nw
 https://moxfield.com/decks/L088VAS-TEKk0-4BH0EmbQ
