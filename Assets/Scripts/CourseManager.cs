@@ -356,7 +356,7 @@ public class Course : MonoBehaviour
                 // fairwayType = CoursePieces.ROUGH;
                 break;
         }
-        int holeLength = Random.Range(42,46) + courseNum * 5 + lengthMod; //actual length
+        int holeLength = Random.Range(35,40) + courseNum * 5 + lengthMod; //actual length
         holeLength += + pars[holeNum-1] == 3 ? 10 : 0;
         holeLength += + pars[holeNum-1] == 5 ? 12 : 0;
         for (int i = 0; i < holeLength; i++)

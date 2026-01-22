@@ -57,7 +57,7 @@ public class NewCardManager : MonoBehaviour
     public void AddCardToDeck()
     {
         //make sure we have finished scrolling up before doing anything
-        if (GameObject.Find("CourseManager").GetComponent<Course>().gamestate != Course.NEW_CARD_SELECT) return;
+        if (GameObject.Find("CourseManager").GetComponent<Course>().gameState != Course.GameState.NEW_CARD_SELECT) return;
         GetComponent<Hand>().baseDeck.Add(cardOption);
         cardOption.transform.parent = GameObject.Find("BaseDeck").transform;
         GetComponent<Hand>().ClearUpgrades();
@@ -69,7 +69,7 @@ public class NewCardManager : MonoBehaviour
     public void Reroll()
     {
         //make sure we have finished scrolling up before doing anything
-        if (GameObject.Find("CourseManager").GetComponent<Course>().gamestate != Course.NEW_CARD_SELECT) return;
+        if (GameObject.Find("CourseManager").GetComponent<Course>().gameState != Course.GameState.NEW_CARD_SELECT) return;
         //flip current card over then flip new card over
         Sequence seq = DOTween.Sequence();
         seq.Append(
@@ -105,7 +105,7 @@ public class NewCardManager : MonoBehaviour
     public void TakeTees()
     {
         //make sure we have finished scrolling up before doing anything
-        if (GameObject.Find("CourseManager").GetComponent<Course>().gamestate != Course.NEW_CARD_SELECT) return;
+        if (GameObject.Find("CourseManager").GetComponent<Course>().gameState != Course.GameState.NEW_CARD_SELECT) return;
         //add tees
         GameObject.Find("CourseManager").GetComponent<Course>().tees += currentTeeReward;
         //delete upgrade option

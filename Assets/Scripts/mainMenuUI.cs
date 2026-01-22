@@ -14,7 +14,14 @@ public class mainMenuUI : MonoBehaviour
 
     private bool isMoving = false;
 
-    public void ScrollDown(System.Action action = null)
+    public void ScrollDown()
+    {
+        scrollDistance = 10;
+        if (!isMoving)
+            StartCoroutine(ScrollRoutine());
+    }
+
+    public void ScrollDown(System.Action action)
     {
         scrollDistance = 10;
         if (!isMoving)
