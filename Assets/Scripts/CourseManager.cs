@@ -31,7 +31,7 @@ public class Course : MonoBehaviour
             //set up initial game state
             courseManagerObj = this.gameObject;
             DontDestroyOnLoad(this.gameObject);
-            for(int i = 0; i < rivalImages.Count; i++)
+            for (int i = 0; i < rivalImages.Count; i++)
             {
                 availRivals.Add(i);
             }
@@ -133,7 +133,7 @@ public class Course : MonoBehaviour
         //escape key to pause
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if(holeNum > 0) //can't pause while at main menu
+            if (holeNum > 0) //can't pause while at main menu
                 TogglePause();
         }
         if (paused) return;
@@ -142,7 +142,7 @@ public class Course : MonoBehaviour
         float offset = Time.time * scrollSpeed;
         GetComponent<LineRenderer>().material.SetTextureOffset("_MainTex", new Vector2(-offset, 0));
         //do not let user move course while swinging
-        if(isBallMoving) return;
+        if (isBallMoving) return;
         // Handle mouse input
         Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (Input.GetMouseButtonDown(0))
@@ -268,7 +268,7 @@ public class Course : MonoBehaviour
             nextCourse = -1;
         }
         //set up rival
-        if(currentRival == -1) //if it is not -1, just use what it is currently set to
+        if (currentRival == -1) //if it is not -1, just use what it is currently set to
         {
             currentRival = availRivals[Random.Range(0, availRivals.Count)];
             availRivals.Remove(currentRival);
@@ -331,12 +331,12 @@ public class Course : MonoBehaviour
         courseLayout = new List<GameObject>();
         power = 0;
         pinpoint = 0;
-        
+
         GetComponent<BoxCollider2D>().enabled = true;
         //Generate Fairway
         CoursePieces fairwayType = CoursePieces.FAIRWAY;
         int lengthMod = 0;
-        switch(courseType)
+        switch (courseType)
         {
             case CourseType.plains:
                 lengthMod = 3;
@@ -356,9 +356,9 @@ public class Course : MonoBehaviour
                 // fairwayType = CoursePieces.ROUGH;
                 break;
         }
-        int holeLength = Random.Range(35,40) + courseNum * 5 + lengthMod; //actual length
-        holeLength += + pars[holeNum-1] == 3 ? 10 : 0;
-        holeLength += + pars[holeNum-1] == 5 ? 12 : 0;
+        int holeLength = Random.Range(35, 40) + courseNum * 5 + lengthMod; //actual length
+        holeLength += +pars[holeNum - 1] == 3 ? 10 : 0;
+        holeLength += +pars[holeNum - 1] == 5 ? 12 : 0;
         for (int i = 0; i < holeLength; i++)
         {
             GameObject fairway = Instantiate(coursePieces[(int)fairwayType], courseDisplay.transform);
@@ -379,10 +379,10 @@ public class Course : MonoBehaviour
                 {
                     int patchSize = Random.Range(1, 4 + courseNum / 2);
                     int patchType = WeightedRandomInt(
-                        new List<int>{ 1, 2, 3 }, //rough, sand, water
-                        new List<int>{ 15, 10 + courseNum, 10 + courseNum });
-                    if(patchType == 1)
-                        patchSize += Random.Range(1,3);
+                        new List<int> { 1, 2, 3 }, //rough, sand, water
+                        new List<int> { 15, 10 + courseNum, 10 + courseNum });
+                    if (patchType == 1)
+                        patchSize += Random.Range(1, 3);
                     AddHazardPatch(patchType, currentPos, patchSize);
                     currentPos += patchSize + Random.Range(5 - courseNum / 2, 10 - courseNum / 2);
                 }
@@ -398,10 +398,10 @@ public class Course : MonoBehaviour
                 {
                     int patchSize = Random.Range(4, 8);
                     int patchType = WeightedRandomInt(
-                        new List<int>{ 0, 1, 2 }, //fairway, rough, sand
-                        new List<int>{ 10, 5, 5 + courseNum * 2 });
-                    if(patchType == 2)
-                        patchSize -= Random.Range(1,3);
+                        new List<int> { 0, 1, 2 }, //fairway, rough, sand
+                        new List<int> { 10, 5, 5 + courseNum * 2 });
+                    if (patchType == 2)
+                        patchSize -= Random.Range(1, 3);
                     AddHazardPatch(patchType, currentPos, patchSize);
                     currentPos += patchSize + Random.Range(4 - courseNum / 3, 7);
                 }
@@ -416,8 +416,8 @@ public class Course : MonoBehaviour
                 {
                     int patchSize = Random.Range(1, 4 + courseNum / 2);
                     int patchType = WeightedRandomInt(
-                        new List<int>{ 1, 2, 3 }, //rough, sand, water
-                        new List<int>{ 1, 3, 4 });
+                        new List<int> { 1, 2, 3 }, //rough, sand, water
+                        new List<int> { 1, 3, 4 });
                     AddHazardPatch(patchType, currentPos, patchSize);
                     currentPos += patchSize + Random.Range(3 - courseNum / 3, 9 - courseNum / 2);
                 }
@@ -431,9 +431,9 @@ public class Course : MonoBehaviour
                 {
                     int patchSize = Random.Range(4, 8);
                     int patchType = WeightedRandomInt(
-                        new List<int>{ 1, 3 }, //rough, water
-                        new List<int>{ 20, 10 + courseNum });
-                    if (patchType == 3) patchSize -= 3 - courseNum / 3; 
+                        new List<int> { 1, 3 }, //rough, water
+                        new List<int> { 20, 10 + courseNum });
+                    if (patchType == 3) patchSize -= 3 - courseNum / 3;
                     AddHazardPatch(patchType, currentPos, patchSize);
                     currentPos += patchSize + Random.Range(3 - courseNum / 3, 7 - courseNum / 3);
                 }
@@ -447,9 +447,9 @@ public class Course : MonoBehaviour
                 {
                     int patchSize = Random.Range(1 + courseNum / 3, 4);
                     int patchType = WeightedRandomInt(
-                        new List<int>{ 1, 2, 3 }, //rough, sand, water
-                        new List<int>{ 30, 10 + courseNum, 10 + courseNum });
-                    if(patchType == 1)
+                        new List<int> { 1, 2, 3 }, //rough, sand, water
+                        new List<int> { 30, 10 + courseNum, 10 + courseNum });
+                    if (patchType == 1)
                         patchSize += 2;
                     AddHazardPatch(patchType, currentPos, patchSize);
                     currentPos += patchSize + Random.Range(1, 6 - courseNum / 2);
@@ -468,7 +468,7 @@ public class Course : MonoBehaviour
         {
             ReplacePieceAt(i, (int)CoursePieces.GREEN);
         }
-        ReplacePieceAt(startOfGreen - 1, Random.Range(0,2)); //Dont let there be water before the green
+        ReplacePieceAt(startOfGreen - 1, Random.Range(0, 2)); //Dont let there be water before the green
         //Place Hole on the Green
         int holePlacement = Mathf.Clamp(startOfGreen + Random.Range(1, greenLength - 1), startOfGreen, courseLayout.Count - 1);
         ReplacePieceAt(holePlacement, (int)CoursePieces.HOLE);
@@ -501,7 +501,7 @@ public class Course : MonoBehaviour
     {
         for (int i = 0; i < patchSize; i++)
         {
-            if(startIndex + i < courseLayout.Count)
+            if (startIndex + i < courseLayout.Count)
                 ReplacePieceAt(startIndex + i, hazardType);
         }
     }
@@ -510,16 +510,16 @@ public class Course : MonoBehaviour
     private int WeightedRandomInt(List<int> keys, List<int> weights)
     {
         int totalWeight = 0;
-        foreach(int weight in weights)
+        foreach (int weight in weights)
         {
             totalWeight += weight;
         }
         float f = Random.Range(0, (float)totalWeight);
         int cumulative = 0;
-        for(int i = 0; i < weights.Count; i++)
+        for (int i = 0; i < weights.Count; i++)
         {
             cumulative += weights[i];
-            if(f < cumulative)
+            if (f < cumulative)
                 return keys[i];
         }
         return -1;
@@ -589,7 +589,7 @@ public class Course : MonoBehaviour
         //Find where the hole is
         foreach (GameObject go in courseLayout)
         {
-            if(go.GetComponent<CoursePiece>().pieceName == "Hole")
+            if (go.GetComponent<CoursePiece>().pieceName == "Hole")
             {
                 return go.GetComponent<CoursePiece>().myIndex - startIndex;
             }
@@ -626,7 +626,6 @@ public class Course : MonoBehaviour
     //Move the ball its carry distance then the roll distance
     public void HitBall()
     {
-        isBallMoving = true;
         //animate the ball
         LineRenderer line = GetComponent<LineRenderer>();
         Vector3[] path = new Vector3[line.positionCount];
@@ -645,19 +644,24 @@ public class Course : MonoBehaviour
         bool isRolling = false;
         //calculate shot timing
         float ratio;
-        if(swing.landIndex - swing.endIndex == 0)
+        if (swing.landIndex - swing.endIndex == 0)
             ratio = 0;
         else
             ratio = (swing.landIndex - swing.startIndex) / (swing.landIndex - swing.endIndex);
-        AnimationCurve curve = new AnimationCurve(new Keyframe(0f,1f,0f,-2f), new Keyframe(1f + ratio, 0f, -2f, 0f));
-        float shotLength = (swing.endIndex - swing.startIndex) / 5f; // need less linear curve. short shots too fast and long shots too slow
+        AnimationCurve curve = new AnimationCurve(new Keyframe(0f, 1f, 0f, -2f), new Keyframe(1f + ratio, 0f, -2f, 0f));
+        // need less linear curve. short shots too fast and long shots too slow
+        float shotLength = (swing.endIndex - swing.startIndex) / 5f;
+        //club effects at start of swing
+        if (selectedClub.GetComponent<Draggable>().cardName == "Paper Club")
+            GameObject.Find("GameManager").GetComponent<Hand>().Toss(selectedClub);
+        isBallMoving = true;
         //send the ball on its path
         DOPath = ballObj.transform.DOPath(path, shotLength, PathType.Linear).SetEase(Ease.OutCubic).OnUpdate(() =>
         {
             RollBall(isRolling);
             //check if the ball is still in the air
             float travelled = ballObj.transform.position.x - rollStart.x;
-            if (travelled < 0) return; 
+            if (travelled < 0) return;
             //trigger tiles as your roll across them
             isRolling = true;
             float rollT = Mathf.Clamp01(travelled / segmentLength);
@@ -906,8 +910,8 @@ public class Course : MonoBehaviour
         //get base distances
         if (selectedClub == null)
             return swing; //cant swing without a club!
-        int carry = selectedClub.GetComponent<Draggable>().Carry/10;
-        int roll = selectedClub.GetComponent<Draggable>().Roll/10;
+        int carry = selectedClub.GetComponent<Draggable>().Carry / 10;
+        int roll = selectedClub.GetComponent<Draggable>().Roll / 10;
         bool hasRoll = true; //false if an effect makes this shot have 0 roll
         int tempLuck = 0; //luck that would be gained during this shot
         //card effects
@@ -920,12 +924,12 @@ public class Course : MonoBehaviour
         if (selectedClub.GetComponent<Draggable>().cardName == "Long Ranger")
         {
             bool onlyClub = true;
-            foreach(GameObject go in GameObject.Find("GameManager").GetComponent<Hand>().hand)
+            foreach (GameObject go in GameObject.Find("GameManager").GetComponent<Hand>().hand)
             {
                 if (go.GetComponent<Draggable>().cardType == Draggable.CardTypes.Club && go != selectedClub)
                     onlyClub = false;
             }
-            if(onlyClub)
+            if (onlyClub)
             {
                 carry += 5;
                 roll -= 2;
@@ -948,7 +952,7 @@ public class Course : MonoBehaviour
             }
         }
         //rivals
-        if(currentRival == 0)
+        if (currentRival == 0)
         {
             if (selectedClub.GetComponent<Draggable>().isDriver)
                 carry -= 3;
@@ -963,7 +967,7 @@ public class Course : MonoBehaviour
                     carry += 2;
                     break;
                 case "Breakfast Ball":
-                    if(selectedClub.GetComponent<Draggable>().clubType == Draggable.ClubTypes.Wood)
+                    if (selectedClub.GetComponent<Draggable>().clubType == Draggable.ClubTypes.Wood)
                         hasRoll = false;
                     carry += 5;
                     break;
@@ -980,10 +984,13 @@ public class Course : MonoBehaviour
                 case "The Finisher":
                     tempLuck++;
                     break;
+                case "Clover Ball":
+                    carry += luck;
+                    break;
             }
         }
         int direction = 1;
-        if(DistanceToHole(ballPos) < 0)
+        if (DistanceToHole(ballPos) < 0)
         {
             direction = -1;
         }
@@ -991,9 +998,9 @@ public class Course : MonoBehaviour
         int rollAmount = 0;
         int start = ballPos;
         swing.startIndex = start;
-        swing.landIndex = start + Mathf.Max(carry + power/10, 1) * direction;
+        swing.landIndex = start + Mathf.Max(carry + power / 10, 1) * direction;
         int end = swing.landIndex;
-        if(swing.landIndex >= courseLayout.Count || swing.landIndex < 0)
+        if (swing.landIndex >= courseLayout.Count || swing.landIndex < 0)
         {
             //Is landing out of bounds
             hasRoll = false;
@@ -1025,7 +1032,7 @@ public class Course : MonoBehaviour
                         else
                         {
                             rollAmount++;
-                            swing.roughHits += 1; 
+                            swing.roughHits += 1;
                         }
                     }
                     break;
@@ -1140,11 +1147,11 @@ public class Course : MonoBehaviour
         string[] score = { "ACE", "HOLE IN ONE", "EAGLE", "BIRDIE", "PAR", "BOGEY", "DOUBLE BOGEY", "TRIPLE BOGEY" };
         continueObj = Instantiate(finishText, GameObject.Find("MainCanvas").transform);
         continueObj.transform.localPosition = new Vector3(0, 200, 56);
-        if(strokeCount >= score.Length)
+        if (strokeCount >= score.Length)
             continueObj.GetComponent<TextMeshProUGUI>().text = "+" + (strokeCount - pars[holeNum - 1]);
         else
             continueObj.GetComponent<TextMeshProUGUI>().text = score[strokeCount + 4 - pars[holeNum - 1]];
-        float t = Mathf.Min(Mathf.Max(strokeCount - 3,0), 7.0f) / 7.0f;
+        float t = Mathf.Min(Mathf.Max(strokeCount - 3, 0), 7.0f) / 7.0f;
         continueObj.GetComponent<TextMeshProUGUI>().color = Color.Lerp(Color.green, Color.red, t);
         continueObj.GetComponentInChildren<Button>().onClick.AddListener(ContinueButtonClick);
     }
@@ -1266,7 +1273,7 @@ public class Course : MonoBehaviour
             GetComponent<BoxCollider2D>().enabled = false;
             GameObject.Find("GameManager").GetComponent<Hand>().RemoveDeck();
             //GameObject.Find("GameManager").GetComponent<Hand>().CreateNewCardOptions();
-            int teeReward = Mathf.Max(pars[holeNum - 1] - strokeCount + 3,1);
+            int teeReward = Mathf.Max(pars[holeNum - 1] - strokeCount + 3, 1);
             if (currentRival == 4 && pars[holeNum - 1] < scores[holeNum - 1]) //must par or better to get tees against rival 4
                 teeReward = 0;
             GameObject.Find("TeesText").GetComponent<TextMeshProUGUI>().text = "(     +" + teeReward + ")";

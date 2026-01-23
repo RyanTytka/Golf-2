@@ -19,15 +19,15 @@ public class Draggable : MonoBehaviour
     int carry; //How far ball travels in air
     [SerializeField]
     int roll; //How far ball travels on ground
-    public int Carry 
-    { 
-        get 
+    public int Carry
+    {
+        get
         {
             GetComponent<upgrades>().UpdateView();
-            if(cardName == "Lone Ranger")
+            if (cardName == "Lone Ranger")
                 carry -= GameObject.Find("GameManager").GetComponent<Hand>().hand.Count - 1;
-            return carry + GetComponent<upgrades>().Stats()[0]; 
-        } 
+            return carry + GetComponent<upgrades>().Stats()[0];
+        }
     }
     public int Roll
     {
@@ -191,13 +191,13 @@ public class Draggable : MonoBehaviour
     }
 
     public void MouseReleased()
-    { 
+    {
         if (GameObject.Find("CourseManager").GetComponent<Course>().paused) return;
         if (GameObject.Find("GameManager").GetComponent<Hand>().paused) return;
         if (isDeckView) return;
         if (isUpgradeOption) return;
 
-        if(isShopOption)
+        if (isShopOption)
         {
             if (GameObject.Find("CourseManager").GetComponent<Course>().tees >= myCost)
             {
@@ -258,14 +258,14 @@ public class Draggable : MonoBehaviour
             if (transform.position.y > 0)
             {
                 //if (cardType != CardTypes.Caddie ||
-                    //GameObject.Find("GameManager").GetComponent<Hand>().playedCaddie == false) //one caddie per turn
+                //GameObject.Find("GameManager").GetComponent<Hand>().playedCaddie == false) //one caddie per turn
                 //{
                 //    if (cardType != CardTypes.Ability || GameObject.Find("GameManager").GetComponent<Hand>().playedAbility == false ||
-                        //GameObject.Find("CourseManager").GetComponent<Course>().currentRival != 3)
-                    //{
-                        //play this
-                        StartCoroutine(PlayCard());
-                    //}
+                //GameObject.Find("CourseManager").GetComponent<Course>().currentRival != 3)
+                //{
+                //play this
+                StartCoroutine(PlayCard());
+                //}
                 //} 
             }
         }
@@ -274,7 +274,7 @@ public class Draggable : MonoBehaviour
 
     void Update()
     {
-        if(onDisplay)
+        if (onDisplay)
         {
             transform.position = displayPos;
             return;
@@ -286,7 +286,7 @@ public class Draggable : MonoBehaviour
             Vector3 rayPoint = ray.GetPoint(distance);
             transform.position = rayPoint + startDist;
             //indicate that this can be played (or stop indicating)
-            if(GameObject.Find("GameManager").GetComponent<Hand>().waitingForDiscard == false)
+            if (GameObject.Find("GameManager").GetComponent<Hand>().waitingForDiscard == false)
             {
                 bool inPlayZone = transform.position.y > 0;
                 if (inPlayZone && !indicatingPlay)
@@ -332,7 +332,7 @@ public class Draggable : MonoBehaviour
     {
         //get upgrade info
         GetComponent<upgrades>().UpdateView();
-        
+
         //set text
         titleObj.GetComponent<TextMeshProUGUI>().text = cardName;
         descObj.GetComponent<TextMeshProUGUI>().text = description;
@@ -396,6 +396,11 @@ public class Draggable : MonoBehaviour
             wiggleTween.Kill();
             transform.DORotate(Vector3.zero, 0.15f).SetEase(Ease.OutQuad);
         }
+        if (cardName == "Voodoo Doll")
+        {
+            //voodoo doll cannot be played from hand
+            yield return null;
+        }
         //do effect
         if (cardType == CardTypes.Caddie)
         {
@@ -456,11 +461,11 @@ public class Draggable : MonoBehaviour
             case "Dig Through Your Bag":
                 //draw 3 then discard all non-clubs 
                 List<GameObject> hand = h.hand;
-                h.DrawCard(3,() =>
-                {   
-                    for(int i = hand.Count - 1; i >= 0; i--)
+                h.DrawCard(3, () =>
+                {
+                    for (int i = hand.Count - 1; i >= 0; i--)
                     {
-                        if(hand[i].GetComponent<Draggable>().cardType != CardTypes.Club)
+                        if (hand[i].GetComponent<Draggable>().cardType != CardTypes.Club)
                         {
                             h.DiscardCard(hand[i]);
                         }
@@ -514,19 +519,19 @@ public class Draggable : MonoBehaviour
             case "Tee Up":
                 //if in fairway, add all drivers to hand
                 if (c.courseLayout[c.ballPos].GetComponent<CoursePiece>().myType == 0)
-                foreach (GameObject go in h.baseDeck)
-                {
-                    if (go.GetComponent<Draggable>().isDriver)
+                    foreach (GameObject go in h.baseDeck)
                     {
-                        GameObject newObj = Instantiate(go, GameObject.Find("GameManager").transform);
-                        h.hand.Add(newObj);
+                        if (go.GetComponent<Draggable>().isDriver)
+                        {
+                            GameObject newObj = Instantiate(go, GameObject.Find("GameManager").transform);
+                            h.hand.Add(newObj);
+                        }
                     }
-                }
                 break;
             case "Back to Basics":
                 //draw 2. disable balls until next swing
                 h.DrawCard(2);
-                if(c.selectedBall != null)
+                if (c.selectedBall != null)
                 {
                     c.selectedBall.GetComponent<Draggable>().selected = false;
                     c.selectedBall.GetComponent<SpriteRenderer>().color = Color.white;
@@ -563,8 +568,8 @@ public class Draggable : MonoBehaviour
                 //toss each card left in your deck. Gain 10 power for each
                 // while(h.currentDeck.Count > 0)
                 // {
-                    // h.Toss(h.currentDeck[0]);
-                    // c.power += 10;
+                // h.Toss(h.currentDeck[0]);
+                // c.power += 10;
                 // }
                 break;
             case "Recycle":
@@ -605,13 +610,13 @@ public class Draggable : MonoBehaviour
     //returns null if cant take upgrade, or the matching upgrade if it will be replaced, or the passed upgrade if it is new
     public upgradeBuy CanUpgrade(upgradeBuy newUpgrade)
     {
-        if((int)newUpgrade.type < 3) //shaft/clubhead/grip
+        if ((int)newUpgrade.type < 3) //shaft/clubhead/grip
         {
             if (cardType == CardTypes.Club)
             {
-                foreach(upgradeBuy myUpgrade in GetComponentsInChildren<upgradeBuy>())
+                foreach (upgradeBuy myUpgrade in GetComponentsInChildren<upgradeBuy>())
                 {
-                    if(myUpgrade.type == newUpgrade.type)
+                    if (myUpgrade.type == newUpgrade.type)
                         return myUpgrade; //already has this type of upgrade
                 }
                 return newUpgrade; //can take this upgrade (new)
@@ -627,7 +632,7 @@ public class Draggable : MonoBehaviour
         isHoverable = false;
         Vector3 startPosition = new(-8f, -8f);
         Vector3 handPosition = new(-2f, 0f);
-        float moveDuration = 0.5f; 
+        float moveDuration = 0.5f;
         float flipDuration = 0.25f;
         float arcHeight = 2f;
         transform.position = startPosition;
@@ -654,7 +659,7 @@ public class Draggable : MonoBehaviour
                     GameObject.Find("GameManager").GetComponent<Hand>().hand.Add(this.gameObject);
                     GameObject.Find("GameManager").GetComponent<Hand>().DisplayHand();
                     //start drawing another card if necessary
-                    if(drawAmount > 1)
+                    if (drawAmount > 1)
                         GameObject.Find("GameManager").GetComponent<Hand>().DrawCard(drawAmount - 1);
                     else if (completeCallback != null)
                         completeCallback.Invoke();
@@ -741,21 +746,21 @@ public class Draggable : MonoBehaviour
         Hand h = GameObject.Find("GameManager").GetComponent<Hand>();
         //animation variables
         float moveDuration = 1.0f;
-        Vector3 endPos =  new(h.caddieDisplays.Count * 1 - 5, 2f);
+        Vector3 endPos = new(h.caddieDisplays.Count * 1 - 5, 2f);
         // Set sort order so it is in front of everything
         GetComponentInChildren<Canvas>().sortingOrder = 1000;
         GetComponent<SpriteRenderer>().sortingOrder = 1000;
         //move the card while scaling it down
-        Sequence seq = DOTween.Sequence(); 
-        seq.Join(transform.DOMove(endPos, moveDuration)); 
-        seq.Join(transform.DOScale(new Vector3(0,0), moveDuration).SetEase(Ease.InQuad)); 
+        Sequence seq = DOTween.Sequence();
+        seq.Join(transform.DOMove(endPos, moveDuration));
+        seq.Join(transform.DOScale(new Vector3(0, 0), moveDuration).SetEase(Ease.InQuad));
         // seq.Play();
         //create the caddie icon when done
         seq.OnComplete(() =>
         {
             GameObject newCaddie = Instantiate(h.caddieDisplayObj, GameObject.Find("MainCanvas").transform);
             newCaddie.GetComponent<RectTransform>().position = endPos;
-            newCaddie.GetComponent<RectTransform>().localScale = new Vector3(0,0,0);
+            newCaddie.GetComponent<RectTransform>().localScale = new Vector3(0, 0, 0);
             newCaddie.GetComponent<caddieDisplay>().caddieRef = this.gameObject;
             newCaddie.GetComponent<Image>().sprite = caddieIcon;
             h.caddieDisplays.Add(newCaddie);

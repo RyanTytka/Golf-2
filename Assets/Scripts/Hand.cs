@@ -82,8 +82,8 @@ public class Hand : MonoBehaviour
         }
         ShuffleDeck();
         //add drivers to the top of the deck. Not included instarting hand size
-            currentDeck.InsertRange(0, drivers);
-        foreach(GameObject driver in drivers)
+        currentDeck.InsertRange(0, drivers);
+        foreach (GameObject driver in drivers)
         {
         }
         //Draw starting hand
@@ -140,7 +140,7 @@ public class Hand : MonoBehaviour
 
         for (int i = 0; i < count; i++)
         {
-            if(hand[i].GetComponent<Draggable>().onDisplay) continue; //dont move displayed cards
+            if (hand[i].GetComponent<Draggable>().onDisplay) continue; //dont move displayed cards
             hand[i].SetActive(true);
             hand[i].GetComponent<Draggable>().UpdateCard();
             float t = (count == 1) ? 0f : (float)i / (count - 1);
@@ -160,7 +160,7 @@ public class Hand : MonoBehaviour
             }
             //hovering
             Vector3 scale = Vector3.one;
-            if(hand[i] == hoveringCard)
+            if (hand[i] == hoveringCard)
             {
                 y += 0.25f;
                 scale = new Vector3(1.2f, 1.2f, 1);
@@ -171,7 +171,7 @@ public class Hand : MonoBehaviour
             //move cards
             card.DOMove(targetPos, moveDuration).SetEase(Ease.OutQuad).OnComplete(() =>
             {
-              card.GetComponent<Draggable>().isHoverable = true;  
+                card.GetComponent<Draggable>().isHoverable = true;
             });
             card.DORotateQuaternion(targetRot, moveDuration);
             // Sorting so middle cards appear on top
@@ -228,6 +228,12 @@ public class Hand : MonoBehaviour
     //removes a card from your deck (not the base deck)
     public void Toss(GameObject card)
     {
+        //card effects
+        if (card.GetComponent<Draggable>().cardName == "Voodoo Doll")
+            GameObject.Find("CourseManager").GetComponent<Course>().luck += 3;
+        if (GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Caddie 5") > 0)
+            GameObject.Find("CourseManager").GetComponent<Course>().power += 10;
+        //remove from current deck/hand/discard
         if (currentDeck.Contains(card))
         {
             currentDeck.Remove(card);
