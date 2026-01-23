@@ -10,7 +10,6 @@ add putting mechanic
 should caddies be unique? but what about random caddie generation?
 
 high priority:
-add new distance markers (one above ball, one when mouse highlights course piece)
 waiting for discard does not show instructions 
 view deck can still drag course display
 disable selecting cards once hole is done
@@ -18,6 +17,7 @@ help screen is behind course and ball and hand
 rival display is behind course
 
 low:
+add new distance markers (one above ball, one when mouse highlights course piece)
 pause can still hover cards in hand (but not click them)
 using arrow keys to move course before clicking makes bg jump (not always based on bg element distance maybe?)
 roll over make it say luck used instead of penalty if you have luck
