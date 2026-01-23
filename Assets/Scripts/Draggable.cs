@@ -399,7 +399,7 @@ public class Draggable : MonoBehaviour
         if (cardName == "Voodoo Doll")
         {
             //voodoo doll cannot be played from hand
-            return;
+            yield return null;
         }
         //do effect
         if (cardType == CardTypes.Caddie)
