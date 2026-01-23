@@ -1,23 +1,22 @@
-scorecard headers
-status effect graphics
-need new tees Icon
-make cards more readable
-new ball sprite
-better shot preview arc
-more bg elements
-view discard pile
-add putting mechanic
-should caddies be unique? but what about random caddie generation?
-
 high priority:
+status effect graphics
 add new distance markers (one above ball, one when mouse highlights course piece)
 waiting for discard does not show instructions 
-view deck can still drag course display
-disable selecting cards once hole is done
 help screen is behind course and ball and hand
 rival display is behind course
 
 low:
+scorecard headers
+need new tees Icon
+new ball sprite
+better shot preview arc
+make cards more readable
+more bg elements
+view discard pile
+add putting mechanic
+disable selecting cards once hole is done
+view deck can still drag course display
+clubs that have variable stats need to update their card text. (also change color when modified to indicate)
 pause can still hover cards in hand (but not click them)
 using arrow keys to move course before clicking makes bg jump (not always based on bg element distance maybe?)
 roll over make it say luck used instead of penalty if you have luck
