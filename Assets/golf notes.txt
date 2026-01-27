@@ -1,9 +1,7 @@
 high priority:
 status effect graphics
-add new distance markers (one above ball, one when mouse highlights course piece)
-waiting for discard does not show instructions 
-help screen is behind course and ball and hand
-rival display is behind course
+implement and test new cards
+caddie displays are behind the course
 
 low:
 scorecard headers
@@ -26,6 +24,9 @@ when play a caddie, make the move duration scale with distance moved
 change view bag button from a button to just clicking the bag
 add camera track ball while moving
 dont delete hand/caddie/hole displays after hole until screen moves up
+clicking card while waiting for discard and dragging mouse fast breaks hovering/dragging card
+can drag course while waiting for discard. (or make it so you can and turn full black panel into just an area?)
+move distance data marker to manager script so it does not snap to start of animation
 
 
 ready for test:
@@ -56,3 +57,71 @@ https://moxfield.com/decks/qh0n0I0vBEGtctP0CXK_Nw
 https://moxfield.com/decks/L088VAS-TEKk0-4BH0EmbQ
 https://moxfield.com/decks/vIqbX1YtykSoauuntSW3zA
 https://moxfield.com/decks/8JGeI90Pt02XtSP2O9qHwQ
+
+cards list
+	////Starter
+    Driver - Standard Golf Club
+    3 Wood - Standard Golf Club
+    9 Iron - Standard Golf Club
+7 Iron - Standard Golf Club
+Sand Wedge - Standard Golf Club
+    Pitching Wedge - Standard golf club
+    Rangefinder - Standard Golf tool used to find distance to the flag
+    Ace Ball - Basic ball that lets you hit it right down the middle of the fairway
+
+    ////misc
+    Find a Ball - Finding a ball hidden in the rough on the side of the fairway
+Chip Johnson - Double iron carry. Cannot use woods.
+    Distance Ball - Basic ball that adds distance to your shot
+Back to Basics - You cannot use a special ball on this next shot
+    Backspin - When the ball stops instead of rolls
+Dead Stop Iron - Haunted looking golf club. Made of Bones/Grim Reaper Scythe, tombstone in background.
+    Dig Through Your Bag - Looking through your bag (drawing cards)
+    Ice Ball - Ball made of ice. Very slippery
+    Lead Ball - Heavy Ball made out of metal
+    Old Scorecard - Crumpled old scorecard
+Reckless Swing - Discard a card to make you next shot go farther
+Square Ball - Cube shaped ball that does not roll at all
+Swiss Army Wedge - Golf Club that has tools sticking out of it
+Tee Up - Places you ball on a tee while on the fairway
+Long Ranger - Bigger shot if this is only club in hand
+    Breakfast Ball - Ball that looks like bacon and eggs (term for when you mulligan your first shot)
+Loner - Golf club (Iron) that is alone on an island. 
+Finisher - get tees when hit into hole
+Club of Greed - Gold/Fancy golf club
+Pocket Aces - Gives you luck. Cards sticking out of a pocket
+Caddie 4 - Gain luck after each shot
+    Golf Glove - Standard glove used for golf
+
+    ////big hand
+Caddie 1 - Lose a stroke if you have 6+ cards in hand
+Practice Swing - Taking a swing that does not actually hit the ball
+Big Betty - Large and powerful driver
+-
+-
+
+    ////toss (+3)
+Unburden - Tossing your bag of clubs into the water
+Recycle - Discard cards then draw cards
+
+    ////caddie
+Phone a Friend - draws caddies from your deck
+Caddie 3 - Gain power for each caddie you have
+Caddie 2 - Draw a card when you play another caddie
+-
+-
+
+    ////hazards    
+Caddie A - Get tees when you land in the sand/water
+    Beach Ball - Large colorful plastic ball that likes being in the sand
+Rubber Duck Ball - Ball that looks like a rubber duck floating on water
+Shovel Wedge - Golf club that looks like a shovel to hit balls out of the sand
+Big Iron - Large and powerful iron. Hits out of the rough
+-
+
+
+new:
+caddie 5 - Gain power when you toss a card
+voodoo doll - cannot be played. Gain 3 luck when you toss this.
+Paper Club - Toss this after use. (club made out of paper)
+Clover Ball - Gain +10 power for each luck you have

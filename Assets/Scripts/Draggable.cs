@@ -228,7 +228,7 @@ public class Draggable : MonoBehaviour
         {
             //Cannot play cards while waiting for a discard
             //Check if in discard area
-            if (transform.position.x > 4)
+            if (transform.position.y > 1)
             {
                 // If it's currently returning, stop that coroutine
                 if (returnCoroutine != null)
@@ -286,26 +286,23 @@ public class Draggable : MonoBehaviour
             Vector3 rayPoint = ray.GetPoint(distance);
             transform.position = rayPoint + startDist;
             //indicate that this can be played (or stop indicating)
-            if (GameObject.Find("GameManager").GetComponent<Hand>().waitingForDiscard == false)
+            bool inPlayZone = transform.position.y > 1;
+            if (inPlayZone && !indicatingPlay)
             {
-                bool inPlayZone = transform.position.y > 0;
-                if (inPlayZone && !indicatingPlay)
-                {
-                    indicatingPlay = true;
-                    transform.DOKill(false);
-                    wiggleTween = transform.DOPunchRotation(
-                        new Vector3(0, 0, 8f),   // wiggle angle
-                        0.4f,                    // duration
-                        6                        //Vibrato
-                    ).SetLoops(-1, LoopType.Restart);
-                }
-                else if (!inPlayZone && indicatingPlay)
-                {
-                    indicatingPlay = false;
-                    if (wiggleTween != null)
-                        wiggleTween.Kill();
-                    transform.DORotate(Vector3.zero, 0.15f).SetEase(Ease.OutQuad);
-                }
+                indicatingPlay = true;
+                transform.DOKill(false);
+                wiggleTween = transform.DOPunchRotation(
+                    new Vector3(0, 0, 8f),   // wiggle angle
+                    0.4f,                    // duration
+                    6                        //Vibrato
+                ).SetLoops(-1, LoopType.Restart);
+            }
+            else if (!inPlayZone && indicatingPlay)
+            {
+                indicatingPlay = false;
+                if (wiggleTween != null)
+                    wiggleTween.Kill();
+                transform.DORotate(Vector3.zero, 0.15f).SetEase(Ease.OutQuad);
             }
         }
     }
@@ -399,7 +396,7 @@ public class Draggable : MonoBehaviour
         if (cardName == "Voodoo Doll")
         {
             //voodoo doll cannot be played from hand
-            yield return null;
+            yield break;
         }
         //do effect
         if (cardType == CardTypes.Caddie)

@@ -15,7 +15,7 @@ public class CoursePiece : MonoBehaviour
     public GameObject distanceDataObj;
     public GameObject rollOverPrefab; //obj created when ball rolls over this piece
     public Sprite rollOverSprite; //sprite to set for rollOverPrefab
-    //private GameObject currentDataObj = null;
+    private GameObject currentDataObj = null;
 
     void Update()
     {
@@ -29,28 +29,39 @@ public class CoursePiece : MonoBehaviour
         {
             if (hit.transform == transform)
             {
+                //highlight this piece
                 GetComponent<SpriteRenderer>().color = new Color(.8f, .8f, .5f, 1);
                 hovering = true;
-                //if (currentDataObj == null)
-                //{
-                //    currentDataObj = Instantiate(distanceDataObj, GameObject.Find("MainCanvas").transform);
-                //}
-                //// Convert world position to canvas-local position
-                //Vector2 screenPoint = Camera.main.WorldToScreenPoint(transform.position);
-                //RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                //    GameObject.Find("MainCanvas").GetComponent<RectTransform>(),
-                //    screenPoint,
-                //    GameObject.Find("MainCanvas").GetComponent<Canvas>().renderMode == RenderMode.ScreenSpaceOverlay ? null : Camera.main,
-                //    out Vector2 anchoredPos
-                //);
-                //currentDataObj.GetComponent<RectTransform>().anchoredPosition = anchoredPos;
-                //currentDataObj.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 90);
-
-                ////Set distance text
-                //int distToPin = Mathf.Abs(GameObject.Find("CourseManager").GetComponent<Course>().DistanceToHole(myIndex)) * 10;
-                //int distFromBall = Mathf.Abs(GameObject.Find("CourseManager").GetComponent<Course>().DistanceToBall(myIndex)) * 10;
-                //currentDataObj.GetComponentsInChildren<TextMeshProUGUI>()[0].text = distFromBall.ToString() + " yds.";
-                //currentDataObj.GetComponentsInChildren<TextMeshProUGUI>()[1].text = distToPin.ToString() + " yds.";
+                if (currentDataObj == null)
+                {
+                    //if we dont have a data obj already, create one
+                    currentDataObj = Instantiate(distanceDataObj, GameObject.Find("FrontCanvas").transform);
+                    currentDataObj.GetComponent<RectTransform>().position = new Vector3(gameObject.transform.position.x, 1, 90);
+                    //set the animation for it
+                    float bobHeight = 20f;
+                    float bobDuration = 1f;
+                    float rotationDuration = 2f;
+                    // Bob up & down
+                    currentDataObj.GetComponentsInChildren<RectTransform>()[0].DOAnchorPosY(
+                        currentDataObj.GetComponentsInChildren<RectTransform>()[0].anchoredPosition.y + bobHeight,
+                        bobDuration
+                    )
+                    .SetLoops(-1, LoopType.Yoyo)
+                    .SetEase(Ease.InOutSine);
+                    //spin around y axis
+                    currentDataObj.GetComponentsInChildren<RectTransform>()[1].DORotate(
+                        new Vector3(0f, 360f, 0f),
+                        rotationDuration,
+                        RotateMode.FastBeyond360
+                        )
+                        .SetEase(Ease.Linear)
+                        .SetLoops(-1);
+                }
+                //set the pos of our current data obj
+                currentDataObj.GetComponent<RectTransform>().position = new Vector3(gameObject.transform.position.x, 1, 90);
+                //Set distance text
+                int distFromBall = Mathf.Abs(GameObject.Find("CourseManager").GetComponent<Course>().DistanceToBall(myIndex)) * 10;
+                currentDataObj.GetComponentsInChildren<TextMeshProUGUI>()[0].text = distFromBall.ToString() + " yds.";
                 break;
             }
         }
@@ -58,7 +69,7 @@ public class CoursePiece : MonoBehaviour
         if (!hovering)// && currentDataObj != null)
         {
             GetComponent<SpriteRenderer>().color = Color.white;
-            //Destroy(currentDataObj);
+            Destroy(currentDataObj);
         }
     }
 

@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using DG.Tweening;
 
 //public class rivalDisplay : MonoBehaviour
 public class rivalDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
@@ -14,6 +15,7 @@ public class rivalDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public GameObject bgPanel;
     public int idNum;
     public bool isLoseDisplay; //if true, do not display extra info on hover
+    private Tween scaleTween;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -24,6 +26,9 @@ public class rivalDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         nameObj.SetActive(true);
         scoreObj.SetActive(true);
         bgPanel.SetActive(true);
+        //scale this obj up on hover
+        scaleTween?.Kill();
+        scaleTween = transform.DOScale(new Vector3(1.2f, 1.2f, 1), 0.1f);
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -34,6 +39,9 @@ public class rivalDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         nameObj.SetActive(false);
         scoreObj.SetActive(false);
         bgPanel.SetActive(false);
+        //stop scaling this up
+        scaleTween?.Kill();
+        scaleTween = transform.DOScale(Vector3.one, 0.1f);
     }
 
     public void UpdateView()

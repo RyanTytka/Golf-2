@@ -581,6 +581,7 @@ public class Course : MonoBehaviour
             int roll = selectedClub.GetComponent<Draggable>().Roll / 10;
             HighlightHit();
         }
+        UpdateStatusEffectDisplay();
     }
 
     // Returns the distance from given point to the hole
@@ -651,9 +652,6 @@ public class Course : MonoBehaviour
         AnimationCurve curve = new AnimationCurve(new Keyframe(0f, 1f, 0f, -2f), new Keyframe(1f + ratio, 0f, -2f, 0f));
         // need less linear curve. short shots too fast and long shots too slow
         float shotLength = (swing.endIndex - swing.startIndex) / 5f;
-        //club effects at start of swing
-        if (selectedClub.GetComponent<Draggable>().cardName == "Paper Club")
-            GameObject.Find("GameManager").GetComponent<Hand>().Toss(selectedClub);
         isBallMoving = true;
         //send the ball on its path
         DOPath = ballObj.transform.DOPath(path, shotLength, PathType.Linear).SetEase(Ease.OutCubic).OnUpdate(() =>
@@ -793,7 +791,11 @@ public class Course : MonoBehaviour
         //deselect current club and ball and update hand
         if (selectedClub != null)
         {
-            if (selectedClub.GetComponent<Draggable>().isDriver)
+            if (selectedClub.GetComponent<Draggable>().cardName == "Paper Club")
+            {
+                selectedClub.GetComponent<Draggable>().AnimateDiscard(true);
+            }
+            else if (selectedClub.GetComponent<Draggable>().isDriver)
             {
                 handRef.hand.Remove(selectedClub);
                 Destroy(selectedClub);
