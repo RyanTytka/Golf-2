@@ -743,7 +743,7 @@ public class Draggable : MonoBehaviour
         Hand h = GameObject.Find("GameManager").GetComponent<Hand>();
         //animation variables
         float moveDuration = 1.0f;
-        Vector3 endPos = new(h.caddieDisplays.Count * 1 - 5, 2f);
+        Vector3 endPos = new(h.caddieDisplays.Count - 6f, 4.25f);
         // Set sort order so it is in front of everything
         GetComponentInChildren<Canvas>().sortingOrder = 1000;
         GetComponent<SpriteRenderer>().sortingOrder = 1000;
@@ -755,7 +755,7 @@ public class Draggable : MonoBehaviour
         //create the caddie icon when done
         seq.OnComplete(() =>
         {
-            GameObject newCaddie = Instantiate(h.caddieDisplayObj, GameObject.Find("MainCanvas").transform);
+            GameObject newCaddie = Instantiate(h.caddieDisplayObj, GameObject.Find("FrontCanvas").transform);
             newCaddie.GetComponent<RectTransform>().position = endPos;
             newCaddie.GetComponent<RectTransform>().localScale = new Vector3(0, 0, 0);
             newCaddie.GetComponent<caddieDisplay>().caddieRef = this.gameObject;

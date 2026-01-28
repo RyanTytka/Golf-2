@@ -1,7 +1,9 @@
 high priority:
-status effect graphics
 implement and test new cards
-caddie displays are behind the course
+cards cost 0 in shop
+courses too long/varied (410, 500yd, ?, 450 par 4 crs 1,2,3,4)
+can click swing while ball is moving
+scorecard text is misaligned in lose screen
 
 low:
 scorecard headers
@@ -19,9 +21,7 @@ pause can still hover cards in hand (but not click them)
 using arrow keys to move course before clicking makes bg jump (not always based on bg element distance maybe?)
 roll over make it say luck used instead of penalty if you have luck
 add animation/indicator for drivers
-add better wait for discard graphics (transulcent black over everything but hand, drag card to middle of screen to discard)
 when play a caddie, make the move duration scale with distance moved
-change view bag button from a button to just clicking the bag
 add camera track ball while moving
 dont delete hand/caddie/hole displays after hole until screen moves up
 clicking card while waiting for discard and dragging mouse fast breaks hovering/dragging card

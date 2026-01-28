@@ -115,6 +115,7 @@ public class Course : MonoBehaviour
     //status effects
     public int power = 0;
     public int pinpoint = 0;
+    public List<Sprite> statusEffectIcons;
 
     //rivals
     public List<string> rivalNames = new List<string>();
@@ -1085,16 +1086,34 @@ public class Course : MonoBehaviour
 
     public void UpdateStatusEffectDisplay()
     {
+        GameObject.Find("StatusEffects").GetComponentsInChildren<Image>()[0].enabled = false;
+        GameObject.Find("StatusEffects").GetComponentsInChildren<Image>()[1].enabled = false;
+        GameObject.Find("StatusEffects").GetComponentsInChildren<Image>()[2].enabled = false;
         GameObject.Find("StatusEffects").GetComponent<TextMeshProUGUI>().text = "";
         int tempPower = 0;
         if (GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Caddie 3") > 0)
             tempPower += 10 * GameObject.Find("GameManager").GetComponent<Hand>().caddies.Count;
+        int statusIndex = 0;
         if (power + tempPower != 0)
-            GameObject.Find("StatusEffects").GetComponent<TextMeshProUGUI>().text += "Power: " + (power + tempPower) + "\n";
+        {
+            GameObject.Find("StatusEffects").GetComponent<TextMeshProUGUI>().text += (power + tempPower) + "\n";
+            GameObject.Find("StatusEffects").GetComponentsInChildren<Image>()[statusIndex].enabled = true;
+            GameObject.Find("StatusEffects").GetComponentsInChildren<Image>()[statusIndex].sprite = statusEffectIcons[0];
+            statusIndex++;
+        }
         if (pinpoint != 0)
-            GameObject.Find("StatusEffects").GetComponent<TextMeshProUGUI>().text += "Pinpoint: " + pinpoint;
+        {
+            GameObject.Find("StatusEffects").GetComponent<TextMeshProUGUI>().text += pinpoint + "\n";
+            GameObject.Find("StatusEffects").GetComponentsInChildren<Image>()[statusIndex].enabled = true;
+            GameObject.Find("StatusEffects").GetComponentsInChildren<Image>()[statusIndex].sprite = statusEffectIcons[1];
+            statusIndex++;
+        }
         if (luck != 0)
-            GameObject.Find("StatusEffects").GetComponent<TextMeshProUGUI>().text += "Luck: " + luck;
+        {
+            GameObject.Find("StatusEffects").GetComponent<TextMeshProUGUI>().text += luck + "\n";
+            GameObject.Find("StatusEffects").GetComponentsInChildren<Image>()[statusIndex].enabled = true;
+            GameObject.Find("StatusEffects").GetComponentsInChildren<Image>()[statusIndex].sprite = statusEffectIcons[2];
+        }
     }
 
     public void DrawArc(Vector3 start, Vector3 end, float targetX, GameObject endObj)

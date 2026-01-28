@@ -20,6 +20,8 @@ public class CoursePiece : MonoBehaviour
     void Update()
     {
         if (GameObject.Find("CourseManager").GetComponent<Course>().paused) return;
+        if (GameObject.Find("CourseManager").GetComponent<Course>().gameState != Course.GameState.PLAYING) return;
+
         //If hovering this piece, display distance data
         Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         bool hovering = false;
