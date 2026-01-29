@@ -50,13 +50,8 @@ Or remove upgrades entirely and do artifact system (although this requires more 
 add upgrades to new card select? Or cart girl comes with upgrades mid hole? Or in shop, can't buy any cards, but can reroll upgrades as much as you want (same as new card select, although you can buy each time)
 
 misc notes:
-call nani
 deckbuilder fest in may 18-25
 https://assetstore.unity.com/packages/2d/gui/icons/low-poly-pixel-ui-169751
-https://moxfield.com/decks/qh0n0I0vBEGtctP0CXK_Nw
-https://moxfield.com/decks/L088VAS-TEKk0-4BH0EmbQ
-https://moxfield.com/decks/vIqbX1YtykSoauuntSW3zA
-https://moxfield.com/decks/8JGeI90Pt02XtSP2O9qHwQ
 
 cards list
 	////Starter
@@ -125,3 +120,25 @@ caddie 5 - Gain power when you toss a card
 voodoo doll - cannot be played. Gain 3 luck when you toss this.
 Paper Club - Toss this after use. (club made out of paper)
 Clover Ball - Gain +10 power for each luck you have
+
+
+
+
+housesitting:
+modular generated houses
+random assortment of rules each time
+use player's mic?
+have some kind of monster in the house? (maybe only if you break certain rules)
+don't tell the player the rules and they have to figure it out by trial/error? have multiple scenarios/jobs?
+or have rules be very vague
+rules:
+- if you hear knocking, close the curtains
+- if someone is standing outside on the sidewalk, make sure the front lights are on
+- never turn on the TV before 3AM
+- never have more than 1 faucet running
+- if the lights turn off, hide until you hear the front door open
+- if you walk into a room and everything goes quiet, do not move until sound returns
+- if the lights don't turn on, hide in a closet
+- if a clock chimes while you are on the stairs, go back the way you came without turning around
+- if bathtub/sink is full of water, drain it immediately. If the water has turned red, turn the radiio/TV on as loud as you can
+- if you hear a dog barking, go open the back door. 
