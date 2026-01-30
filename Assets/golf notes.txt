@@ -6,6 +6,7 @@ distance data marker is in front when waiting for discard
 hazards display stoke penalty particle even if you have luck
 
 low:
+pressing space bar after start does start game again
 shooting backwards swing animation happens instantly
 distance data marker is in front of ability card while dragging it to play area
 scorecard headers
