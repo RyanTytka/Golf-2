@@ -654,6 +654,8 @@ public class Course : MonoBehaviour
         // need less linear curve. short shots too fast and long shots too slow
         float shotLength = (swing.endIndex - swing.startIndex) / 5f;
         isBallMoving = true;
+        GameObject.Find("SwingButton").GetComponent<Button>().interactable = false;
+        GameObject.Find("MulliganButton").GetComponent<Button>().interactable = false;
         //send the ball on its path
         DOPath = ballObj.transform.DOPath(path, shotLength, PathType.Linear).SetEase(Ease.OutCubic).OnUpdate(() =>
         {
@@ -687,6 +689,8 @@ public class Course : MonoBehaviour
     public void AfterHitBall()
     {
         isBallMoving = false;
+        GameObject.Find("SwingButton").GetComponent<Button>().interactable = true;
+        GameObject.Find("MulliganButton").GetComponent<Button>().interactable = true;
         SwingResult swing = CalculateSwing();
         //card effects
         if (selectedClub.GetComponent<Draggable>().cardName == "Shovel Wedge")

@@ -2,7 +2,6 @@ high priority:
 implement and test new cards
 cards cost 0 in shop
 courses too long/varied (410, 500yd, ?, 450 par 4 crs 1,2,3,4)
-can click swing while ball is moving
 scorecard text is misaligned in lose screen
 
 low:
