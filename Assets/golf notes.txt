@@ -1,8 +1,13 @@
 high priority:
 implement and test new cards
 courses too long/varied (410, 500yd, ?, 450 par 4 crs 1,2,3,4)
+balance tee earnings/costs
+distance data marker is in front when waiting for discard
+hazards display stoke penalty particle even if you have luck
 
 low:
+shooting backwards swing animation happens instantly
+distance data marker is in front of ability card while dragging it to play area
 scorecard headers
 need new tees Icon
 new ball sprite
@@ -60,102 +65,286 @@ cards list
 	////Starter
     Driver - 
         Standard Golf Club
-        ? Power, ? Roll
+        100 Power, 50 Roll
         art: done
         bugs: none
-        bugs: ?
+        bugs: none
     3 Wood - 
         Standard Golf Club
-        ? Power, ? Roll
+        80 Power, 50 Roll
         art: done
-        bugs: ?
+        bugs: none
     9 Iron - 
         Standard Golf Club
-        ? Power, ? Roll
+        50 Power, 30 Roll
         art: done
-        bugs: ?
+        bugs: none
     7 Iron - 
         Standard Golf Club
-        ? Power, ? Roll
+        70 Power, 30 Roll
         art: missing
-        bugs: ?
+        bugs: none
     Sand Wedge - 
         Standard Golf Club
-        ? Power, ? Roll
-        art: missing
-        bugs: ?
+        20 Power, 20 Roll
+        art: pending
+        bugs: none
     Pitching Wedge - 
         Standard golf club
-        ? Power, ? Roll
+        30 Power, 20 Roll
         art: done
-        bugs: ?
+        bugs: none
     Rangefinder - 
         Standard Golf tool used to find distance to the flag
         Discard 1, Draw 2
         art: done
-        bugs: ?
+        bugs: 
+            need to stop play wiggles on the discarded card
     Ace Ball - 
         Basic ball that lets you hit it right down the middle of the fairway
         Draw 2 if this lands in the fairway
         art: done
-        bugs: ?
+        bugs: none
 
     ////misc
-    Find a Ball - Finding a ball hidden in the rough on the side of the fairway
-Chip Johnson - Double iron carry. Cannot use woods.
-    Distance Ball - Basic ball that adds distance to your shot
-Back to Basics - You cannot use a special ball on this next shot
-    Backspin - When the ball stops instead of rolls
-Dead Stop Iron - Haunted looking golf club. Made of Bones/Grim Reaper Scythe, tombstone in background.
-    Dig Through Your Bag - Looking through your bag (drawing cards)
-    Ice Ball - Ball made of ice. Very slippery
-    Lead Ball - (Heavy Ball made out of metal) +50 power. Toss this if it lands in water. (art - done) (bug: does not do toss animation)
-    Old Scorecard - Crumpled old scorecard
-Reckless Swing - Discard a card to make you next shot go farther
-Square Ball - Cube shaped ball that does not roll at all
-Swiss Army Wedge - Golf Club that has tools sticking out of it
-Tee Up - Places you ball on a tee while on the fairway
-Long Ranger - Bigger shot if this is only club in hand
-    Breakfast Ball - Ball that looks like bacon and eggs (term for when you mulligan your first shot)
-Loner - Golf club (Iron) that is alone on an island. 
-Finisher - get tees when hit into hole
-Club of Greed - Gold/Fancy golf club
-Pocket Aces - Gives you luck. Cards sticking out of a pocket
-Caddie 4 - Gain luck after each shot
-    Golf Glove - Standard glove used for golf
+    Find a Ball - 
+        Finding a ball hidden in the rough on the side of the fairway
+        draw 2 balls from your deck
+        art: done
+        bugs: 
+            balls are drawn simultaneously
+    Chip Johnson - 
+        desc
+        Double iron carry. Cannot use woods.
+        art: missing
+        bugs: none
+    Distance Ball - 
+        Basic ball that adds distance to your shot
+        this shot has +20 power
+        art: done
+        bugs: none
+    Back to Basics - 
+        You cannot use a special ball on this next shot
+        Draw 2. You cannot use a ball on your next shot
+        art: pending
+        bugs: 
+            if you select a ball, it will move up (but not be selected)
+    Backspin - 
+        When the ball stops instead of rolls
+        gain 30 backspin
+        art: done
+        bugs: 
+            rename to pinpoint
+    Dead Stop Iron - 
+        Haunted looking golf club. Made of Bones/Grim Reaper Scythe, tombstone in background.
+        If this shot does not roll, draw 2
+        art: missing
+        bugs: none
+    Dig Through Your Bag - 
+        Looking through your bag
+        draw 3 then discard all non-clubs in hand
+        art: done
+        bugs: 
+            card name text goes onto second line
+    Ice Ball - 
+        Ball made of ice. Very slippery
+        this shot has x2 roll
+        art: done
+        bugs: none
+    Lead Ball - 
+        Heavy Ball made out of metal 
+        +50 power. Toss this if it lands in water. 
+        art: done
+        bugs: 
+            does not do toss animation
+    Old Scorecard - 
+        Crumpled old scorecard
+        draw a card for each stroke you have taken this hole
+        art:done
+        bugs:  
+            draws 1 card with 0 strokes
+    Reckless Swing - 
+        Discard a card to make you next shot go farther
+        +30 power. Discard a random card
+        art: missing
+        bugs: none
+    Square Ball - 
+        Cube shaped ball that does not roll at all
+        this shot has -20 power and 0 roll
+        art: missing
+        bugs: none
+    Swiss Army Wedge - 
+        Golf Club that has tools sticking out of it
+        swing: draw a card for each upgrade on this card
+        art: pending
+        bugs: 
+            draws 1 even with 0 upgrades
+    Tee Up - 
+        Places you ball on a tee while on the fairway
+        if you are on the fairway, add your drivers to your hand
+        art: missing
+        bugs: 
+            make it so it cannot be played if you are not on the fairway
+    Long Ranger - 
+        Bigger shot if this is only club in hand
+        +50 power and +20 backspin if there are no other clubs in hand
+        art: missing
+        bugs: none
+    Breakfast Ball - 
+        Ball that looks like bacon and eggs (term for when you mulligan your first shot)
+        wood: this shot has +50 power and 0 roll
+        art: done
+        bugs: 
+            irons get the power bonus but still have roll
+    Loner - 
+        Golf club (Iron) that is alone on an island. 
+        100 power / 40 roll. -10 power for each other clube in your hand
+        art: pending
+        bugs: 
+            does not update shot arc when you mulligan
+    Finisher - 
+        get tees when hit into hole
+        Swing: Gain 1 lucky. If this shot goes in the hole, gain 3 tees
+        art: missing
+        bugs: none
+    Club of Greed - 
+        Gold/Fancy golf club
+        Fairway Landing: Gain 2 Tees
+        art: pending
+        bugs: none
+    Pocket Aces - 
+        Gives you luck. Cards sticking out of a pocket
+        effect?
+        art: pending
+        bugs: 
+            not yet implemented
+    Caddie 4 - 
+        desc
+        Gain 1 luck after each shot
+        art: missing
+        bugs: none
+    Golf Glove - 
+        Standard glove used for golf
+        Gain 2 luck
+        art: done
+        bugs: none
+    Lion Forest
+        desc
+        your irons have +20 power and -20 roll
+        art: missing
+        bugs: none
 
     ////big hand
-Caddie 1 - Lose a stroke if you have 6+ cards in hand
-Practice Swing - Taking a swing that does not actually hit the ball
-Big Betty - Large and powerful driver
+    Caddie 1 - 
+        desc
+        -1 stroke if you have 6+ cards in hand at the end of the hole
+        art: missing
+        bugs: none
+    Practice Swing - 
+        Taking a swing that does not actually hit the ball
+        if you have 6 or more other cards in hand, -1 stroke and toss this
+        art: missing
+        bugs: 
+            does not do toss animation
+            make it so it is unplayable if less than 6 cards in hand
+    Big Betty - 
+        Large and powerful driver
+        100 power, 50 roll. +10 power for each card in your hand
+        art: missing
+        bugs: 
+            does not update shot arc on card draw/play
 -
 -
 
     ////toss (+3)
-Unburden - Tossing your bag of clubs into the water
-Recycle - Discard cards then draw cards
+    Unburden - 
+        Tossing your bag of clubs into the water
+        effect
+        art: pending
+        bugs: 
+            not yet implemented
+    Recycle - 
+        Discard cards then draw cards
+        effect: 
+        art: missing
+        bugs: 
+            not yet implmented
 
     ////caddie
-Phone a Friend - draws caddies from your deck
-Caddie 3 - Gain power for each caddie you have
-Caddie 2 - Draw a card when you play another caddie
+    Phone a Friend - 
+        a picture of a phone
+        add a random caddie to your hand
+        art: pending
+        bugs: none (but can go infinite with caddie 2)
+    Caddie 3 - 
+        +10 power for each caddie you have
+        effect
+        art: missing
+        bugs: none
+    Caddie 2 - 
+        desc
+        Draw a card when you play another caddie
+        art: missing
+        bugs: none
 -
 -
 
     ////hazards    
-Caddie A - Get tees when you land in the sand/water
-    Beach Ball - Large colorful plastic ball that likes being in the sand
-Rubber Duck Ball - Ball that looks like a rubber duck floating on water
-Shovel Wedge - Golf club that looks like a shovel to hit balls out of the sand
-Big Iron - Large and powerful iron. Hits out of the rough
+    Caddie A - 
+        desc
+        Get 2 tees when you land in the sand/water
+        art: missing
+        bugs: none
+    Beach Ball - 
+        Large colorful plastic ball that likes being in the sand
+        beach landing: Draw 3
+        art: done
+        bugs: none
+    Rubber Duck Ball - 
+        Ball that looks like a rubber duck floating on water
+        This shot ignores water hazards
+        art: pending
+        bugs: 
+            still gives +1 stroke particle effect
+    Shovel Wedge - 
+        Golf club that looks like a shovel to hit balls out of the sand
+        draw 2 after hitting out of the sand
+        art: pending
+        bugs: none
+    Big Iron - 
+        Large and powerful iron. Hits out of the rough
+        70 power, 30 roll. +50 power if hitting out of the rough
+        art: missing
+        bugs: none
 -
 
 
 new:
-caddie 5 - Gain power when you toss a card
-voodoo doll - cannot be played. Gain 3 luck when you toss this.
-Paper Club - Toss this after use. (club made out of paper)
-Clover Ball - Gain +10 power for each luck you have
+    caddie 5 - 
+        desc
+        +10 power when you toss a card
+        art: missing
+        bugs: ?
+    voodoo doll - 
+        desc
+        cannot be played. Gain 3 luck when you toss this.
+        art: missing
+        bugs: ?
+    Paper Club - 
+        flmisy club made out of paper
+        Toss this after use. 
+        art: missing
+        bugs: ?
+    Clover Ball - 
+        desc
+        +10 power for each luck you have
+        art: missing
+        bugs: ?
+    ???
+        desc
+        +10 power for each card in your deck
+        art: missing
+        bugs: not implemented
 
 
 
