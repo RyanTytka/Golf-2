@@ -1,8 +1,6 @@
 high priority:
 implement and test new cards
-cards cost 0 in shop
 courses too long/varied (410, 500yd, ?, 450 par 4 crs 1,2,3,4)
-scorecard text is misaligned in lose screen
 
 low:
 scorecard headers
@@ -53,15 +51,54 @@ deckbuilder fest in may 18-25
 https://assetstore.unity.com/packages/2d/gui/icons/low-poly-pixel-ui-169751
 
 cards list
+    name
+        description
+        effect
+        art
+        bugs
+
 	////Starter
-    Driver - Standard Golf Club
-    3 Wood - Standard Golf Club
-    9 Iron - Standard Golf Club
-7 Iron - Standard Golf Club
-Sand Wedge - Standard Golf Club
-    Pitching Wedge - Standard golf club
-    Rangefinder - Standard Golf tool used to find distance to the flag
-    Ace Ball - Basic ball that lets you hit it right down the middle of the fairway
+    Driver - 
+        Standard Golf Club
+        ? Power, ? Roll
+        art: done
+        bugs: none
+        bugs: ?
+    3 Wood - 
+        Standard Golf Club
+        ? Power, ? Roll
+        art: done
+        bugs: ?
+    9 Iron - 
+        Standard Golf Club
+        ? Power, ? Roll
+        art: done
+        bugs: ?
+    7 Iron - 
+        Standard Golf Club
+        ? Power, ? Roll
+        art: missing
+        bugs: ?
+    Sand Wedge - 
+        Standard Golf Club
+        ? Power, ? Roll
+        art: missing
+        bugs: ?
+    Pitching Wedge - 
+        Standard golf club
+        ? Power, ? Roll
+        art: done
+        bugs: ?
+    Rangefinder - 
+        Standard Golf tool used to find distance to the flag
+        Discard 1, Draw 2
+        art: done
+        bugs: ?
+    Ace Ball - 
+        Basic ball that lets you hit it right down the middle of the fairway
+        Draw 2 if this lands in the fairway
+        art: done
+        bugs: ?
 
     ////misc
     Find a Ball - Finding a ball hidden in the rough on the side of the fairway
@@ -72,7 +109,7 @@ Back to Basics - You cannot use a special ball on this next shot
 Dead Stop Iron - Haunted looking golf club. Made of Bones/Grim Reaper Scythe, tombstone in background.
     Dig Through Your Bag - Looking through your bag (drawing cards)
     Ice Ball - Ball made of ice. Very slippery
-    Lead Ball - Heavy Ball made out of metal
+    Lead Ball - (Heavy Ball made out of metal) +50 power. Toss this if it lands in water. (art - done) (bug: does not do toss animation)
     Old Scorecard - Crumpled old scorecard
 Reckless Swing - Discard a card to make you next shot go farther
 Square Ball - Cube shaped ball that does not roll at all
