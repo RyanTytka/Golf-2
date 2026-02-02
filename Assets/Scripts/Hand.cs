@@ -273,24 +273,20 @@ public class Hand : MonoBehaviour
     public bool waitingForDiscard = false;
     public GameObject instructionTextObj;
 
-    public IEnumerator WaitForDiscard()
+    public IEnumerator WaitForSelection(string instructions, System.Action action)
     {
-        //create instruction obj
-        //GameObject go = Instantiate(instructionTextObj, GameObject.Find("MainCanvas").transform);
-        //go.transform.position = new Vector3(-75, 50, 100);
-        //go.SetActive(true);
-        //go.GetComponentInChildren<TextMeshProUGUI>().text = "Drag a card here to discard it";
         //turn on instruction text
         referenceManager rm = GameObject.Find("ReferenceManager").GetComponent<referenceManager>();
         rm.handHighlightCanvas.SetActive(true);
-        rm.handHighlightText.GetComponent<TextMeshProUGUI>().text = "Drag a card here to discard it";
+        rm.handHighlightText.GetComponent<TextMeshProUGUI>().text = instructions;
         waitingForDiscard = true;
         //wait for card to be dragged to discard
         while (waitingForDiscard)
             yield return null;
-        //Destroy(go);
         //turn off instruction text
         rm.handHighlightCanvas.SetActive(false);
+        GameObject test = null;
+        return test;
     }
 
     //returns a random upgrade card

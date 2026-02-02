@@ -398,6 +398,10 @@ public class Draggable : MonoBehaviour
             //voodoo doll cannot be played from hand
             yield break;
         }
+        if (c.canPlayAbilities == false)
+        {
+            yield break;
+        }
         //do effect
         if (cardType == CardTypes.Caddie)
         {
@@ -425,21 +429,20 @@ public class Draggable : MonoBehaviour
             case "Rangefinder":
                 //set this card to middle of screen and stop shaking
                 onDisplay = true;
-                displayPos = new Vector3(-2, 1.5f, -2);
+                displayPos = new Vector3(-2, 1.5f, -2); //TODO: Make this tween to the pos instead of instant
                 indicatingPlay = false;
                 if (wiggleTween != null)
                     wiggleTween.Kill();
                 transform.DORotate(Vector3.zero, 0.15f).SetEase(Ease.OutQuad);
-                // If it's currently returning, stop that coroutine
-                // if (returnCoroutine != null)
-                // {
-                //     StopCoroutine(returnCoroutine);
-                //     returnCoroutine = null;
-                // }
-                // Wait for user to select a card to discard
-                yield return h.WaitForDiscard();
-                onDisplay = false;
+                // Wait for user to select a card to Toss
+                yield return h.WaitForSelection("Drag a card here to Toss it", (List<GameObject> selections) => {
+                    foreach(GameObject go in selections)
+                    {
+                        h.Toss(go);
+                    }
+                });
                 // Now draw 2 cards after discarding
+                onDisplay = false;
                 h.DrawCard(2);
                 break;
             case "Backspin":
@@ -526,15 +529,9 @@ public class Draggable : MonoBehaviour
                     }
                 break;
             case "Back to Basics":
-                //draw 2. disable balls until next swing
+                //draw 2. disable abilities until next swing
                 h.DrawCard(2);
-                if (c.selectedBall != null)
-                {
-                    c.selectedBall.GetComponent<Draggable>().selected = false;
-                    c.selectedBall.GetComponent<SpriteRenderer>().color = Color.white;
-                    c.selectedBall = null;
-                }
-                c.canPlayBall = false;
+                h.canPlayAbilities = false;
                 break;
             case "Old Scorecard":
                 h.DrawCard(c.strokeCount);

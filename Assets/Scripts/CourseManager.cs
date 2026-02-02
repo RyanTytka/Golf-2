@@ -124,6 +124,7 @@ public class Course : MonoBehaviour
     public List<Sprite> rivalImages = new List<Sprite>();
     public int currentRival = -1;
     public List<int> availRivals = new(); //tracks which rivals have already been played so no duplicates
+    public bool canPlayAbilities = true;
 
     //pause state
     public bool paused = false;
@@ -869,6 +870,7 @@ public class Course : MonoBehaviour
         }
         //clean up
         canPlayBall = true;
+        canPlayAbilities = true;
         handRef.DrawCard(1);
         if (GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Caddie 4") > 0)
             luck++;

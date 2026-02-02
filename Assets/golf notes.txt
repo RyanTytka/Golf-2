@@ -48,9 +48,17 @@ ideas for upgrades:
 -hat or something. add to caddie and makes it level 2 caddie
 -similar upgrade for upgrades. Or have specific ones that draw, give extra stats, etc
 
-Or remove upgrades entirely and do artifact system (although this requires more artwork) and refactoring
+Or remove upgrades entirely and do artifact system (although this requires more artwork and refactoring)
 
 add upgrades to new card select? Or cart girl comes with upgrades mid hole? Or in shop, can't buy any cards, but can reroll upgrades as much as you want (same as new card select, although you can buy each time)
+
+idea to counter infinite draw/ability combos: discard only shuffles into deck after each swing? or only after each hole?
+
+ascension levels: (called tours)
+-cub tour: no modifiers
+-bunny tour: course are longer
+-badger tour: shop prices increase
+-gator tour: you have 2 rivals
 
 misc notes:
 deckbuilder fest in may 18-25
@@ -69,15 +77,14 @@ cards list
         100 Power, 50 Roll
         art: done
         bugs: none
-        bugs: none
     3 Wood - 
         Standard Golf Club
-        80 Power, 50 Roll
+--        80 Power, 40 Roll
         art: done
         bugs: none
     9 Iron - 
         Standard Golf Club
-        50 Power, 30 Roll
+--        60 Power, 30 Roll
         art: done
         bugs: none
     7 Iron - 
@@ -87,23 +94,22 @@ cards list
         bugs: none
     Sand Wedge - 
         Standard Golf Club
-        20 Power, 20 Roll
+--        30 Power, 20 Roll
         art: pending
         bugs: none
     Pitching Wedge - 
         Standard golf club
-        30 Power, 20 Roll
+--        40 Power, 20 Roll
         art: done
         bugs: none
-    Rangefinder - 
-        Standard Golf tool used to find distance to the flag
-        Discard 1, Draw 2
-        art: done
-        bugs: 
-            need to stop play wiggles on the discarded card
     Ace Ball - 
         Basic ball that lets you hit it right down the middle of the fairway
         Draw 2 if this lands in the fairway
+        art: done
+        bugs: none
+    Distance Ball - 
+        Basic ball that adds distance to your shot
+        this shot has +20 power
         art: done
         bugs: none
 
@@ -114,19 +120,20 @@ cards list
         art: done
         bugs: 
             balls are drawn simultaneously
+    Rangefinder - 
+        Standard Golf tool used to find distance to the flag
+-test?-        Discard 1, Draw 2 (Toss instead of discard?)
+        art: done
+        bugs: 
+            need to stop play wiggles on the discarded card
     Chip Johnson - 
         desc
         Double iron carry. Cannot use woods.
         art: missing
         bugs: none
-    Distance Ball - 
-        Basic ball that adds distance to your shot
-        this shot has +20 power
-        art: done
-        bugs: none
     Back to Basics - 
-        You cannot use a special ball on this next shot
-        Draw 2. You cannot use a ball on your next shot
+        ball on a tee
+-test-        Draw 2. You cannot X-- use a ball on your next shot --X (play any more abilities until your next shot)
         art: pending
         bugs: 
             if you select a ball, it will move up (but not be selected)
@@ -136,9 +143,9 @@ cards list
         art: done
         bugs: 
             rename to pinpoint
-    Dead Stop Iron - 
+    Dead Stop Iron - (new name)
         Haunted looking golf club. Made of Bones/Grim Reaper Scythe, tombstone in background.
-        If this shot does not roll, draw 2
+--        iron. power ?, roll, ?. X-- If this shot does not roll, draw 2--X (+10 power for each card tossed this hole)
         art: missing
         bugs: none
     Dig Through Your Bag - 
@@ -154,29 +161,29 @@ cards list
         bugs: none
     Lead Ball - 
         Heavy Ball made out of metal 
-        +50 power. Toss this if it lands in water. 
+--        +50 power. X-- Toss this if it lands in water. --X (Toss the club used to hit this) 
         art: done
         bugs: 
             does not do toss animation
     Old Scorecard - 
         Crumpled old scorecard
-        draw a card for each stroke you have taken this hole
+--        draw a card for each stroke you have taken this hole. (Toss this)
         art:done
         bugs:  
             draws 1 card with 0 strokes
     Reckless Swing - 
         Discard a card to make you next shot go farther
-        +30 power. Discard a random card
+--        +30 power. X-- Discard --X (Toss) a random card
         art: missing
         bugs: none
-    Square Ball - 
+--    Square Ball - (just delete this)
         Cube shaped ball that does not roll at all
         this shot has -20 power and 0 roll
         art: missing
         bugs: none
     Swiss Army Wedge - 
         Golf Club that has tools sticking out of it
-        swing: draw a card for each upgrade on this card
+        power ?, roll ?. swing: draw a card for each upgrade on this card
         art: pending
         bugs: 
             draws 1 even with 0 upgrades
@@ -186,9 +193,9 @@ cards list
         art: missing
         bugs: 
             make it so it cannot be played if you are not on the fairway
-    Long Ranger - 
+    X-- Long Ranger --X  (The Showoff?)
         Bigger shot if this is only club in hand
-        +50 power and +20 backspin if there are no other clubs in hand
+--        (wood) power ? roll ?. +50 power and +20 backspin if there are no other clubs in hand
         art: missing
         bugs: none
     Breakfast Ball - 
@@ -199,39 +206,39 @@ cards list
             irons get the power bonus but still have roll
     Loner - 
         Golf club (Iron) that is alone on an island. 
-        100 power / 40 roll. -10 power for each other clube in your hand
+--        120 power / (30) roll. -10 power for each other club in your hand
         art: pending
         bugs: 
             does not update shot arc when you mulligan
-    Finisher - 
+--    Finisher (new name?) - 
         get tees when hit into hole
         Swing: Gain 1 lucky. If this shot goes in the hole, gain 3 tees
         art: missing
         bugs: none
-    Club of Greed - 
+--    Club of Greed (new name) - 
         Gold/Fancy golf club
-        Fairway Landing: Gain 2 Tees
+        power ?, roll ?. Fairway Landing: Gain 2 Tees
         art: pending
         bugs: none
     Pocket Aces - 
         Gives you luck. Cards sticking out of a pocket
-        effect?
+--        Toss 2 cards from your deck then gain 2 luck
         art: pending
         bugs: 
             not yet implemented
     Caddie 4 - 
         desc
-        Gain 1 luck after each shot
+--        Gain 1 luck X-- after each shot --X (at the start of each turn) [identical function, just worded more intuitively]
         art: missing
         bugs: none
     Golf Glove - 
         Standard glove used for golf
-        Gain 2 luck
+--        Gain 2 luck (and 20 backspin)
         art: done
         bugs: none
-    Lion Forest
+    Lion Forest (woody ___)
         desc
-        your irons have +20 power and -20 roll
+--        your X-- irons -- X (woods) have +20 power and 20 backspin (30 power / 30 backspin)
         art: missing
         bugs: none
 
@@ -250,23 +257,21 @@ cards list
             make it so it is unplayable if less than 6 cards in hand
     Big Betty - 
         Large and powerful driver
-        100 power, 50 roll. +10 power for each card in your hand
+--        (80) power, 50 roll. +10 power for each card in your hand
         art: missing
         bugs: 
             does not update shot arc on card draw/play
--
--
 
-    ////toss (+3)
+    ////toss
     Unburden - 
         Tossing your bag of clubs into the water
-        effect
+--        toss each card left in your deck. Gain 10 power for each
         art: pending
         bugs: 
             not yet implemented
-    Recycle - 
-        Discard cards then draw cards
-        effect: 
+    Recycle - (new name? beer?)
+--        toss your hand. then draw your deck
+        effect
         art: missing
         bugs: 
             not yet implmented
@@ -274,9 +279,9 @@ cards list
     ////caddie
     Phone a Friend - 
         a picture of a phone
-        add a random caddie to your hand
+--        X-- add a random caddie to your hand --X (Draw a card from your deck. Gain 2 luck)
         art: pending
-        bugs: none (but can go infinite with caddie 2)
+        bugs: none
     Caddie 3 - 
         +10 power for each caddie you have
         effect
@@ -287,8 +292,7 @@ cards list
         Draw a card when you play another caddie
         art: missing
         bugs: none
--
--
+
 
     ////hazards    
     Caddie A - 
@@ -298,26 +302,26 @@ cards list
         bugs: none
     Beach Ball - 
         Large colorful plastic ball that likes being in the sand
-        beach landing: Draw 3
+        sand landing: Draw 3
         art: done
         bugs: none
     Rubber Duck Ball - 
         Ball that looks like a rubber duck floating on water
-        This shot ignores water hazards
+--        X-- This shot ignores water hazards --X (water landing: do not lose a stroke)
         art: pending
         bugs: 
             still gives +1 stroke particle effect
     Shovel Wedge - 
         Golf club that looks like a shovel to hit balls out of the sand
-        draw 2 after hitting out of the sand
+--        X-- draw 2 after --X (+50 power when) hitting out of the sand
         art: pending
         bugs: none
-    Big Iron - 
+    Big Iron - (new name?)
         Large and powerful iron. Hits out of the rough
         70 power, 30 roll. +50 power if hitting out of the rough
         art: missing
         bugs: none
--
+
 
 
 new:
@@ -328,25 +332,37 @@ new:
         bugs: ?
     voodoo doll - 
         desc
-        cannot be played. Gain 3 luck when you toss this.
+--        cannot be played. Gain 3 luck (and draw a card) when you toss this.
         art: missing
         bugs: ?
     Paper Club - 
-        flmisy club made out of paper
-        Toss this after use. 
+        flimsy club made out of paper
+        power ? roll ?. Toss this after use. 
         art: missing
         bugs: ?
     Clover Ball - 
         desc
-        +10 power for each luck you have
+--        +10 power (and +10 roll) for each luck you have
         art: missing
         bugs: ?
-    ???
+    ??? Ball
         desc
-        +10 power for each card in your deck
+        +10 power for each card in your draw pile.
         art: missing
-        bugs: not implemented
-
+        bugs: 
+            not yet implemented
+    Lawnmower ball/ Ramball (rambo) / Jungle Ball
+        desc
+        gain 10 power instead of lose it when roll over rough
+        art: missing
+        bugs:
+            not yet implemented
+    Low Rider (name?)
+        desc
+        iron. power 50, roll 100. 
+        art: missing
+        bugs: 
+            not yet implemented
 
 
 
