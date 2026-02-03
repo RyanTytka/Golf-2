@@ -2,10 +2,10 @@ high priority:
 implement and test new cards
 courses too long/varied (410, 500yd, ?, 450 par 4 crs 1,2,3,4)
 balance tee earnings/costs
-distance data marker is in front when waiting for discard
 hazards display stoke penalty particle even if you have luck
 
 low:
+distance data marker is in front when waiting for discard
 pressing space bar after start does start game again
 shooting backwards swing animation happens instantly
 distance data marker is in front of ability card while dragging it to play area
@@ -122,10 +122,9 @@ cards list
             balls are drawn simultaneously
     Rangefinder - 
         Standard Golf tool used to find distance to the flag
--test?-        Discard 1, Draw 2 (Toss instead of discard?)
+        Discard 1, Draw 2
         art: done
-        bugs: 
-            need to stop play wiggles on the discarded card
+        bugs: none
     Chip Johnson - 
         desc
         Double iron carry. Cannot use woods.
@@ -133,10 +132,9 @@ cards list
         bugs: none
     Back to Basics - 
         ball on a tee
--test-        Draw 2. You cannot X-- use a ball on your next shot --X (play any more abilities until your next shot)
+        Draw 2. You cannot play any more abilities until your next shot
         art: pending
-        bugs: 
-            if you select a ball, it will move up (but not be selected)
+        bugs: none
     Backspin - 
         When the ball stops instead of rolls
         gain 30 backspin
@@ -332,9 +330,9 @@ new:
         bugs: ?
     voodoo doll - 
         desc
---        cannot be played. Gain 3 luck (and draw a card) when you toss this.
+        cannot be played. Gain 5 luck when you toss this.
         art: missing
-        bugs: ?
+        bugs: none
     Paper Club - 
         flimsy club made out of paper
         power ? roll ?. Toss this after use. 

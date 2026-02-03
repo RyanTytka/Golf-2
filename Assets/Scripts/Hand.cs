@@ -37,6 +37,7 @@ public class Hand : MonoBehaviour
     public List<GameObject> caddieDisplays; //list of current objs
     public bool playedAbility;
     public bool paused = false;
+    public List<GameObject> cardSelection = null; //used when user needs to select cards from hand
 
     public void StartGame()
     {
@@ -230,7 +231,7 @@ public class Hand : MonoBehaviour
     {
         //card effects
         if (card.GetComponent<Draggable>().cardName == "Voodoo Doll")
-            GameObject.Find("CourseManager").GetComponent<Course>().luck += 3;
+            GameObject.Find("CourseManager").GetComponent<Course>().luck += 5;
         if (GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Caddie 5") > 0)
             GameObject.Find("CourseManager").GetComponent<Course>().power += 10;
         //remove from current deck/hand/discard
@@ -248,6 +249,7 @@ public class Hand : MonoBehaviour
         }
         // baseDeck.Remove(card.GetComponent<Draggable>().baseReference);
         // Destroy(card.GetComponent<Draggable>().baseReference);
+        GameObject.Find("CourseManager").GetComponent<Course>().UpdateStatusEffectDisplay();
         Destroy(card);
     }
 
@@ -273,7 +275,8 @@ public class Hand : MonoBehaviour
     public bool waitingForDiscard = false;
     public GameObject instructionTextObj;
 
-    public IEnumerator WaitForSelection(string instructions, System.Action action)
+    //highlight hand and display 'instructions' until the user selects 'amount' cards
+    public IEnumerator WaitForSelection(string instructions, int amount)
     {
         //turn on instruction text
         referenceManager rm = GameObject.Find("ReferenceManager").GetComponent<referenceManager>();
@@ -281,12 +284,11 @@ public class Hand : MonoBehaviour
         rm.handHighlightText.GetComponent<TextMeshProUGUI>().text = instructions;
         waitingForDiscard = true;
         //wait for card to be dragged to discard
-        while (waitingForDiscard)
+        while (cardSelection.Count < amount)
             yield return null;
+        waitingForDiscard = false;
         //turn off instruction text
         rm.handHighlightCanvas.SetActive(false);
-        GameObject test = null;
-        return test;
     }
 
     //returns a random upgrade card

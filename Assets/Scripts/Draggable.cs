@@ -248,8 +248,9 @@ public class Draggable : MonoBehaviour
                     selected = false;
                     GameObject.Find("CourseManager").GetComponent<Course>().selectedBall = null;
                 }
-                hand.DiscardCard(this.gameObject);
-                hand.waitingForDiscard = false;
+                hand.cardSelection.Add(this.gameObject);
+                //hand.DiscardCard(this.gameObject);
+                //hand.waitingForDiscard = false;
             }
         }
         else
@@ -434,15 +435,12 @@ public class Draggable : MonoBehaviour
                 if (wiggleTween != null)
                     wiggleTween.Kill();
                 transform.DORotate(Vector3.zero, 0.15f).SetEase(Ease.OutQuad);
+                h.cardSelection = new();
                 // Wait for user to select a card to Toss
-                yield return h.WaitForSelection("Drag a card here to Toss it", (List<GameObject> selections) => {
-                    foreach(GameObject go in selections)
-                    {
-                        h.Toss(go);
-                    }
-                });
+                yield return h.WaitForSelection("Drag a card here to Toss it", 1);
                 // Now draw 2 cards after discarding
                 onDisplay = false;
+                h.cardSelection[0].GetComponent<Draggable>().AnimateDiscard(true);
                 h.DrawCard(2);
                 break;
             case "Backspin":
@@ -531,7 +529,7 @@ public class Draggable : MonoBehaviour
             case "Back to Basics":
                 //draw 2. disable abilities until next swing
                 h.DrawCard(2);
-                h.canPlayAbilities = false;
+                c.canPlayAbilities = false;
                 break;
             case "Old Scorecard":
                 h.DrawCard(c.strokeCount);

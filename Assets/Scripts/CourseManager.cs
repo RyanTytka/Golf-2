@@ -24,7 +24,8 @@ public class Course : MonoBehaviour
     public void Awake()
     {
         //set up debug
-        GameObject.Find("SkipHoleButton").GetComponent<Button>().onClick.AddListener(GameObject.Find("CourseManager").GetComponent<Course>().SkipHole);
+        if(GameObject.Find("SkipHoleButton") != null)
+            GameObject.Find("SkipHoleButton").GetComponent<Button>().onClick.AddListener(GameObject.Find("CourseManager").GetComponent<Course>().SkipHole);
         //
         if (courseManagerObj == null)
         {
@@ -359,8 +360,8 @@ public class Course : MonoBehaviour
                 break;
         }
         int holeLength = Random.Range(35, 40) + courseNum * 5 + lengthMod; //actual length
-        holeLength += +pars[holeNum - 1] == 3 ? 10 : 0;
-        holeLength += +pars[holeNum - 1] == 5 ? 12 : 0;
+        holeLength += pars[holeNum - 1] == 3 ? 10 : 0;
+        holeLength += pars[holeNum - 1] == 5 ? 12 : 0;
         for (int i = 0; i < holeLength; i++)
         {
             GameObject fairway = Instantiate(coursePieces[(int)fairwayType], courseDisplay.transform);
@@ -529,11 +530,14 @@ public class Course : MonoBehaviour
 
     public void DisplayCourse()
     {
-        GameObject.Find("RivalDisplay").GetComponent<rivalDisplay>().idNum = currentRival;
-        GameObject.Find("RivalDisplay").GetComponent<rivalDisplay>().UpdateView();
-        GameObject.Find("StrokeCount").GetComponent<TextMeshProUGUI>().text = strokeCount.ToString();
-        GameObject.Find("HoleCount").GetComponent<TextMeshProUGUI>().text = holeNum.ToString();
-        GameObject.Find("TeeCount").GetComponent<TextMeshProUGUI>().text = tees.ToString();
+        if (GameObject.Find("RivalDisplay") != null)
+        {
+            GameObject.Find("RivalDisplay").GetComponent<rivalDisplay>().idNum = currentRival;
+            GameObject.Find("RivalDisplay").GetComponent<rivalDisplay>().UpdateView();
+            GameObject.Find("StrokeCount").GetComponent<TextMeshProUGUI>().text = strokeCount.ToString();
+            GameObject.Find("HoleCount").GetComponent<TextMeshProUGUI>().text = holeNum.ToString();
+            GameObject.Find("TeeCount").GetComponent<TextMeshProUGUI>().text = tees.ToString();
+        }
         //Put pieces in their place
         int prevPieceType = 0;
         for (int i = 0; i < courseLayout.Count; i++)
