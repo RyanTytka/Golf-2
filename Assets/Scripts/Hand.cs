@@ -38,6 +38,7 @@ public class Hand : MonoBehaviour
     public bool playedAbility;
     public bool paused = false;
     public List<GameObject> cardSelection = null; //used when user needs to select cards from hand
+    public int cardsTossed = 0; //increments each time you toss. resets each swing
 
     public void StartGame()
     {
@@ -229,6 +230,7 @@ public class Hand : MonoBehaviour
     //removes a card from your deck (not the base deck)
     public void Toss(GameObject card)
     {
+        cardsTossed++;
         //card effects
         if (card.GetComponent<Draggable>().cardName == "Voodoo Doll")
             GameObject.Find("CourseManager").GetComponent<Course>().luck += 5;

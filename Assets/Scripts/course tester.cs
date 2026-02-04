@@ -24,11 +24,16 @@ public class coursetester : MonoBehaviour
 
     public void cycleCourseType()
     {
-
+        CourseType = (CourseType + 1) % 4;
+        GameObject.Find("CourseType").GetComponent<TextMeshProUGUI>().text = CourseType.ToString();
     }
 
     public void createHole()
     {
-        GameObject.Find("CourseManager").GetComponent<Course>().NewCourse();
+        Course c = GameObject.Find("CourseManager").GetComponent<Course>();
+        c.courseType = (int)CourseType;
+        c.courseNum--;
+        c.holeNum = 0;
+        c.NewCourse();
     }
 }

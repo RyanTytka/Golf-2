@@ -78,6 +78,20 @@ public class CoursePiece : MonoBehaviour
     //create pop up effect that triggers when landing on this piece
     public void RolledOver()
     {
+        GameObject particle = rollOverPrefab;
+        //check for card effects
+        Course c = GameObject.Find("CourseManager").GetComponent<Course>();
+        if (c.selectedBall != null)
+        {
+            if (myType == (int)Course.CoursePieces.ROUGH)
+            {
+                if (c.selectedBall.GetComponent<Draggable>().cardName == "Lawnmower Ball")
+                {
+                    // particle = ???; //TODO: make new particle for here
+                }
+            }
+        }
+        //create particle effect
         GameObject obj = Instantiate(rollOverPrefab, transform);
         obj.transform.localPosition = new Vector3(0, 1, 0);
         obj.GetComponent<SpriteRenderer>().sprite = rollOverSprite;

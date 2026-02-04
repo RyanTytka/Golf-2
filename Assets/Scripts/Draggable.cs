@@ -500,19 +500,22 @@ public class Draggable : MonoBehaviour
             case "Golf Glove":
                 //Gain 2 Luck 
                 c.luck += 2;
+                c.pinpoint += 2;
                 break;
             case "Phone a Friend":
                 //add a random caddie to your hand
                 List<GameObject> caddies = new();
-                foreach (GameObject go in h.upgradeCards)
+                foreach (GameObject go in h.currentDeck)
                 {
                     //find all caddies available
                     if (go.GetComponent<Draggable>().cardType == CardTypes.Caddie)
                         caddies.Add(go);
                 }
-                //create new caddie card
-                GameObject newCaddie = Instantiate(caddies[Random.Range(0, caddies.Count - 1)], GameObject.Find("GameManager").transform);
-                h.hand.Add(newCaddie);
+                //draw a random caddie
+                // GameObject newCaddie = Instantiate(caddies[Random.Range(0, caddies.Count - 1)], GameObject.Find("GameManager").transform);
+                // h.hand.Add(newCaddie);
+                h.DrawCard(caddies[Random.Range(0, caddies.Count - 1)]);
+                c.luck += 2;
                 break;
             case "Tee Up":
                 //if in fairway, add all drivers to hand
@@ -532,14 +535,18 @@ public class Draggable : MonoBehaviour
                 c.canPlayAbilities = false;
                 break;
             case "Old Scorecard":
-                h.DrawCard(c.strokeCount);
+                h.DrawCard(c.strokeCount, () =>
+                {
+                    isStillActive = false;
+                    AnimateDiscard(true);
+                });
                 break;
             case "Reckless Swing":
                 List<GameObject> otherCards = h.hand.Where(card => card != this.gameObject).ToList();
                 if (otherCards.Count == 0)
                     break;
-                GameObject cardToDiscard = otherCards[Random.Range(0, otherCards.Count)];
-                h.DiscardCard(cardToDiscard);
+                GameObject cardToToss = otherCards[Random.Range(0, otherCards.Count)];
+                cardToToss.GetComponent<Draggable>().AnimateDiscard(true);
                 c.power += 30;
                 break;
             case "Practice Swing":
@@ -553,24 +560,31 @@ public class Draggable : MonoBehaviour
             // following are not yet implemented:
             case "Pocket Aces":
                 //Toss 2 cards from your deck then gain 2 luck
-                // h.Toss(h.currentDeck[0]);
+                h.currentDeck[0].GetComponent<Draggable>().AnimateDiscard(true, () =>
+                {
+                    h.currentDeck[0].GetComponent<Draggable>().AnimateDiscard(true);
+                });
                 c.luck += 2;
                 break;
             case "Unburden":
                 //toss each card left in your deck. Gain 10 power for each
-                // while(h.currentDeck.Count > 0)
-                // {
-                // h.Toss(h.currentDeck[0]);
-                // c.power += 10;
-                // }
+                float timeBetweenToss = h.currentDeck.Count == 0 ? 0 : Mathf.Min(0.25f, 1.0f / h.currentDeck.Count);
+                while (h.currentDeck.Count > 0)
+                {
+                    h.Toss(h.currentDeck[0]); //TODO: need animation
+                    c.power += 10;
+                    c.UpdateStatusEffectDisplay();
+                    c.DisplayCourse();
+                    yield return WaitForSeconds(timeBetweenToss);
+                }
                 break;
             case "Recycle":
                 //toss your hand. then draw your deck
-                // while(h.hand.Count > 0)
-                // {
-                //     h.Toss(h.hand[0]);
-                // }
-                // h.DrawCard(h.currentDeck.Count);
+                while (h.hand.Count > 0)
+                {
+                    yield return h.hand[0].GetComponent<Draggable>().AnimateDiscard(true);
+                }
+                h.DrawCard(h.currentDeck.Count);
                 break;
         }
         //Update view

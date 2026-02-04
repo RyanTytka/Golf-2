@@ -54,6 +54,11 @@ add upgrades to new card select? Or cart girl comes with upgrades mid hole? Or i
 
 idea to counter infinite draw/ability combos: discard only shuffles into deck after each swing? or only after each hole?
 
+ideas: consumable drinks you can buy at shop (and/or cart girl)
+ - water: start with extra card in hand / draw 2
+ - beer: 
+ - power-aid: get power on shot
+
 ascension levels: (called tours)
 -cub tour: no modifiers
 -bunny tour: course are longer
@@ -143,7 +148,7 @@ cards list
             rename to pinpoint
     Dead Stop Iron - (new name)
         Haunted looking golf club. Made of Bones/Grim Reaper Scythe, tombstone in background.
---        iron. power ?, roll, ?. X-- If this shot does not roll, draw 2--X (+10 power for each card tossed this hole)
+-test-        iron. power ?, roll, ?. X-- If this shot does not roll, draw 2--X (+10 power for each card tossed this hole)
         art: missing
         bugs: none
     Dig Through Your Bag - 
@@ -159,22 +164,22 @@ cards list
         bugs: none
     Lead Ball - 
         Heavy Ball made out of metal 
---        +50 power. X-- Toss this if it lands in water. --X (Toss the club used to hit this) 
+-test-        +50 power. X-- Toss this if it lands in water. --X (Toss the club used to hit this) 
         art: done
         bugs: 
             does not do toss animation
     Old Scorecard - 
         Crumpled old scorecard
---        draw a card for each stroke you have taken this hole. (Toss this)
+-test-        draw a card for each stroke you have taken this hole. (Toss this)
         art:done
         bugs:  
             draws 1 card with 0 strokes
     Reckless Swing - 
         Discard a card to make you next shot go farther
---        +30 power. X-- Discard --X (Toss) a random card
+-test-        +30 power. X-- Discard --X (Toss) a random card
         art: missing
         bugs: none
---    Square Ball - (just delete this)
+--    Square Ball - (just delete this for now)
         Cube shaped ball that does not roll at all
         this shot has -20 power and 0 roll
         art: missing
@@ -220,7 +225,7 @@ cards list
         bugs: none
     Pocket Aces - 
         Gives you luck. Cards sticking out of a pocket
---        Toss 2 cards from your deck then gain 2 luck
+-test-        Toss 2 cards from your deck then gain 2 luck
         art: pending
         bugs: 
             not yet implemented
@@ -231,12 +236,12 @@ cards list
         bugs: none
     Golf Glove - 
         Standard glove used for golf
---        Gain 2 luck (and 20 backspin)
+-test-        Gain 2 luck (and 20 backspin)
         art: done
         bugs: none
-    Lion Forest (woody ___)
+--    Lion Forest (woody ___)
         desc
---        your X-- irons -- X (woods) have +20 power and 20 backspin (30 power / 30 backspin)
+-test-        your X-- irons -- X (woods) have +20 power and 20 backspin (30 power / 30 backspin)
         art: missing
         bugs: none
 
@@ -263,12 +268,12 @@ cards list
     ////toss
     Unburden - 
         Tossing your bag of clubs into the water
---        toss each card left in your deck. Gain 10 power for each
+-test-        toss each card left in your deck. Gain 10 power for each
         art: pending
         bugs: 
             not yet implemented
     Recycle - (new name? beer?)
---        toss your hand. then draw your deck
+-test-        toss your hand. then draw your deck
         effect
         art: missing
         bugs: 
@@ -277,7 +282,7 @@ cards list
     ////caddie
     Phone a Friend - 
         a picture of a phone
---        X-- add a random caddie to your hand --X (Draw a card from your deck. Gain 2 luck)
+-test-        X-- add a random caddie to your hand --X (Draw a caddie from your deck. Gain 2 luck)
         art: pending
         bugs: none
     Caddie 3 - 
@@ -305,16 +310,16 @@ cards list
         bugs: none
     Rubber Duck Ball - 
         Ball that looks like a rubber duck floating on water
---        X-- This shot ignores water hazards --X (water landing: do not lose a stroke)
+-test-        X-- This shot ignores water hazards --X (water landing: do not lose a stroke)
         art: pending
         bugs: 
             still gives +1 stroke particle effect
     Shovel Wedge - 
         Golf club that looks like a shovel to hit balls out of the sand
---        X-- draw 2 after --X (+50 power when) hitting out of the sand
+        draw 2 after hitting out of the sand
         art: pending
         bugs: none
-    Big Iron - (new name?)
+--    Big Iron - (new name?)
         Large and powerful iron. Hits out of the rough
         70 power, 30 roll. +50 power if hitting out of the rough
         art: missing
@@ -327,7 +332,8 @@ new:
         desc
         +10 power when you toss a card
         art: missing
-        bugs: ?
+        bugs: 
+            test
     voodoo doll - 
         desc
         cannot be played. Gain 5 luck when you toss this.
@@ -337,30 +343,39 @@ new:
         flimsy club made out of paper
         power ? roll ?. Toss this after use. 
         art: missing
-        bugs: ?
+        bugs: 
+            test
     Clover Ball - 
         desc
---        +10 power (and +10 roll) for each luck you have
+        +10 power and +10 roll for each luck you have
         art: missing
-        bugs: ?
-    ??? Ball
+        bugs: 
+            test
+    Disco Ball 
         desc
         +10 power for each card in your draw pile.
         art: missing
         bugs: 
-            not yet implemented
+            test
     Lawnmower ball/ Ramball (rambo) / Jungle Ball
         desc
         gain 10 power instead of lose it when roll over rough
         art: missing
         bugs:
-            not yet implemented
+            test
+            rough shows -10 power particle when roll over
     Low Rider (name?)
         desc
         iron. power 50, roll 100. 
         art: missing
         bugs: 
             not yet implemented
+    Foot Wedge
+        foot kicking a ball
+        wedge. power 10, roll 10. Does not cost a stroke
+        art: missing
+        bugs:
+            test
 
 
 

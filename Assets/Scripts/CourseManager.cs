@@ -24,7 +24,7 @@ public class Course : MonoBehaviour
     public void Awake()
     {
         //set up debug
-        if(GameObject.Find("SkipHoleButton") != null)
+        if (GameObject.Find("SkipHoleButton") != null)
             GameObject.Find("SkipHoleButton").GetComponent<Button>().onClick.AddListener(GameObject.Find("CourseManager").GetComponent<Course>().SkipHole);
         //
         if (courseManagerObj == null)
@@ -69,7 +69,7 @@ public class Course : MonoBehaviour
         SHOP,
         END_SCREEN
     }
-    private enum CoursePieces
+    public enum CoursePieces
     {
         FAIRWAY = 0,
         ROUGH,
@@ -184,7 +184,7 @@ public class Course : MonoBehaviour
             startMouseX = currentMouseX;
         }
         // Handle keyboard input
-        if ((Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow)))
+        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow))
         {
             // Sync the startChildX with the current position to prevent snapping
             startChildX = courseDisplay.transform.localPosition.x;
@@ -486,7 +486,8 @@ public class Course : MonoBehaviour
         newLocalPos.x = maxX;
         courseDisplay.transform.localPosition = newLocalPos;
         //generate bg elements
-        GameObject.Find("BackgroundManager").GetComponent<backgroundManager>().SetSprites((int)courseType);
+        if (GameObject.Find("BackgroundManager") != null)
+            GameObject.Find("BackgroundManager").GetComponent<backgroundManager>().SetSprites((int)courseType);
     }
 
     //helper method that inputs pieceType at index
@@ -708,14 +709,10 @@ public class Course : MonoBehaviour
         string ballName = selectedBall != null ? selectedBall.GetComponent<Draggable>().cardName : "";
         luck += swing.luckGained;
         luck -= swing.luckUsed;
-        strokeCount++;
+        if (selectedClub.GetComponent<Draggable>().cardName != "Foot Wedge")
+            strokeCount++;
         //card effects
         //clubs
-        if (selectedClub.GetComponent<Draggable>().cardName == "Dead Stop Iron")
-        { //draw 2 when swinging with no roll
-            if (swing.landIndex == swing.endIndex)
-                GameObject.Find("GameManager").GetComponent<Hand>().DrawCard(2);
-        }
         if (selectedClub.GetComponent<Draggable>().cardName == "Swiss Army Wedge")
         { //draw for each upgrade on this club
             GameObject.Find("GameManager").GetComponent<Hand>().DrawCard(selectedClub.GetComponentsInChildren<upgradeBuy>().Length);
@@ -741,7 +738,10 @@ public class Course : MonoBehaviour
                 }
                 else
                 {
-                    power -= 10;
+                    if (selectedBall != null && selectedBall.GetComponent<Draggable>().cardName == "Lawnmower Ball")
+                        power += 10;
+                    else
+                        power -= 10;
                 }
             }
             if (courseLayout[ballPos].GetComponent<CoursePiece>().pieceName == "Water")
@@ -752,25 +752,19 @@ public class Course : MonoBehaviour
                 //Item effects
                 if (GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Caddie A") > 0)
                     tees += 2;
-                //Rubber Duck Ball ignores water
-                if (selectedBall == null || selectedBall.GetComponent<Draggable>().cardName != "Rubber Duck Ball")
+                if (luck > 0)
                 {
-                    if (luck > 0)
-                    {
-                        luck--;
-                    }
-                    else
+                    luck--;
+                }
+                else
+                {
+                    //rubber duck ball does not take stroke penalty
+                    if (selectedBall == null || selectedBall.GetComponent<Draggable>().cardName != "Rubber Duck Ball")
                     {
                         strokeCount++;
                         if (currentRival == 1)
                             strokeCount++;
                     }
-                }
-                //Lead destroys itself in water
-                if (selectedBall != null && selectedBall.GetComponent<Draggable>().cardName == "Lead Ball")
-                {
-                    GameObject.Find("GameManager").GetComponent<Hand>().Toss(selectedBall);
-                    selectedBall = null;
                 }
             }
             pinpoint = 0;
@@ -801,7 +795,13 @@ public class Course : MonoBehaviour
         //deselect current club and ball and update hand
         if (selectedClub != null)
         {
+            //paper club tosses itself
             if (selectedClub.GetComponent<Draggable>().cardName == "Paper Club")
+            {
+                selectedClub.GetComponent<Draggable>().AnimateDiscard(true);
+            }
+            //lead ball destroys club used
+            else if (selectedBall.GetComponent<Draggable>().cardName == "Lead Ball")
             {
                 selectedClub.GetComponent<Draggable>().AnimateDiscard(true);
             }
@@ -873,6 +873,7 @@ public class Course : MonoBehaviour
             return;
         }
         //clean up
+        GameObject.Find("GameManager").GetComponent<Hand>().cardsTossed = 0;
         canPlayBall = true;
         canPlayAbilities = true;
         handRef.DrawCard(1);
@@ -950,6 +951,8 @@ public class Course : MonoBehaviour
         }
         if (selectedClub.GetComponent<Draggable>().cardName == "The Loner")
             carry = Mathf.Max(1, carry - GameObject.Find("GameManager").GetComponent<Hand>().hand.Count + 1);
+        if (selectedClub.GetComponent<Draggable>().cardName == "Dead Stop Iron")
+            carry += GameObject.Find("GameManager").GetComponent<Hand>().cardsTossed;
         //caddies
         if (GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Chip Johnson") > 0 &&
             selectedClub.GetComponent<Draggable>().clubType == Draggable.ClubTypes.Iron)
@@ -958,7 +961,7 @@ public class Course : MonoBehaviour
             carry += GameObject.Find("GameManager").GetComponent<Hand>().caddies.Count;
         if (GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Lion Forest") > 0)
         {
-            if (selectedClub.GetComponent<Draggable>().clubType == Draggable.ClubTypes.Iron)
+            if (selectedClub.GetComponent<Draggable>().clubType == Draggable.ClubTypes.Wood)
             {
                 carry += 2;
                 roll -= 2;
@@ -999,6 +1002,10 @@ public class Course : MonoBehaviour
                     break;
                 case "Clover Ball":
                     carry += luck;
+                    roll += luck;
+                    break;
+                case "Disco Ball":
+                    carry += handRef.currentDeck.Count;
                     break;
             }
         }
@@ -1055,22 +1062,14 @@ public class Course : MonoBehaviour
                     break;
                 case "Sand":
                 case "Water":
-                    if (selectedBall != null && selectedBall.GetComponent<Draggable>().cardName == "Rubber Duck Ball")
+                    if (luck + tempLuck - luckUsed > 0)
                     {
-                        //Rubber Duck Ball ignores water
+                        luckUsed++;
                         rollAmount++;
                     }
                     else
                     {
-                        if (luck + tempLuck - luckUsed > 0)
-                        {
-                            luckUsed++;
-                            rollAmount++;
-                        }
-                        else
-                        {
-                            i = end;
-                        }
+                        i = end;
                     }
                     break;
                 case "Hole":
@@ -1096,6 +1095,7 @@ public class Course : MonoBehaviour
 
     public void UpdateStatusEffectDisplay()
     {
+        if (GameObject.Find("StatusEffects") == null) return;
         GameObject.Find("StatusEffects").GetComponentsInChildren<Image>()[0].enabled = false;
         GameObject.Find("StatusEffects").GetComponentsInChildren<Image>()[1].enabled = false;
         GameObject.Find("StatusEffects").GetComponentsInChildren<Image>()[2].enabled = false;
