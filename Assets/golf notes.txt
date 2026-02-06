@@ -1,6 +1,6 @@
 high priority:
 implement and test new cards
-courses too long/varied (410, 500yd, ?, 450 par 4 crs 1,2,3,4)
+courses too long/varied 
 balance tee earnings/costs
 hazards display stoke penalty particle even if you have luck
 

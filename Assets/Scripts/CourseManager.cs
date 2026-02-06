@@ -322,6 +322,7 @@ public class Course : MonoBehaviour
         NewHole();
     }
 
+    public int test_par = -1; //use this if you want to set the par to specific num
     //Generate new hole
     public void NewHole()
     {
@@ -360,8 +361,8 @@ public class Course : MonoBehaviour
                 break;
         }
         int holeLength = Random.Range(35, 40) + courseNum * 5 + lengthMod; //actual length
-        holeLength += pars[holeNum - 1] == 3 ? 10 : 0;
-        holeLength += pars[holeNum - 1] == 5 ? 12 : 0;
+        holeLength -= test_par == -1 ? (pars[holeNum - 1] == 3 ? 10 : 0) : (test_par == 3 ? 10 : 0);
+        holeLength += test_par == -1 ?  (pars[holeNum - 1] == 5 ? 12 : 0) : (test_par == 5 ? 12 : 0);
         for (int i = 0; i < holeLength; i++)
         {
             GameObject fairway = Instantiate(coursePieces[(int)fairwayType], courseDisplay.transform);

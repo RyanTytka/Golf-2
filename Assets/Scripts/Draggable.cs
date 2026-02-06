@@ -575,14 +575,16 @@ public class Draggable : MonoBehaviour
                     c.power += 10;
                     c.UpdateStatusEffectDisplay();
                     c.DisplayCourse();
-                    yield return WaitForSeconds(timeBetweenToss);
+                    yield return new WaitForSeconds(timeBetweenToss);
                 }
                 break;
             case "Recycle":
                 //toss your hand. then draw your deck
+                timeBetweenToss = h.hand.Count == 0 ? 0 : Mathf.Min(0.25f, 1.0f / h.hand.Count);
                 while (h.hand.Count > 0)
                 {
-                    yield return h.hand[0].GetComponent<Draggable>().AnimateDiscard(true);
+                    h.hand[0].GetComponent<Draggable>().AnimateDiscard(true);
+                    yield return new WaitForSeconds(timeBetweenToss);
                 }
                 h.DrawCard(h.currentDeck.Count);
                 break;
