@@ -2,9 +2,9 @@ high priority:
 implement and test new cards
 courses too long/varied 
 balance tee earnings/costs
-hazards display stoke penalty particle even if you have luck
 
 low:
+hazards display stoke penalty particle even if you have luck
 distance data marker is in front when waiting for discard
 pressing space bar after start does start game again
 shooting backwards swing animation happens instantly
@@ -84,12 +84,12 @@ cards list
         bugs: none
     3 Wood - 
         Standard Golf Club
---        80 Power, 40 Roll
+        80 Power, 40 Roll
         art: done
         bugs: none
     9 Iron - 
         Standard Golf Club
---        60 Power, 30 Roll
+        60 Power, 30 Roll
         art: done
         bugs: none
     7 Iron - 
@@ -99,12 +99,12 @@ cards list
         bugs: none
     Sand Wedge - 
         Standard Golf Club
---        30 Power, 20 Roll
+        30 Power, 20 Roll
         art: pending
         bugs: none
     Pitching Wedge - 
         Standard golf club
---        40 Power, 20 Roll
+        40 Power, 20 Roll
         art: done
         bugs: none
     Ace Ball - 
@@ -148,7 +148,7 @@ cards list
             rename to pinpoint
     Dead Stop Iron - (new name)
         Haunted looking golf club. Made of Bones/Grim Reaper Scythe, tombstone in background.
--test-        iron. power ?, roll, ?. X-- If this shot does not roll, draw 2--X (+10 power for each card tossed this hole)
+        iron. power 50, roll, 30. +10 power for each card tossed this hole
         art: missing
         bugs: none
     Dig Through Your Bag - 

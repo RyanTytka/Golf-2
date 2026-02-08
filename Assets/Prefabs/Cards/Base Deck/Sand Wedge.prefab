@@ -22,7 +22,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: carry
-      value: 20
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: cardName
