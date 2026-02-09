@@ -189,31 +189,35 @@ public class Hand : MonoBehaviour
     //completeCallaback is called after all cards are drawn
     public void DrawCard(int amount, System.Action completeCallback = null)
     {
-        //draw card
-        //for (int i = 0; i < amount; i++)
+        if (amount == 0)
         {
-            //if deck is empty, reshuffle
-            if (currentDeck.Count == 0)
-            {
-                foreach (GameObject card in discardPile)
-                {
-                    currentDeck.Add(card);
-                }
-                discardPile.Clear();
-                ShuffleDeck();
-            }
-            //draw a card
-            if (currentDeck.Count == 0)
-                return; //if both deck and discard are empty, do nothing
-            GameObject drawnCard = currentDeck[0];
-            drawnCard.GetComponent<Draggable>().UpdateCard();
-            currentDeck[0].SetActive(true);
-            currentDeck.RemoveAt(0);
-            if (currentDeck.Count == 0 && GameObject.Find("CourseManager").GetComponent<Course>().currentRival == 5)
-                GameObject.Find("CourseManager").GetComponent<Course>().strokeCount++;
-            //animate drawing the card
-            drawnCard.GetComponent<Draggable>().AnimateDraw(amount, completeCallback);
+            completeCallback?.Invoke();
+            return;
         }
+        //if deck is empty, reshuffle
+        if (currentDeck.Count == 0)
+        {
+            foreach (GameObject card in discardPile)
+            {
+                currentDeck.Add(card);
+            }
+            discardPile.Clear();
+            ShuffleDeck();
+        }
+        //draw a card
+        if (currentDeck.Count == 0)
+        {
+            completeCallback?.Invoke();
+            return; //if both deck and discard are empty, do nothing
+        }
+        GameObject drawnCard = currentDeck[0];
+        drawnCard.GetComponent<Draggable>().UpdateCard();
+        currentDeck[0].SetActive(true);
+        currentDeck.RemoveAt(0);
+        if (currentDeck.Count == 0 && GameObject.Find("CourseManager").GetComponent<Course>().currentRival == 5)
+            GameObject.Find("CourseManager").GetComponent<Course>().strokeCount++;
+        //animate drawing the cards
+        drawnCard.GetComponent<Draggable>().AnimateDraw(amount, completeCallback);
     }
 
     //draws a specific card

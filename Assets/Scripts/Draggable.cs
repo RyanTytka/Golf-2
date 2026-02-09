@@ -512,9 +512,8 @@ public class Draggable : MonoBehaviour
                         caddies.Add(go);
                 }
                 //draw a random caddie
-                // GameObject newCaddie = Instantiate(caddies[Random.Range(0, caddies.Count - 1)], GameObject.Find("GameManager").transform);
-                // h.hand.Add(newCaddie);
-                h.DrawCard(caddies[Random.Range(0, caddies.Count - 1)]);
+                if(caddies.Count > 0)
+                    h.DrawCard(caddies[Random.Range(0, caddies.Count - 1)]);
                 c.luck += 2;
                 break;
             case "Tee Up":
@@ -535,11 +534,9 @@ public class Draggable : MonoBehaviour
                 c.canPlayAbilities = false;
                 break;
             case "Old Scorecard":
-                h.DrawCard(c.strokeCount, () =>
-                {
-                    isStillActive = false;
-                    AnimateDiscard(true);
-                });
+                h.DrawCard(c.strokeCount);
+                isStillActive = false;
+                AnimateDiscard(true);
                 break;
             case "Reckless Swing":
                 List<GameObject> otherCards = h.hand.Where(card => card != this.gameObject).ToList();
@@ -560,10 +557,16 @@ public class Draggable : MonoBehaviour
             // following are not yet implemented:
             case "Pocket Aces":
                 //Toss 2 cards from your deck then gain 2 luck
-                h.currentDeck[0].GetComponent<Draggable>().AnimateDiscard(true, () =>
+                if (h.currentDeck.Count > 0)
                 {
-                    h.currentDeck[0].GetComponent<Draggable>().AnimateDiscard(true);
-                });
+                    h.currentDeck[0].GetComponent<Draggable>().AnimateDiscard(true, () =>
+                    {
+                        if (h.currentDeck.Count > 0)
+                        {
+                            h.currentDeck[0].GetComponent<Draggable>().AnimateDiscard(true);
+                        }
+                    });
+                }
                 c.luck += 2;
                 break;
             case "Unburden":
@@ -668,10 +671,9 @@ public class Draggable : MonoBehaviour
                     GameObject.Find("GameManager").GetComponent<Hand>().DisplayHand();
                     //start drawing another card if necessary
                     if (drawAmount > 1)
-                        GameObject.Find("GameManager").GetComponent<Hand>().DrawCard(drawAmount - 1);
+                        GameObject.Find("GameManager").GetComponent<Hand>().DrawCard(drawAmount - 1, completeCallback);
                     else if (completeCallback != null)
                         completeCallback.Invoke();
-
                 })
         );
         // Scale up during front half of the arc

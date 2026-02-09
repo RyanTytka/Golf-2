@@ -46,7 +46,7 @@ PrefabInstance:
       objectReference: {fileID: 21300000, guid: 289ce49d040e3924aa7bbffb0e92b61d, type: 3}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: description
-      value: Your Irons have +20 Power and 20 Pinpoint
+      value: Your Woods have +30 Power and 30 Backspin
       objectReference: {fileID: 0}
     - target: {fileID: 7053857363415383679, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: m_Name

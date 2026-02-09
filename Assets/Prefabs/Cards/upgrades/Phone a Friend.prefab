@@ -42,7 +42,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: description
-      value: Add 1 random caddie to your hand
+      value: Draw a random caddie from your deck. Gain 2 Luck.
       objectReference: {fileID: 0}
     - target: {fileID: 7053857363415383679, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: m_Name

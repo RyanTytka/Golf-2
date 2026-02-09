@@ -164,19 +164,19 @@ cards list
         bugs: none
     Lead Ball - 
         Heavy Ball made out of metal 
--test-        +50 power. X-- Toss this if it lands in water. --X (Toss the club used to hit this) 
+        +50 power. Toss the club used to hit this. 
         art: done
         bugs: 
             does not do toss animation
     Old Scorecard - 
         Crumpled old scorecard
--test-        draw a card for each stroke you have taken this hole. (Toss this)
+        draw a card for each stroke you have taken this hole. Toss this
         art:done
         bugs:  
             draws 1 card with 0 strokes
     Reckless Swing - 
         Discard a card to make you next shot go farther
--test-        +30 power. X-- Discard --X (Toss) a random card
+        +30 power. Toss a random card from your hand
         art: missing
         bugs: none
 --    Square Ball - (just delete this for now)
@@ -198,7 +198,7 @@ cards list
             make it so it cannot be played if you are not on the fairway
     X-- Long Ranger --X  (The Showoff?)
         Bigger shot if this is only club in hand
---        (wood) power ? roll ?. +50 power and +20 backspin if there are no other clubs in hand
+        (wood) power 80 roll 40. +50 power and +20 backspin if there are no other clubs in hand
         art: missing
         bugs: none
     Breakfast Ball - 
@@ -209,7 +209,7 @@ cards list
             irons get the power bonus but still have roll
     Loner - 
         Golf club (Iron) that is alone on an island. 
---        120 power / (30) roll. -10 power for each other club in your hand
+        120 power / 30 roll. -10 power for each other club in your hand
         art: pending
         bugs: 
             does not update shot arc when you mulligan
@@ -225,23 +225,23 @@ cards list
         bugs: none
     Pocket Aces - 
         Gives you luck. Cards sticking out of a pocket
--test-        Toss 2 cards from your deck then gain 2 luck
+        Toss 2 cards from your deck then gain 2 luck
         art: pending
         bugs: 
-            not yet implemented
+            toss animation is too slow (and cant see any indicator except deck counting down)
     Caddie 4 - 
         desc
---        Gain 1 luck X-- after each shot --X (at the start of each turn) [identical function, just worded more intuitively]
+        Gain 1 luck at the start of each turn
         art: missing
         bugs: none
     Golf Glove - 
         Standard glove used for golf
--test-        Gain 2 luck (and 20 backspin)
+        Gain 2 luck and 20 backspin
         art: done
         bugs: none
 --    Lion Forest (woody ___)
         desc
--test-        your X-- irons -- X (woods) have +20 power and 20 backspin (30 power / 30 backspin)
+        your woods have +30 power and 30 backspin
         art: missing
         bugs: none
 
@@ -260,7 +260,7 @@ cards list
             make it so it is unplayable if less than 6 cards in hand
     Big Betty - 
         Large and powerful driver
---        (80) power, 50 roll. +10 power for each card in your hand
+        80 power, 50 roll. +10 power for each card in your hand
         art: missing
         bugs: 
             does not update shot arc on card draw/play
@@ -268,21 +268,20 @@ cards list
     ////toss
     Unburden - 
         Tossing your bag of clubs into the water
--test-        toss each card left in your deck. Gain 10 power for each
+        toss each card left in your deck. Gain 10 power for each
         art: pending
-        bugs: 
-            not yet implemented
+        bugs: none
     Recycle - (new name? beer?)
--test-        toss your hand. then draw your deck
+        Toss your hand. Then draw your deck.
         effect
         art: missing
         bugs: 
-            not yet implmented
+            should this toss itself? if not, needs to remove from hand before tossing hand
 
     ////caddie
     Phone a Friend - 
         a picture of a phone
--test-        X-- add a random caddie to your hand --X (Draw a caddie from your deck. Gain 2 luck)
+        Draw a caddie from your deck. Gain 2 luck
         art: pending
         bugs: none
     Caddie 3 - 
@@ -310,7 +309,7 @@ cards list
         bugs: none
     Rubber Duck Ball - 
         Ball that looks like a rubber duck floating on water
--test-        X-- This shot ignores water hazards --X (water landing: do not lose a stroke)
+        Do not lose a stroke for landing in the water
         art: pending
         bugs: 
             still gives +1 stroke particle effect
@@ -350,19 +349,18 @@ new:
         +10 power and +10 roll for each luck you have
         art: missing
         bugs: 
-            test
+            not yet implemented
     Disco Ball 
         desc
         +10 power for each card in your draw pile.
         art: missing
         bugs: 
-            test
     Lawnmower ball/ Ramball (rambo) / Jungle Ball
         desc
         gain 10 power instead of lose it when roll over rough
         art: missing
         bugs:
-            test
+            not yet implemented
             rough shows -10 power particle when roll over
     Low Rider (name?)
         desc
@@ -375,11 +373,12 @@ new:
         wedge. power 10, roll 10. Does not cost a stroke
         art: missing
         bugs:
-            test
+            not yet implemented
 
 
 
 housesitting:
+unique shader graphics for art style that pops
 modular generated houses
 random assortment of rules each time
 use player's mic?

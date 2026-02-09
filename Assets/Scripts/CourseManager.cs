@@ -793,6 +793,7 @@ public class Course : MonoBehaviour
                 }
             }
         }
+
         //deselect current club and ball and update hand
         if (selectedClub != null)
         {
@@ -802,7 +803,7 @@ public class Course : MonoBehaviour
                 selectedClub.GetComponent<Draggable>().AnimateDiscard(true);
             }
             //lead ball destroys club used
-            else if (selectedBall.GetComponent<Draggable>().cardName == "Lead Ball")
+            else if (selectedBall != null && selectedBall.GetComponent<Draggable>().cardName == "Lead Ball")
             {
                 selectedClub.GetComponent<Draggable>().AnimateDiscard(true);
             }
@@ -964,8 +965,8 @@ public class Course : MonoBehaviour
         {
             if (selectedClub.GetComponent<Draggable>().clubType == Draggable.ClubTypes.Wood)
             {
-                carry += 2;
-                roll -= 2;
+                carry += 3;
+                roll -= 3;
             }
         }
         //rivals
@@ -1089,8 +1090,6 @@ public class Course : MonoBehaviour
     public void Swing()
     {
         if (selectedClub == null) return; //need a club to swing
-        int carry = selectedClub.GetComponent<Draggable>().Carry;
-        int roll = selectedClub.GetComponent<Draggable>().Roll;
         HitBall();
     }
 
