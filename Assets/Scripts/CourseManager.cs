@@ -259,7 +259,7 @@ public class Course : MonoBehaviour
     {
         //set initial course data
         ballObj.SetActive(true);
-        holeNum = 8; //note: this will be incremented once before each hole
+        holeNum = 0; //note: this will be incremented once before each hole
         courseNum++;
         if (nextCourse == -1)
         {
@@ -360,9 +360,11 @@ public class Course : MonoBehaviour
                 // fairwayType = CoursePieces.ROUGH;
                 break;
         }
-        int holeLength = Random.Range(35, 40) + courseNum * 5 + lengthMod; //actual length
-        holeLength -= test_par == -1 ? (pars[holeNum - 1] == 3 ? 10 : 0) : (test_par == 3 ? 10 : 0);
-        holeLength += test_par == -1 ?  (pars[holeNum - 1] == 5 ? 12 : 0) : (test_par == 5 ? 12 : 0);
+        int holeLength = Random.Range(35, 40) + courseNum * 5 + lengthMod; //full length of course
+        if (test_par == 3 || pars[holeNum - 1] == 3)
+            holeLength -= (7 + 3 * courseNum);
+        if (test_par == 5 || pars[holeNum - 1] == 5)
+            holeLength += (7 + 3 * courseNum);
         for (int i = 0; i < holeLength; i++)
         {
             GameObject fairway = Instantiate(coursePieces[(int)fairwayType], courseDisplay.transform);
@@ -659,7 +661,7 @@ public class Course : MonoBehaviour
             ratio = (swing.landIndex - swing.startIndex) / (swing.landIndex - swing.endIndex);
         AnimationCurve curve = new AnimationCurve(new Keyframe(0f, 1f, 0f, -2f), new Keyframe(1f + ratio, 0f, -2f, 0f));
         // need less linear curve. short shots too fast and long shots too slow
-        float shotLength = (swing.endIndex - swing.startIndex) / 5f;
+        float shotLength = (swing.endIndex - swing.startIndex) / 10f;
         isBallMoving = true;
         GameObject.Find("SwingButton").GetComponent<Button>().interactable = false;
         GameObject.Find("MulliganButton").GetComponent<Button>().interactable = false;

@@ -1,7 +1,13 @@
 high priority:
-implement and test new cards
 courses too long/varied 
+ - make par 3s have smaller greens
+ - forest has more hazards than plains but similar distances
+ -par 3s scale with course at same rate as par 4s. decrease it (and par 5s too prob)
+ -make beach course shorter
+ -calculate from start of course for less variation
+ -desert can have possibly no hazards
 balance tee earnings/costs
+distance marker is not deleted if active when you finish a hole
 
 low:
 hazards display stoke penalty particle even if you have luck
@@ -173,7 +179,7 @@ cards list
         draw a card for each stroke you have taken this hole. Toss this
         art:done
         bugs:  
-            draws 1 card with 0 strokes
+---            draws 1 card with 0 strokes
     Reckless Swing - 
         Discard a card to make you next shot go farther
         +30 power. Toss a random card from your hand
@@ -206,7 +212,7 @@ cards list
         wood: this shot has +50 power and 0 roll
         art: done
         bugs: 
-            irons get the power bonus but still have roll
+---            irons get the power bonus but still have roll
     Loner - 
         Golf club (Iron) that is alone on an island. 
         120 power / 30 roll. -10 power for each other club in your hand
@@ -331,8 +337,7 @@ new:
         desc
         +10 power when you toss a card
         art: missing
-        bugs: 
-            test
+        bugs: none
     voodoo doll - 
         desc
         cannot be played. Gain 5 luck when you toss this.
@@ -342,19 +347,18 @@ new:
         flimsy club made out of paper
         power ? roll ?. Toss this after use. 
         art: missing
-        bugs: 
-            test
+        bugs: none
     Clover Ball - 
         desc
         +10 power and +10 roll for each luck you have
         art: missing
-        bugs: 
-            not yet implemented
+        bugs: none
     Disco Ball 
         desc
         +10 power for each card in your draw pile.
         art: missing
         bugs: 
+            not yet implemented
     Lawnmower ball/ Ramball (rambo) / Jungle Ball
         desc
         gain 10 power instead of lose it when roll over rough
@@ -396,3 +400,27 @@ rules:
 - if a clock chimes while you are on the stairs, go back the way you came without turning around
 - if bathtub/sink is full of water, drain it immediately. If the water has turned red, turn the radiio/TV on as loud as you can
 - if you hear a dog barking, go open the back door. 
+
+
+7 deadly seas:
+Black Sea Brigands - cultist token - Obsessed with money, want to find relics to sell for money
+Brethren of the Coast - Tablet Token - Want to find relics to preserve them and keep out of wrong hands
+Neptunes Chosen - Elder Token - Obsessed with power looking for relics to gain power
+
+Artifacts:
+Golden Fleece (greek)
+Ark of the covenant (christian)
+Excalibur (arthurian)
+Philosophers StoneCintamani Stone (hindu)
+Trident of Poseidon (greek)
+Pandora’s Box (greek)
+Book of Thoth (Egypt)
+Eye of Ra (Egypt)
+Uses curse tokens
+Final Objective is to get 10 curse tokens in bag then seal them all on asset
+Cursed Gold - Put in threat area. Start of turn: add curse to bag. Wil check to add to victory display. Plunder 1.
+Mummy - when defeated, add curse tokens to bag
+Horn of Valhalla (Norse)
+Viking Spirit Enemies
+Tomb of the First Emperor (chinese)
+Fountain of Youth

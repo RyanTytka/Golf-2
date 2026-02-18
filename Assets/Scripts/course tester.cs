@@ -9,6 +9,8 @@ public class coursetester : MonoBehaviour
     public Course.CourseType CourseType;
     public int par = 4;
     public int course = 1;
+    public List<int> generatedLengths = new();
+    public List<int> generatedParDistances = new();
 
     public void modifyPar(int mod)
     {
