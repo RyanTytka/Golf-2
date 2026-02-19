@@ -380,7 +380,6 @@ new:
             not yet implemented
 
 
-
 housesitting:
 unique shader graphics for art style that pops
 modular generated houses
@@ -402,25 +401,4 @@ rules:
 - if you hear a dog barking, go open the back door. 
 
 
-7 deadly seas:
-Black Sea Brigands - cultist token - Obsessed with money, want to find relics to sell for money
-Brethren of the Coast - Tablet Token - Want to find relics to preserve them and keep out of wrong hands
-Neptunes Chosen - Elder Token - Obsessed with power looking for relics to gain power
-
-Artifacts:
-Golden Fleece (greek)
-Ark of the covenant (christian)
-Excalibur (arthurian)
-Philosophers StoneCintamani Stone (hindu)
-Trident of Poseidon (greek)
-Pandora’s Box (greek)
-Book of Thoth (Egypt)
-Eye of Ra (Egypt)
-Uses curse tokens
-Final Objective is to get 10 curse tokens in bag then seal them all on asset
-Cursed Gold - Put in threat area. Start of turn: add curse to bag. Wil check to add to victory display. Plunder 1.
-Mummy - when defeated, add curse tokens to bag
-Horn of Valhalla (Norse)
-Viking Spirit Enemies
-Tomb of the First Emperor (chinese)
-Fountain of Youth
+https://ficsit.app/mod/Cartograph
