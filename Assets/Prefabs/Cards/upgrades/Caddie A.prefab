@@ -11,7 +11,7 @@ PrefabInstance:
     - target: {fileID: 1636312264385510429, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: f9003e5b629430f4fa2e59386a50c199, type: 3}
+      objectReference: {fileID: 21300000, guid: 752e92ae3ef115a48bdf95d0bee09551, type: 3}
     - target: {fileID: 1683249602816217892, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -47,7 +47,7 @@ PrefabInstance:
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: caddieIcon
       value: 
-      objectReference: {fileID: 21300000, guid: f9003e5b629430f4fa2e59386a50c199, type: 3}
+      objectReference: {fileID: 21300000, guid: ce2eaad61ddc97e469e1b3d2434ad8c6, type: 3}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: description
       value: Gain 2 Tees when you land in sand or water

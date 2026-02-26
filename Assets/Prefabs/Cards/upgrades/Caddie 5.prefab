@@ -11,7 +11,7 @@ PrefabInstance:
     - target: {fileID: 1636312264385510429, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: aee0a26138cba044e94f7a78e4785215, type: 3}
+      objectReference: {fileID: 21300000, guid: 017ccb0ca90c0dd44bded28a359383c6, type: 3}
     - target: {fileID: 1683249602816217892, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -43,7 +43,7 @@ PrefabInstance:
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: caddieIcon
       value: 
-      objectReference: {fileID: 21300000, guid: aee0a26138cba044e94f7a78e4785215, type: 3}
+      objectReference: {fileID: 21300000, guid: bcee14cd501f4ae46a38d837cd35c5d4, type: 3}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: description
       value: Gain 10 Power when you Toss a card

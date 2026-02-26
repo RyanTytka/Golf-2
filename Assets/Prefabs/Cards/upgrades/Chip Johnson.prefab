@@ -11,7 +11,7 @@ PrefabInstance:
     - target: {fileID: 1636312264385510429, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 8f10ee6adf36bfd459cb5603898a270f, type: 3}
+      objectReference: {fileID: 21300000, guid: 4d35cfd6c6ae592408d4bda886f2e8eb, type: 3}
     - target: {fileID: 1683249602816217892, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -43,7 +43,7 @@ PrefabInstance:
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: caddieIcon
       value: 
-      objectReference: {fileID: 21300000, guid: 8f10ee6adf36bfd459cb5603898a270f, type: 3}
+      objectReference: {fileID: 21300000, guid: 8b9de5a60c432854aa635a95dede0f42, type: 3}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: description
       value: Double the carry of your Irons. You cannot use Woods.

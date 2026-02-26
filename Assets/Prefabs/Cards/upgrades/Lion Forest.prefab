@@ -11,7 +11,7 @@ PrefabInstance:
     - target: {fileID: 1636312264385510429, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 289ce49d040e3924aa7bbffb0e92b61d, type: 3}
+      objectReference: {fileID: 21300000, guid: cc63e75a50af158449b70926305c5cef, type: 3}
     - target: {fileID: 1683249602816217892, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -43,7 +43,7 @@ PrefabInstance:
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: caddieIcon
       value: 
-      objectReference: {fileID: 21300000, guid: 289ce49d040e3924aa7bbffb0e92b61d, type: 3}
+      objectReference: {fileID: 21300000, guid: 56b063ae4c6091d4ea4d2173706c7343, type: 3}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: description
       value: Your Woods have +30 Power and 30 Backspin
