@@ -8,8 +8,10 @@ courses too long/varied
  -desert can have possibly no hazards
 balance tee earnings/costs
 distance marker is not deleted if active when you finish a hole
+No exit app button
 
 low:
+clicking on a disabled button still moves text
 hazards display stoke penalty particle even if you have luck
 distance data marker is in front when waiting for discard
 pressing space bar after start does start game again
@@ -140,12 +142,13 @@ cards list
         desc
         Double iron carry. Cannot use woods.
         art: missing
-        bugs: none
+        bugs: 
     Back to Basics - 
         ball on a tee
         Draw 2. You cannot play any more abilities until your next shot
         art: pending
-        bugs: none
+        bugs: 
+            stops you from using balls and abilities?
     Backspin - 
         When the ball stops instead of rolls
         gain 30 backspin
