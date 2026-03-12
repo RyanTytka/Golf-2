@@ -4,6 +4,10 @@ fringe: course type around greens that slows down roll to prevent from rolling i
 mechanics to add/work:
 putting
 upgrades / item rarity (Rookie - Pro - Legend)
+    upgrade in shop
+    adding cards to deck generates random rarity
+    update card descriptions
+    update card effects
 drinks (/snacks?)
 ascension modes (full version only) (called handicap?)
 
@@ -407,6 +411,7 @@ use player's mic?
 have some kind of monster in the house? (maybe only if you break certain rules)
 don't tell the player the rules and they have to figure it out by trial/error? have multiple scenarios/jobs?
 or have rules be very vague
+make house eerie and slightly surreal to make creepy vibes
 rules:
 - if you hear knocking, close the curtains
 - if someone is standing outside on the sidewalk, make sure the front lights are on

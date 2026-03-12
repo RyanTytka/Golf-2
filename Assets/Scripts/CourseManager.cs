@@ -777,7 +777,8 @@ public class Course : MonoBehaviour
                 if (ballName == "Ace Ball")
                 {
                     //Draw 2
-                    GameObject.Find("GameManager").GetComponent<Hand>().DrawCard(2);
+                    int drawAmount = selectedBall.GetComponent<Draggable>().rarity + 2;
+                    GameObject.Find("GameManager").GetComponent<Hand>().DrawCard(drawAmount);
                 }
                 if (selectedClub.GetComponent<Draggable>().cardName == "Club of Greed")
                     tees += 2;

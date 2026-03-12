@@ -1082,6 +1082,12 @@ MonoBehaviour:
   cardBack: {fileID: 8808256642606992661}
   isHoverable: 0
   caddieIcon: {fileID: 0}
+  rarity: 0
+  raritySymbols:
+  - {fileID: -108137374, guid: 8c1d8312164eb574f93c68cc63f1933c, type: 3}
+  - {fileID: -1055331194, guid: 8c1d8312164eb574f93c68cc63f1933c, type: 3}
+  - {fileID: -1817769234, guid: 8c1d8312164eb574f93c68cc63f1933c, type: 3}
+  rarityIconRef: {fileID: 3913443457993876986}
   onDisplay: 0
 --- !u!61 &8151426438713169010
 BoxCollider2D:

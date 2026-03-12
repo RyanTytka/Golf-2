@@ -7,6 +7,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Text.RegularExpressions;
 
 public class Draggable : MonoBehaviour
 {
@@ -60,6 +61,8 @@ public class Draggable : MonoBehaviour
     public bool isHoverable = false; //do not enlarge card when hovered if this is false
     public Sprite caddieIcon; //if this is a caddie and is played, this image will be the caddie icon
     public int rarity; //0 - Rookie, 1 - Pro, 2 - Legend
+    public Sprite[] raritySymbols; //list of icons that the card siplays
+    public GameObject rarityIconRef; //the object on each card that displays rarity
 
     //Internal Helper Variables
     //these are used for when dragging
@@ -334,7 +337,7 @@ public class Draggable : MonoBehaviour
 
         //set text
         titleObj.GetComponent<TextMeshProUGUI>().text = cardName;
-        descObj.GetComponent<TextMeshProUGUI>().text = description;
+        descObj.GetComponent<TextMeshProUGUI>().text = GetDescription();
         clubStatBlock.SetActive(cardType == CardTypes.Club);
         carryTextObj.SetActive(cardType == CardTypes.Club);
         rollTextObj.SetActive(cardType == CardTypes.Club);
@@ -344,6 +347,8 @@ public class Draggable : MonoBehaviour
             carryTextObj.GetComponent<TextMeshProUGUI>().text = Carry.ToString();
             rollTextObj.GetComponent<TextMeshProUGUI>().text = Roll.ToString();
         }
+        //set image
+        rarityIconRef.GetComponent<Image>().sprite = raritySymbols[rarity];
     }
 
     //set the sort order of the card and each image in it
@@ -780,6 +785,22 @@ public class Draggable : MonoBehaviour
             newCaddie.GetComponent<RectTransform>().DOScale(Vector3.one, 1f).SetEase(Ease.OutElastic);
             // refresh hand
             GameObject.Find("GameManager").GetComponent<Hand>().DisplayHand();
+        });
+    }
+
+    //Takes the description of the card and parses its rarity effects, returning a string
+    public string GetDescription()
+    {
+        return Regex.Replace(description, @"\{([^}]*)\}", match =>
+        {
+            string content = match.Groups[1].Value;
+            string[] tiers = content.Split('/');
+
+            if (rarity < tiers.Length)
+                return tiers[rarity];
+
+            // fallback if rarity exceeds provided values
+            return tiers[^1];
         });
     }
 }
