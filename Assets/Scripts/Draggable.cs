@@ -59,6 +59,7 @@ public class Draggable : MonoBehaviour
     public GameObject cardBack; //card back that is shown when card is face down and disabled when face up
     public bool isHoverable = false; //do not enlarge card when hovered if this is false
     public Sprite caddieIcon; //if this is a caddie and is played, this image will be the caddie icon
+    public int rarity; //0 - Rookie, 1 - Pro, 2 - Legend
 
     //Internal Helper Variables
     //these are used for when dragging
