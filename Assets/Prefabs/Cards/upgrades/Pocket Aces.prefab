@@ -46,11 +46,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: description
-      value: Toss 2 cards from your deck then gain 2 luck
+      value: Toss 2 cards from your deck then gain {2/3/4} Luck
       objectReference: {fileID: 0}
     - target: {fileID: 7053857363415383679, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: m_Name
-      value: _Pocket Aces
+      value: Pocket Aces
       objectReference: {fileID: 0}
     - target: {fileID: 8307558494132384029, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: m_LocalPosition.x

@@ -17,25 +17,29 @@ public class Draggable : MonoBehaviour
     public CardTypes cardType;
     public ClubTypes clubType;
     [SerializeField]
-    int carry; //How far ball travels in air
+    string carry; //How far ball travels in air (rookie/pro/legend)
     [SerializeField]
-    int roll; //How far ball travels on ground
+    string roll; //How far ball travels on ground (rookie/pro/legend)
     public int Carry
     {
         get
         {
+            string[] rarityCarry = carry.Split('/');
+            int carryInt = int.Parse(rarityCarry[rarity]);
             GetComponent<upgrades>().UpdateView();
             if (cardName == "Lone Ranger")
-                carry -= GameObject.Find("GameManager").GetComponent<Hand>().hand.Count - 1;
-            return carry + GetComponent<upgrades>().Stats()[0];
+                carryInt -= GameObject.Find("GameManager").GetComponent<Hand>().hand.Count - 1;
+            return carryInt + GetComponent<upgrades>().Stats()[0];
         }
     }
     public int Roll
     {
         get
         {
+            string[] rarityRoll = roll.Split('/');
+            int rollInt = int.Parse(rarityRoll[rarity]);
             GetComponent<upgrades>().UpdateView();
-            return roll + GetComponent<upgrades>().Stats()[1];
+            return rollInt + GetComponent<upgrades>().Stats()[1];
         }
     }
     public GameObject titleObj; //reference to the card's name obj

@@ -137,14 +137,14 @@ cards list
         bugs: none
     Distance Ball - 
         Basic ball that adds distance to your shot
-        this shot has +20/40/60 power
+        this shot has +20/30/40 power
         art: done
         bugs: none
 
     ////misc
     Find a Ball - 
         Finding a ball hidden in the rough on the side of the fairway
-        draw 2/2/3 balls from your deck
+        draw 2/3/4 balls from your deck
         art: done
         bugs: 
             balls are drawn simultaneously
@@ -160,7 +160,7 @@ cards list
         bugs: 
     Back to Basics - 
         ball on a tee
-        Draw 2/2/3. You cannot play any more abilities until your next shot
+        Draw 2/3/4. You cannot play any more abilities until your next shot
         art: pending
         bugs: 
             stops you from using balls and abilities?
@@ -177,7 +177,7 @@ cards list
         bugs: none
     Dig Through Your Bag - 
         Looking through your bag
-        draw 3/3/4 then discard all non-clubs in hand
+        draw 3/4/5 then discard all non-clubs in hand
         art: done
         bugs: 
             card name text goes onto second line
@@ -194,7 +194,7 @@ cards list
             does not do toss animation
     Old Scorecard - 
         Crumpled old scorecard
-        draw a card for each stroke you have taken this hole. Toss this
+        draw a card for each stroke you have taken this hole. Toss this. (/Gain 1/2 Luck)
         art:done
         bugs:  
 ---            draws 1 card with 0 strokes
@@ -258,7 +258,7 @@ cards list
             toss animation is too slow (and cant see any indicator except deck counting down)
     Caddie 4 - 
         desc
-        Gain 1/1/2 luck at the start of each turn
+        Gain 1/2/3 luck at the start of each turn
         art: missing
         bugs: none
     Golf Glove - 
@@ -349,7 +349,7 @@ cards list
         bugs: none
 --    Big Iron - (new name?)
         Large and powerful iron. Hits out of the rough
-        70 power, 30 roll. +50/80/120 power if hitting out of the rough
+        70 power, 30 roll. +50/80/110 power if hitting out of the rough
         art: missing
         bugs: none
 
@@ -358,7 +358,7 @@ cards list
 new:
     caddie 5 - 
         desc
-        +10/10/20 power when you toss a card
+        +10/20/30 power when you toss a card
         art: missing
         bugs: none
     voodoo doll - 
@@ -368,12 +368,12 @@ new:
         bugs: none
     Paper Club - 
         flimsy club made out of paper
-        power ? roll ?. Toss this after use. 
+        power 80/120/160 roll 30/40/50. Toss this after use. 
         art: missing
         bugs: none
     Clover Ball - 
         desc
-        +10/20/30 power for each luck you have
+        +0/10/20 Power. +10 additional power for each luck you have
         art: missing
         bugs: none
     Disco Ball 

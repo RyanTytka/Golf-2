@@ -50,7 +50,7 @@ PrefabInstance:
       objectReference: {fileID: 21300000, guid: ce2eaad61ddc97e469e1b3d2434ad8c6, type: 3}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: description
-      value: Gain 2 Tees when you land in sand or water
+      value: Gain {2/3/4} Tees when you land in sand or water
       objectReference: {fileID: 0}
     - target: {fileID: 7053857363415383679, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: m_Name
