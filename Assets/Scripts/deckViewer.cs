@@ -44,14 +44,14 @@ public class deckViewer : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         OpenDeckView(hand.baseDeck, true);
     }
 
-    //opens view of deck with only cards that are eligible for specified upgrade
-    public void UpgradeDeckView(upgradeBuy upgrade)
+    //opens view of deck with all cards
+    public void UpgradeDeckView()
     {
-        Hand hand = GameObject.Find("GameManager").GetComponent<Hand>();
-        List<GameObject> toDisplay = hand.baseDeck
-            .Where(obj => obj.GetComponent<Draggable>().CanUpgrade(upgrade) != null)
-            .ToList();
-        OpenDeckView(toDisplay, false, true);
+        //Hand hand = GameObject.Find("GameManager").GetComponent<Hand>();
+        //List<GameObject> toDisplay = hand.baseDeck
+        //    .Where(obj => obj.GetComponent<Draggable>().CanUpgrade(upgrade) != null)
+        //    .ToList();
+        OpenDeckView(GameObject.Find("GameManager").GetComponent<Hand>().baseDeck, false, true);
     }
 
     //create background and copies of cards in deck for player to look at

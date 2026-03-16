@@ -15,16 +15,18 @@ public class shopManager : MonoBehaviour
     public deckViewer deckViewer;
     public GameObject teeRemoveCostObj;
     public GameObject removeButton;
+    public GameObject upgradeButton;
     public TextMeshProUGUI tees;
     public TextMeshProUGUI previewText;
     public List<GameObject> upgrades = new();
 
-    public GameObject upgradePreview, replaceUpgradePreview;
-    public GameObject upgradePrefab;
+    public GameObject upgradePreview;//, replaceUpgradePreview;
+    //public GameObject upgradePrefab;
     public List<GameObject> shopOptions;
-    //public GameObject previewBg; //black overlay in preview canvas
+    public GameObject previewBg; //black overlay in preview canvas
+    public GameObject upgradeArrow;
 
-    private GameObject currentUpgrade;
+    //private GameObject currentUpgrade;
     private int removeCost = 2; //doubles each time you remove a card (resets each course)
     private GameObject previewCard;
     private Vector3 previewCardPos, previewCardScale;
@@ -63,52 +65,48 @@ public class shopManager : MonoBehaviour
             index++;
         }
         //upgrades
-        for (int i = 0; i < 3; i++)
-        {
-            //create upgrade options
-            GameObject newUpgrade = Instantiate(upgradePrefab, GameObject.Find("MainCanvas").transform);
-            newUpgrade.GetComponent<RectTransform>().position = new Vector3(i * 3 - 5.0f, 2.5f, 0);
-            newUpgrade.GetComponent<upgradeBuy>().type = (upgradeBuy.upgradeType)Random.Range(0, 3);
-            newUpgrade.GetComponent<upgradeBuy>().ID = Random.Range(0, 4);
-            newUpgrade.GetComponent<upgradeBuy>().UpdateView();
-            newUpgrade.GetComponent<Button>().onClick.AddListener(() => ClickUpgrade(newUpgrade));
-            upgrades.Add(newUpgrade);
-        }
-        Destroy(costObj);
-        GameObject.Find("TeesCount").GetComponent<TextMeshProUGUI>().text =
-            GameObject.Find("CourseManager").GetComponent<Course>().tees.ToString();
-        GameObject.Find("ContinueButton").GetComponent<Button>().onClick.AddListener(ToNewHole);
-        UpdateUI();
+        //for (int i = 0; i < 3; i++)
+        //{
+        //    //create upgrade options
+        //    GameObject newUpgrade = Instantiate(upgradePrefab, GameObject.Find("MainCanvas").transform);
+        //    newUpgrade.GetComponent<RectTransform>().position = new Vector3(i * 3 - 5.0f, 2.5f, 0);
+        //    newUpgrade.GetComponent<upgradeBuy>().type = (upgradeBuy.upgradeType)Random.Range(0, 3);
+        //    newUpgrade.GetComponent<upgradeBuy>().ID = Random.Range(0, 4);
+        //    newUpgrade.GetComponent<upgradeBuy>().UpdateView();
+        //    newUpgrade.GetComponent<Button>().onClick.AddListener(() => ClickUpgrade(newUpgrade));
+        //    upgrades.Add(newUpgrade);
+        //}
+        //Destroy(costObj);
         //reset rival
         GameObject.Find("CourseManager").GetComponent<Course>().currentRival = -1;
     }
 
-    public void ClickUpgrade(GameObject upgrade)
+    public void ClickUpgrade()
     {
         //open deck view to select a card to upgrade
-        deckViewer.UpgradeDeckView(upgrade.GetComponent<upgradeBuy>());
-        currentUpgrade = upgrade;
+        deckViewer.UpgradeDeckView();
+        //currentUpgrade = upgrade;
     }
 
     public void AddUpgrade(int cardId)
     {
         //add upgrade
         isPreviewing = false;
-        upgradePreview.SetActive(false);
+        //upgradePreview.SetActive(false);
         previewCanvas.SetActive(false);
         Destroy(previewCard);
         previewCard = null;
         GameObject card = GameObject.Find("GameManager").GetComponent<Hand>().GetCardById(cardId);
-        upgradeBuy u = card.GetComponent<Draggable>().CanUpgrade(currentUpgrade.GetComponent<upgradeBuy>());
-        if (u != currentUpgrade.GetComponent<upgradeBuy>())
-        {
-            //remove old upgrade if they are the same type
-            Destroy(u.gameObject);
-        }
-        card.GetComponent<upgrades>().AddUpgrade(currentUpgrade);
+        //upgradeBuy u = card.GetComponent<Draggable>().CanUpgrade(currentUpgrade.GetComponent<upgradeBuy>());
+        //if (u != currentUpgrade.GetComponent<upgradeBuy>())
+        //{
+        //remove old upgrade if they are the same type
+        //Destroy(u.gameObject);
+        //}
+        //card.GetComponent<upgrades>().AddUpgrade(currentUpgrade);
         deckViewer.CloseDeckView();
         GameObject.Find("CourseManager").GetComponent<Course>().tees -= 2;
-        currentUpgrade = null;
+        //currentUpgrade = null;
         UpdateUI();
     }
 
@@ -150,6 +148,10 @@ public class shopManager : MonoBehaviour
                 (GameObject.Find("CourseManager").GetComponent<Course>().Swing);
             GameObject.Find("MulliganButton").GetComponent<Button>().onClick.AddListener
                 (GameObject.Find("CourseManager").GetComponent<Course>().Mulligan);
+            GameObject.Find("TeesCount").GetComponent<TextMeshProUGUI>().text = GameObject.Find("CourseManager").GetComponent<Course>().tees.ToString();
+            GameObject.Find("ContinueButton").GetComponent<Button>().onClick.AddListener(ToNewHole);
+            upgradeButton.GetComponent<Button>().onClick.AddListener(ClickUpgrade);
+            UpdateUI();
             // Unsubscribe to avoid duplicate calls in the future
             SceneManager.sceneLoaded -= OnSceneLoaded;
         }
@@ -168,17 +170,17 @@ public class shopManager : MonoBehaviour
         if (teeAmount < 2)
             courseSelectButton.GetComponent<Button>().interactable = false;
         //upgrades
-        foreach(GameObject upgrade in upgrades)
-        {
-            if(teeAmount < 3)
-            {
-                upgrade.GetComponent<Button>().interactable = false;
-            }
-        }
+        //foreach (GameObject upgrade in upgrades)
+        //{
+        //    if (teeAmount < 3)
+        //    {
+        //        upgrade.GetComponent<Button>().interactable = false;
+        //    }
+        //}
         //card options
-        foreach(GameObject card in shopOptions)
+        foreach (GameObject card in shopOptions)
         {
-            if(card.GetComponent<Draggable>().myCost > teeAmount)
+            if (card.GetComponent<Draggable>().myCost > teeAmount)
             {
                 card.GetComponent<SpriteRenderer>().color = Color.red;
             }
@@ -202,29 +204,38 @@ public class shopManager : MonoBehaviour
         yesButton.SetActive(true);
         noButton.SetActive(true);
         courseImagesObj.SetActive(false);
-        replaceUpgradePreview.SetActive(false);
+        //replaceUpgradePreview.SetActive(false);
         if (remove)
         {
             upgradePreview.SetActive(false);
             previewText.text = "Remove this card?";
             yesButton.GetComponent<Button>().onClick.AddListener(() => RemoveCard(previewCard.GetComponent<Draggable>().cardId));
         }
-        if(upgrade)
+        if (upgrade)
         {
-            upgradePreview.SetActive(true);
-            previewText.text = "Add upgrade?";
-            //if you are replacing an existing upgrade
-            upgradeBuy u = previewCard.GetComponent<Draggable>().CanUpgrade(currentUpgrade.GetComponent<upgradeBuy>());
-            if (u != currentUpgrade.GetComponent<upgradeBuy>())
-            {
-                previewText.text = "Replace upgrade?";
-                replaceUpgradePreview.GetComponent<upgradeBuy>().UpdateView(u.gameObject);
-                replaceUpgradePreview.SetActive(true);
-            }
+            previewText.text = "Upgrade this card?";
+            //upgradePreview.SetActive(true);
+            upgradeArrow.SetActive(true);
+            // create upgraded card preview
+            GameObject newCard = Instantiate(card, GameObject.Find("PreviewCanvas").transform);
+            newCard.transform.position = new Vector3(0, 0, 0);
+            newCard.GetComponent<Draggable>().rarity++;
+            newCard.GetComponent<Draggable>().UpdateCard();
+
+            //upgradePreview.SetActive(true);
+            //previewText.text = "Upgrade this card?";
+            ////if you are replacing an existing upgrade
+            //upgradeBuy u = previewCard.GetComponent<Draggable>().CanUpgrade(currentUpgrade.GetComponent<upgradeBuy>());
+            //if (u != currentUpgrade.GetComponent<upgradeBuy>())
+            //{
+            //    previewText.text = "Replace upgrade?";
+            //    replaceUpgradePreview.GetComponent<upgradeBuy>().UpdateView(u.gameObject);
+            //    replaceUpgradePreview.SetActive(true);
+            //}
 
             //update preview update
-            upgradePreview.GetComponent<upgradeBuy>().UpdateView(currentUpgrade);
-            yesButton.GetComponent<Button>().onClick.AddListener(() => AddUpgrade(previewCard.GetComponent<Draggable>().cardId));
+            //upgradePreview.GetComponent<upgradeBuy>().UpdateView(currentUpgrade);
+            //yesButton.GetComponent<Button>().onClick.AddListener(() => AddUpgrade(previewCard.GetComponent<Draggable>().cardId));
         }
     }
 

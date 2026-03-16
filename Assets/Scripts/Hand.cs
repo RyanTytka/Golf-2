@@ -237,9 +237,11 @@ public class Hand : MonoBehaviour
         cardsTossed++;
         //card effects
         if (card.GetComponent<Draggable>().cardName == "Voodoo Doll")
-            GameObject.Find("CourseManager").GetComponent<Course>().luck += 5;
-        if (GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Caddie 5") > 0)
-            GameObject.Find("CourseManager").GetComponent<Course>().power += 10;
+            GameObject.Find("CourseManager").GetComponent<Course>().luck += 5 + card.GetComponent<Draggable>().rarity;
+        foreach (int rarity in GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Caddie 5"))
+        {
+            GameObject.Find("CourseManager").GetComponent<Course>().power += 10 * (rarity + 1);
+        }
         //remove from current deck/hand/discard
         if (currentDeck.Contains(card))
         {
@@ -392,16 +394,16 @@ public class Hand : MonoBehaviour
         }
     }
 
-    //returns # of caddies with "name" in play 
-    public int HasCaddie(string name)
+    //returns list of caddie rarities with "name" in play 
+    public List<int> HasCaddie(string name)
     {
-        int amount = 0;
+        List<int> rarities = new();
         foreach (GameObject go in caddies)
         {
             if (go.GetComponent<Draggable>().cardName == name)
-                amount++;
+                rarities.Add(go.GetComponent<Draggable>().rarity);
         }
-        return amount;
+        return rarities;
     }
 
     //removes a card from the base deck based on id

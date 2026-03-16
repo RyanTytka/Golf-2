@@ -150,7 +150,7 @@ cards list
             balls are drawn simultaneously
     Rangefinder - 
         Standard Golf tool used to find distance to the flag
-        Toss 1, Draw 2/2/3
+        Toss 1, Draw 2/3/4
         art: done
         bugs: none
     Chip Johnson - 
@@ -164,7 +164,7 @@ cards list
         art: pending
         bugs: 
             stops you from using balls and abilities?
-    Backspin - 
+    Pinpoint Accuracy - 
         When the ball stops instead of rolls
         gain 30/40/50 backspin
         art: done
@@ -172,12 +172,12 @@ cards list
             rename to pinpoint
     Dead Stop Iron - (new name)
         Haunted looking golf club. Made of Bones/Grim Reaper Scythe, tombstone in background.
-        iron. power 50/70/100, roll, 30. +10 power for each card tossed this hole
+        iron. power 50/70/100, roll 30. +10 power for each card tossed this hole
         art: missing
         bugs: none
-    Dig Through Your Bag - 
+    Dig In Your Bag - 
         Looking through your bag
-        draw 3/4/5 then discard all non-clubs in hand
+        draw 2/3/4 then discard all non-clubs in hand
         art: done
         bugs: 
             card name text goes onto second line
@@ -225,15 +225,14 @@ cards list
             rework this?
     X-- Long Ranger --X  (The Showoff?)
         Bigger shot if this is only club in hand
-        (wood) power 80 roll 40. +50 power and +20 backspin if there are no other clubs in hand
+        (wood) power 80 roll 40. Gain {50/80/110} power and {20/30/40} Backspin if there are no other clubs in hand.
         art: missing
         bugs: none
     Breakfast Ball - 
         Ball that looks like bacon and eggs (term for when you mulligan your first shot)
         wood: this shot has +50/70/100 power and 0 roll
         art: done
-        bugs: 
----            irons get the power bonus but still have roll
+        bugs: none
     Loner - 
         Golf club (Iron) that is alone on an island. 
         120/140/160 power / 30/40/50 roll. -10 power for each other club in your hand
@@ -247,7 +246,7 @@ cards list
         bugs: none
 --    Club of Greed (new name) - 
         Gold/Fancy golf club
-        power ?, roll ?. Fairway Landing: Gain 2/3/4 Tees
+        power 90/100/120, roll 20/30/30. Fairway Landing: Gain 2/3/4 Tees
         art: pending
         bugs: none
     Pocket Aces - 
@@ -263,7 +262,7 @@ cards list
         bugs: none
     Golf Glove - 
         Standard glove used for golf
-        Gain 2/3/4 luck and 20/30/40 backspin
+        Gain 1/2/3 luck and 20/30/40 backspin
         art: done
         bugs: none
 --    Lion Forest (woody ___)
@@ -295,7 +294,7 @@ cards list
     ////toss
     Unburden - 
         Tossing your bag of clubs into the water
-        toss each card left in your deck. Gain 10/10/20 power for each
+        toss each card left in your deck. Gain 10 power for each
         art: pending
         bugs: none
             rework??
@@ -310,17 +309,17 @@ cards list
     ////caddie
     Phone a Friend - 
         a picture of a phone
-        Draw 1/1/2 caddie from your deck. Gain 2/3/4 luck
+        Draw a caddie from your deck. Gain 2/3/4 luck
         art: pending
         bugs: none
     Caddie 3 - 
-        +10/10/20 power for each caddie you have
+        +10/20/30 power for each caddie you have
         effect
         art: missing
         bugs: none
     Caddie 2 - 
         desc
-        Draw a card when you play another caddie. Draw 0/1/2 when you play this.
+        Draw 1/2/3 cards when you play another caddie.
         art: missing
         bugs: none
 
@@ -338,13 +337,13 @@ cards list
         bugs: none
     Rubber Duck Ball - 
         Ball that looks like a rubber duck floating on water
-        Do not lose a stroke for landing in the water. Water landing: +0/1/2 Tees?
+        Do not lose a stroke for landing in the water.
         art: pending
         bugs: 
             still gives +1 stroke particle effect
     Shovel Wedge - 
         Golf club that looks like a shovel to hit balls out of the sand
-        draw 2/3/4 after hitting out of the sand
+        30/40/50 carry, 10/10/20 Roll. draw 2/3/4 after hitting out of the sand
         art: pending
         bugs: none
 --    Big Iron - (new name?)

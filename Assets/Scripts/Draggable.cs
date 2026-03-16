@@ -145,8 +145,7 @@ public class Draggable : MonoBehaviour
         if (draggable || GameObject.Find("GameManager").GetComponent<Hand>().waitingForDiscard)
             return;
         //Chip Johnson cant use woods
-        if (GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Chip Johnson") > 0 &&
-            clubType == ClubTypes.Wood)
+        if (GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Chip Johnson").Count > 0 && clubType == ClubTypes.Wood)
             return;
 
         selected = !selected;
@@ -416,8 +415,10 @@ public class Draggable : MonoBehaviour
         //do effect
         if (cardType == CardTypes.Caddie)
         {
-            if (h.HasCaddie("Caddie 2") > 0)
-                h.DrawCard(1);
+            foreach (int rarity in h.HasCaddie("Caddie 2"))
+            {
+                h.DrawCard(1 + rarity);
+            }
             h.caddies.Add(this.gameObject);
             h.playedCaddie = true;
             //Caddies do not go into the discard
@@ -451,10 +452,10 @@ public class Draggable : MonoBehaviour
                 // Now draw 2 cards after discarding
                 onDisplay = false;
                 h.cardSelection[0].GetComponent<Draggable>().AnimateDiscard(true);
-                h.DrawCard(2);
+                h.DrawCard(2 + rarity);
                 break;
-            case "Backspin":
-                c.pinpoint += 30;
+            case "Pinpoint Accuracy":
+                c.pinpoint += 30 + (rarity * 10);
                 break;
             case "Chip Johnson":
                 //deselect selected club if its a woods
@@ -466,10 +467,10 @@ public class Draggable : MonoBehaviour
                     c.selectedClub = null;
                 }
                 break;
-            case "Dig Through Your Bag":
-                //draw 3 then discard all non-clubs 
+            case "Dig In Your Bag":
+                //draw 2/3/4 then discard all non-clubs 
                 List<GameObject> hand = h.hand;
-                h.DrawCard(3, () =>
+                h.DrawCard(2 + rarity, () =>
                 {
                     for (int i = hand.Count - 1; i >= 0; i--)
                     {
@@ -481,7 +482,7 @@ public class Draggable : MonoBehaviour
                 });
                 break;
             case "Find a Ball":
-                // Draw 2 random ball cards from the deck
+                // Draw 2/3/4 random ball cards from the deck
                 List<GameObject> balls = new();
                 foreach (GameObject go in h.currentDeck)
                 {
@@ -489,7 +490,7 @@ public class Draggable : MonoBehaviour
                         balls.Add(go);
                 }
                 List<GameObject> toDraw = new();
-                int drawCount = Mathf.Min(2, balls.Count);
+                int drawCount = Mathf.Min(2 + rarity, balls.Count);
                 // Shuffle the list
                 for (int i = balls.Count - 1; i > 0; i--)
                 {
@@ -508,12 +509,12 @@ public class Draggable : MonoBehaviour
                 }
                 break;
             case "Golf Glove":
-                //Gain 2 Luck 
-                c.luck += 2;
-                c.pinpoint += 2;
+                //Gain 1/2/3 Luck 20/30/40 backspin
+                c.luck += 1 + rarity;
+                c.pinpoint += 20 + (rarity * 10);
                 break;
             case "Phone a Friend":
-                //add a random caddie to your hand
+                //draw a random caddie from your deck, then gain luck
                 List<GameObject> caddies = new();
                 foreach (GameObject go in h.currentDeck)
                 {
@@ -524,7 +525,7 @@ public class Draggable : MonoBehaviour
                 //draw a random caddie
                 if(caddies.Count > 0)
                     h.DrawCard(caddies[Random.Range(0, caddies.Count - 1)]);
-                c.luck += 2;
+                c.luck += 2 + rarity;
                 break;
             case "Tee Up":
                 //if in fairway, add all drivers to hand
@@ -539,12 +540,13 @@ public class Draggable : MonoBehaviour
                     }
                 break;
             case "Back to Basics":
-                //draw 2. disable abilities until next swing
-                h.DrawCard(2);
+                //draw 2/3/4. disable abilities until next swing
+                h.DrawCard(2 + rarity);
                 c.canPlayAbilities = false;
                 break;
             case "Old Scorecard":
                 h.DrawCard(c.strokeCount);
+                c.luck += rarity;
                 isStillActive = false;
                 AnimateDiscard(true);
                 break;
@@ -554,10 +556,10 @@ public class Draggable : MonoBehaviour
                     break;
                 GameObject cardToToss = otherCards[Random.Range(0, otherCards.Count)];
                 cardToToss.GetComponent<Draggable>().AnimateDiscard(true);
-                c.power += 30;
+                c.power += 30 + (rarity * 20);
                 break;
             case "Practice Swing":
-                if (h.hand.Count > 6)
+                if (h.hand.Count > 6 - rarity)
                 {
                     c.strokeCount--;
                     h.Toss(this.gameObject);
@@ -577,7 +579,7 @@ public class Draggable : MonoBehaviour
                         }
                     });
                 }
-                c.luck += 2;
+                c.luck += 2 + rarity;
                 break;
             case "Unburden":
                 //toss each card left in your deck. Gain 10 power for each

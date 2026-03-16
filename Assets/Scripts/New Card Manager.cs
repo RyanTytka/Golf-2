@@ -49,6 +49,9 @@ public class NewCardManager : MonoBehaviour
         cardOption = Instantiate(newCard);
         cardOption.transform.position = new Vector3(3.75f, 9, 0);
         cardOption.GetComponent<Draggable>().isUpgradeOption = true;
+        int c = GameObject.Find("CourseManager").GetComponent<Course>().courseNum;
+        float rng = Random.Range(0, 100);
+        cardOption.GetComponent<Draggable>().rarity = rng > 105 - c * 5 ? 2 : rng > 95 - c * 10 ? 1 : 0;
         cardOption.GetComponent<Draggable>().UpdateCard();
         cardOption.transform.parent = gameObject.transform;
     }
@@ -73,7 +76,7 @@ public class NewCardManager : MonoBehaviour
         //flip current card over then flip new card over
         Sequence seq = DOTween.Sequence();
         seq.Append(
-            cardOption.transform.DOScaleX(0f, 0.5f).OnComplete(() =>
+            cardOption.transform.DOScaleX(0f, 0.25f).OnComplete(() =>
             {
                 //delete old card
                 Destroy(cardOption);
@@ -81,14 +84,15 @@ public class NewCardManager : MonoBehaviour
                 GameObject newCard = GetComponent<Hand>().RandomUpgrade();
                 cardOption = Instantiate(newCard);
                 cardOption.transform.position = new Vector3(3.75f, 9, 0);
+                int c = GameObject.Find("CourseManager").GetComponent<Course>().courseNum;
+                float rng = Random.Range(0, 100);
+                cardOption.GetComponent<Draggable>().rarity = rng > 105 - c * 5 ? 2 : rng > 95 - c * 10 ? 1 : 0;
                 cardOption.GetComponent<Draggable>().isUpgradeOption = true;
                 cardOption.GetComponent<Draggable>().UpdateCard();
                 cardOption.transform.parent = gameObject.transform;
-                //start face down
-                //cardOption.GetComponent<Draggable>().cardBack.SetActive(true);
-                //cardOption.GetComponent<Draggable>().typeIconObj.SetActive(false);
+                //start hidden
                 cardOption.transform.localScale = new Vector3(0, 1, 1);
-                cardOption.transform.DOScaleX(1f, 0.5f).OnComplete(() =>
+                cardOption.transform.DOScaleX(1f, 0.25f).OnComplete(() =>
                 {
                     //spend tees
                     GameObject.Find("CourseManager").GetComponent<Course>().tees -= currentRerollCost;
