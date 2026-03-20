@@ -116,6 +116,7 @@ public class Draggable : MonoBehaviour
                 // Start animation to center
                 Vector3 centerScreen = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, 0));
                 centerScreen.z = 0;
+                centerScreen.x = -3f;
                 StartCoroutine(AnimateToPoint(centerScreen, transform.localScale * 1.5f, false, true));
                 GameObject.Find("ShopManager").GetComponent<shopManager>().OpenPreview(this.gameObject, isRemoveView, isUpgradeView);
             }
@@ -776,7 +777,6 @@ public class Draggable : MonoBehaviour
         Sequence seq = DOTween.Sequence();
         seq.Join(transform.DOMove(endPos, moveDuration));
         seq.Join(transform.DOScale(new Vector3(0, 0), moveDuration).SetEase(Ease.InQuad));
-        // seq.Play();
         //create the caddie icon when done
         seq.OnComplete(() =>
         {

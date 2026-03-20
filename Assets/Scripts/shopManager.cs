@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using UnityEngine.SceneManagement;
+using DG.Tweening;
 
 public class shopManager : MonoBehaviour
 {
@@ -20,8 +21,8 @@ public class shopManager : MonoBehaviour
     public TextMeshProUGUI previewText;
     public List<GameObject> upgrades = new();
 
-    public GameObject upgradePreview;//, replaceUpgradePreview;
-    //public GameObject upgradePrefab;
+    public GameObject upgradePreview; //upgraded version of previewed card that is temporarily created
+    public GameObject upgradeTeeCostObj; //obj img of tees next to cost when upgrading
     public List<GameObject> shopOptions;
     public GameObject previewBg; //black overlay in preview canvas
     public GameObject upgradeArrow;
@@ -92,11 +93,12 @@ public class shopManager : MonoBehaviour
     {
         //add upgrade
         isPreviewing = false;
-        //upgradePreview.SetActive(false);
+        Destroy(upgradePreview);
         previewCanvas.SetActive(false);
         Destroy(previewCard);
         previewCard = null;
         GameObject card = GameObject.Find("GameManager").GetComponent<Hand>().GetCardById(cardId);
+        card.GetComponent<Draggable>().rarity++;
         //upgradeBuy u = card.GetComponent<Draggable>().CanUpgrade(currentUpgrade.GetComponent<upgradeBuy>());
         //if (u != currentUpgrade.GetComponent<upgradeBuy>())
         //{
@@ -204,38 +206,30 @@ public class shopManager : MonoBehaviour
         yesButton.SetActive(true);
         noButton.SetActive(true);
         courseImagesObj.SetActive(false);
-        //replaceUpgradePreview.SetActive(false);
         if (remove)
         {
-            upgradePreview.SetActive(false);
             previewText.text = "Remove this card?";
             yesButton.GetComponent<Button>().onClick.AddListener(() => RemoveCard(previewCard.GetComponent<Draggable>().cardId));
+            upgradeTeeCostObj.SetActive(false);
+            upgradeArrow.SetActive(false);
         }
         if (upgrade)
         {
-            previewText.text = "Upgrade this card?";
-            //upgradePreview.SetActive(true);
+            int upgradeCost = card.GetComponent<Draggable>().rarity == 0 ? 5 : 10;
+            previewText.text = "Upgrade this card? (5)";
+            upgradeTeeCostObj.SetActive(true);
             upgradeArrow.SetActive(true);
             // create upgraded card preview
-            GameObject newCard = Instantiate(card, GameObject.Find("PreviewCanvas").transform);
-            newCard.transform.position = new Vector3(0, 0, 0);
-            newCard.GetComponent<Draggable>().rarity++;
-            newCard.GetComponent<Draggable>().UpdateCard();
-
-            //upgradePreview.SetActive(true);
-            //previewText.text = "Upgrade this card?";
-            ////if you are replacing an existing upgrade
-            //upgradeBuy u = previewCard.GetComponent<Draggable>().CanUpgrade(currentUpgrade.GetComponent<upgradeBuy>());
-            //if (u != currentUpgrade.GetComponent<upgradeBuy>())
-            //{
-            //    previewText.text = "Replace upgrade?";
-            //    replaceUpgradePreview.GetComponent<upgradeBuy>().UpdateView(u.gameObject);
-            //    replaceUpgradePreview.SetActive(true);
-            //}
-
-            //update preview update
-            //upgradePreview.GetComponent<upgradeBuy>().UpdateView(currentUpgrade);
-            //yesButton.GetComponent<Button>().onClick.AddListener(() => AddUpgrade(previewCard.GetComponent<Draggable>().cardId));
+            upgradePreview = Instantiate(card, GameObject.Find("CardContainer").transform);
+            upgradePreview.GetComponent<Draggable>().rarity++;
+            upgradePreview.GetComponent<Draggable>().UpdateCard();
+            upgradePreview.transform.position = new Vector3(-3f, 0, 0);
+            upgradePreview.transform.localScale = new Vector3(0, 0, 0);
+            Vector3 endPos = new Vector3(3f, 0, 0);
+            Sequence seq = DOTween.Sequence();
+            seq.Join(upgradePreview.transform.DOMove(endPos, 0.25f));
+            seq.Join(upgradePreview.transform.DOScale(new Vector3(1.5f, 1.5f, 1f), 0.25f).SetEase(Ease.InQuad));
+            yesButton.GetComponent<Button>().onClick.AddListener(() => AddUpgrade(previewCard.GetComponent<Draggable>().cardId));
         }
     }
 
@@ -247,6 +241,8 @@ public class shopManager : MonoBehaviour
         previewCard.GetComponent<Draggable>().StartCoroutine(previewCard.GetComponent<Draggable>().
             AnimateToPoint(previewCardPos, previewCardScale, true, false));
         previewCard = null;
+        //remove upgrade preview
+        Destroy(upgradePreview);
     }
 
     public void RemoveCard(int id)
