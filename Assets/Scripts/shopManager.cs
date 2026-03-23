@@ -89,6 +89,7 @@ public class shopManager : MonoBehaviour
         //currentUpgrade = upgrade;
     }
 
+    //apply upgrade to a card and close preview
     public void AddUpgrade(int cardId)
     {
         //add upgrade
@@ -98,17 +99,9 @@ public class shopManager : MonoBehaviour
         Destroy(previewCard);
         previewCard = null;
         GameObject card = GameObject.Find("GameManager").GetComponent<Hand>().GetCardById(cardId);
-        card.GetComponent<Draggable>().rarity++;
-        //upgradeBuy u = card.GetComponent<Draggable>().CanUpgrade(currentUpgrade.GetComponent<upgradeBuy>());
-        //if (u != currentUpgrade.GetComponent<upgradeBuy>())
-        //{
-        //remove old upgrade if they are the same type
-        //Destroy(u.gameObject);
-        //}
-        //card.GetComponent<upgrades>().AddUpgrade(currentUpgrade);
         deckViewer.CloseDeckView();
-        GameObject.Find("CourseManager").GetComponent<Course>().tees -= 2;
-        //currentUpgrade = null;
+        GameObject.Find("CourseManager").GetComponent<Course>().tees -= card.GetComponent<Draggable>().rarity == 0 ? 5 : 10;
+        card.GetComponent<Draggable>().rarity++;
         UpdateUI();
     }
 
@@ -216,7 +209,7 @@ public class shopManager : MonoBehaviour
         if (upgrade)
         {
             int upgradeCost = card.GetComponent<Draggable>().rarity == 0 ? 5 : 10;
-            previewText.text = "Upgrade this card? (5)";
+            previewText.text = "Upgrade this card? (" + upgradeCost + ")";
             upgradeTeeCostObj.SetActive(true);
             upgradeArrow.SetActive(true);
             // create upgraded card preview

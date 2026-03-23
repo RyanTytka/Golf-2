@@ -107,8 +107,13 @@ public class Draggable : MonoBehaviour
         {
             if (!isPreviewing)
             {
-                if (GameObject.Find("ShopManager").GetComponent<shopManager>().isPreviewing) return;
+                //cant upgrade legendary cards
+                if (rarity > 1) return;
+                //check tee cost
+                int upgradeCost = rarity == 0 ? 5 : 10;
+                if (upgradeCost > GameObject.Find("CourseManager").GetComponent<Course>().tees) return;
                 // Prevent multiple previews
+                if (GameObject.Find("ShopManager").GetComponent<shopManager>().isPreviewing) return;
                 isPreviewing = true;
                 //Display this card
                 originalPosition = transform.position;
