@@ -135,6 +135,10 @@ public class Course : MonoBehaviour
     //pause state
     public bool paused = false;
 
+    //putting
+    int[] puttDistances; //distance <= [0] = 1 putt, d <= [1] = 2 putt, else 3 putt
+    //default = [1, 4]. Resets each hole but can be modified
+
 
     void Update()
     {
@@ -145,6 +149,44 @@ public class Course : MonoBehaviour
                 TogglePause();
         }
         if (paused) return;
+        //show putting distances
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            if (gameState == GameState.PLAYING) //only show on course
+            {
+                int holePos = 0, greenStart = 0, greenEnd = 0;
+                bool onGreenFlag = false;
+                for (int i = 0; i < courseLayout.Count; i++)
+                {
+                    if (courseLayout[i].GetComponent<CoursePiece>().myType == (int)CoursePieces.GREEN)
+                    {
+                        if (onGreenFlag == false)
+                        {
+                            greenStart = i;
+                        }
+                        onGreenFlag = true;
+                        greenEnd = i;
+                    }
+                    if (courseLayout[i].GetComponent<CoursePiece>().myType == (int)CoursePieces.HOLE)
+                        holePos = i;
+                }
+                //3 Putt 
+                for (int i = greenStart; i <= greenEnd; i++)
+                {
+                    courseLayout[i].GetComponent<SpriteRenderer>().color = Color.red;
+                }
+                //2 Putt 
+                for (int i = Mathf.Max(greenStart, holePos - puttDistances[1]); i <= Mathf.Min(greenEnd, holePos + puttDistances[1]); i++)
+                {
+                    courseLayout[i].GetComponent<SpriteRenderer>().color = Color.yellow;
+                }
+                //1 Putt
+                for (int i = Mathf.Max(greenStart, holePos - puttDistances[0]); i <= Mathf.Min(greenEnd, holePos + puttDistances[0]); i++)
+                {
+                    courseLayout[i].GetComponent<SpriteRenderer>().color = Color.blue;
+                }
+            }
+        }
         // Animate shot arc          
         float scrollSpeed = 1.5f;
         float offset = Time.time * scrollSpeed;
@@ -340,6 +382,7 @@ public class Course : MonoBehaviour
         courseLayout = new List<GameObject>();
         power = 0;
         pinpoint = 0;
+        puttDistances = new int[] { 1, 4};
 
         GetComponent<BoxCollider2D>().enabled = true;
         //Generate Fairway
@@ -875,8 +918,12 @@ public class Course : MonoBehaviour
         //If on green, perform a putt
         if (courseLayout[ballPos].GetComponent<CoursePiece>().pieceName == "Green")
         {
-            //TO DO: take distance and putter into account
-            strokeCount++;
+            int distanceToHole = Mathf.Abs(DistanceToHole(ballPos));
+            int puttCount;
+            if (distanceToHole <= puttDistances[0]) puttCount = 1;
+            else if (distanceToHole <= puttDistances[1]) puttCount = 2;
+            else puttCount = 3;
+            strokeCount += puttCount;
             GoToNextHole();
             return;
         }
