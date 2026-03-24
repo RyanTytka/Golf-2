@@ -98,7 +98,7 @@ public class deckViewer : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             list[i].GetComponent<Draggable>().cardId = i;
             if (isUpgrading && newCard.GetComponent<Draggable>().rarity > 1 || (newCard.GetComponent<Draggable>().rarity + 1) * 5 > GameObject.Find("CourseManager").GetComponent<Course>().tees)
             {
-                //make this in previoew instead of making it unclickable
+                //TODO: make this in previoew instead of making it unclickable
                 newCard.GetComponent<SpriteRenderer>().color = Color.gray;
                 newCard.GetComponentInChildren<Image>().color = Color.gray;
             }

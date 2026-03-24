@@ -3,11 +3,6 @@ fringe: course type around greens that slows down roll to prevent from rolling i
 
 mechanics to add/work:
 putting
-upgrades / item rarity (Rookie - Pro - Legend)
-    upgrade in shop
-    adding cards to deck generates random rarity
-    update card descriptions
-    update card effects
 drinks (/snacks?)
 ascension modes (full version only) (called handicap?)
 

@@ -1188,7 +1188,7 @@ public class Course : MonoBehaviour
     //debug tool to quickly go through holes
     public void SkipHole()
     {
-        strokeCount += 4;
+        strokeCount += 3;
         GoToNextHole();
     }
 

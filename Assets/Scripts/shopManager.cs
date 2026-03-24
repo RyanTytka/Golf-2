@@ -56,28 +56,18 @@ public class shopManager : MonoBehaviour
             shopOptions.Add(newCard);
             newCard.transform.position = new Vector3(index * 3 - 5, -1.5f, 0);
             newCard.GetComponent<Draggable>().isShopOption = true;
+            newCard.GetComponent<Draggable>().rarity = index;
             newCard.GetComponent<Draggable>().UpdateCard();
             newCard.transform.parent = gameObject.transform;
             //create cost objs
             GameObject newCost = Instantiate(costObj, GameObject.Find("MainCanvas").transform);
             newCost.GetComponent<RectTransform>().position = new Vector3(index * 3 - 5.25f, 0.75f, 0);
+            newCard.GetComponent<Draggable>().myCost = (newCard.GetComponent<Draggable>().rarity + 1) * 5;
             newCost.GetComponentInChildren<TextMeshProUGUI>().text = newCard.GetComponent<Draggable>().myCost.ToString();
             newCard.GetComponent<Draggable>().costObj = newCost;
             index++;
         }
-        //upgrades
-        //for (int i = 0; i < 3; i++)
-        //{
-        //    //create upgrade options
-        //    GameObject newUpgrade = Instantiate(upgradePrefab, GameObject.Find("MainCanvas").transform);
-        //    newUpgrade.GetComponent<RectTransform>().position = new Vector3(i * 3 - 5.0f, 2.5f, 0);
-        //    newUpgrade.GetComponent<upgradeBuy>().type = (upgradeBuy.upgradeType)Random.Range(0, 3);
-        //    newUpgrade.GetComponent<upgradeBuy>().ID = Random.Range(0, 4);
-        //    newUpgrade.GetComponent<upgradeBuy>().UpdateView();
-        //    newUpgrade.GetComponent<Button>().onClick.AddListener(() => ClickUpgrade(newUpgrade));
-        //    upgrades.Add(newUpgrade);
-        //}
-        //Destroy(costObj);
+        Destroy(costObj);
         //reset rival
         GameObject.Find("CourseManager").GetComponent<Course>().currentRival = -1;
     }
@@ -164,14 +154,6 @@ public class shopManager : MonoBehaviour
         //course selection
         if (teeAmount < 2)
             courseSelectButton.GetComponent<Button>().interactable = false;
-        //upgrades
-        //foreach (GameObject upgrade in upgrades)
-        //{
-        //    if (teeAmount < 3)
-        //    {
-        //        upgrade.GetComponent<Button>().interactable = false;
-        //    }
-        //}
         //card options
         foreach (GameObject card in shopOptions)
         {
