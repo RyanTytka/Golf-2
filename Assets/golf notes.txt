@@ -2,7 +2,6 @@ ideas:
 fringe: course type around greens that slows down roll to prevent from rolling into hole from across the map
 
 mechanics to add/work:
-    putting
 drinks (/snacks?)
 ascension modes (full version only) (called handicap?)
 
@@ -10,14 +9,16 @@ high priority:
 courses too long/varied 
  - make par 3s have smaller greens
  - forest has more hazards than plains but similar distances
- -par 3s scale with course at same rate as par 4s. decrease it (and par 5s too prob)
- -make beach course shorter
- -calculate from start of course for less variation
- -desert can have possibly no hazards
+ - par 3s scale with course at same rate as par 4s. decrease it (and par 5s too prob)
+ - make beach course shorter
+ - calculate from start of course for less variation
+ - desert can have possibly no hazards
+ - make amount of hazards more consistent but also reduced at early courses
+ - scale course length with amount of hazards inversely
 balance tee earnings/costs
 distance marker is not deleted if active when you finish a hole
 No exit app button
-most cards have their internal cost set to 0. dont need individual card costs
+how to play
 
 low:
 stacking multiple of same caddie
@@ -107,22 +108,22 @@ cards list
         bugs: none
     9 Iron - 
         Standard Golf Club
-        60/80/100 Power, 30/30/40 Roll
+        60/80/100 Power, 30/30/40 Roll. Fairway Landing: +1 Putt Range.
         art: done
         bugs: none
     7 Iron - 
         Standard Golf Club
-        70/90/110 Power, 30/30/40 Roll
+        70/90/110 Power, 30/30/40 Roll. Fairway Landing: +1 Putt Range.
         art: missing
         bugs: none
     Sand Wedge - 
         Standard Golf Club
-        30/40/50 Power, 20/20/30 Roll
-        art: pending
+        30/40/50 Power, 20/20/30 Roll. Green Landing: +1 Putt Range
+        art: done
         bugs: none
     Pitching Wedge - 
         Standard golf club
-        40/50/70 Power, 20/20/30 Roll
+        40/50/70 Power, 20/20/30 Roll. Green Landing: +1 Putt Range
         art: done
         bugs: none
     Ace Ball - 
@@ -417,6 +418,3 @@ rules:
 - if a clock chimes while you are on the stairs, go back the way you came without turning around
 - if bathtub/sink is full of water, drain it immediately. If the water has turned red, turn the radiio/TV on as loud as you can
 - if you hear a dog barking, go open the back door. 
-
-
-https://ficsit.app/mod/Cartograph

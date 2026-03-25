@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -700,12 +699,13 @@ public class Course : MonoBehaviour
         float ballRadius = 0.5f;
         Vector3 currentPos = ballObj.transform.position;
         Vector3 delta = currentPos - lastPosition;
+        int direction = delta.x > 0 ? 1 : -1;
         //ball rolls much slower in the air
         float distance = isRolling ? delta.magnitude : delta.magnitude * 0.1f;
         //TODO: need to calculate if going forwards or backwards
         if (distance > 0.0001f)
         {
-            float rotationDegrees = (distance / (2f * Mathf.PI * ballRadius)) * -360f;
+            float rotationDegrees = (distance / (2f * Mathf.PI * ballRadius)) * -360f * direction;
 
             ballObj.transform.Rotate(Vector3.forward, rotationDegrees, Space.World);
         }
@@ -801,7 +801,7 @@ public class Course : MonoBehaviour
         }
         //if out of bounds
         if (swing.endIndex >= courseLayout.Count)
-        {
+        { 
             //ball stays where it is and you lose a stroke
             strokeCount++;
             pinpoint = 0;
@@ -877,7 +877,26 @@ public class Course : MonoBehaviour
                 }
             }
         }
-
+        //club effects
+        if (courseLayout[ballPos].GetComponent<CoursePiece>().pieceName == "Green")
+        {
+            if (selectedClub.GetComponent<Draggable>().cardName == "Pitching Wedge" ||
+                selectedClub.GetComponent<Draggable>().cardName == "Sand Wedge")
+            {
+                puttDistances[0]++;
+                puttDistances[1]++;
+                UpdateStatusEffectDisplay();
+            }
+        }
+        if (courseLayout[ballPos].GetComponent<CoursePiece>().pieceName == "Fairway")
+        {
+            if (selectedClub.GetComponent<Draggable>().cardName == "7 Iron" ||
+                selectedClub.GetComponent<Draggable>().cardName == "9 Iron")
+            {
+                puttDistances[0]++;
+                puttDistances[1]++;
+            }
+        }
         //deselect current club and ball and update hand
         if (selectedClub != null)
         {
@@ -949,13 +968,52 @@ public class Course : MonoBehaviour
         //If on green, perform a putt
         if (courseLayout[ballPos].GetComponent<CoursePiece>().pieceName == "Green")
         {
+            DisplayCourse();
             int distanceToHole = Mathf.Abs(DistanceToHole(ballPos));
             int puttCount;
             if (distanceToHole <= puttDistances[0]) puttCount = 1;
             else if (distanceToHole <= puttDistances[1]) puttCount = 2;
             else puttCount = 3;
-            strokeCount += puttCount;
-            GoToNextHole();
+            //animate the ball being hit for each putt
+            Vector3 currentPos = ballObj.transform.position;
+            Sequence sequence = DOTween.Sequence();
+            sequence.AppendInterval(1.0f); //wait for cards to finish discarding
+            int holeIndex = courseLayout.Find(obj => 
+                obj.GetComponent<CoursePiece>().myType == (int)CoursePieces.HOLE
+            ).GetComponent<CoursePiece>().myIndex;
+            Vector3 target = courseLayout[holeIndex].transform.position;
+            float durationPerPutt = 0.5f;
+            for (int i = 0; i < puttCount; i++)
+            {
+                // Target is 75% towards the hole
+                Vector3 nextPos = currentPos + (target - currentPos) * 0.75f;
+                if (i == puttCount - 1)
+                {
+                    //make last putt actually reach hole
+                    nextPos = target;
+                }
+                // Append movement
+                sequence.Append(
+                    ballObj.transform.DOMove(nextPos, durationPerPutt)
+                             .SetEase(Ease.OutQuad).OnUpdate(() =>
+                             {
+                                 RollBall(true);
+                             }).OnComplete(() =>
+                             {
+                                 strokeCount++;
+                                 UpdateStatusEffectDisplay();
+                             })
+                );
+                // small delay between putts
+                sequence.AppendInterval(0.25f);
+                currentPos = nextPos;
+            }
+            sequence.OnComplete(() =>
+            {
+                ballPos = holeIndex;
+                GoToNextHole();
+            }); 
+            sequence.Play();
             return;
         }
         //if in the hole, go to next hole
@@ -974,6 +1032,7 @@ public class Course : MonoBehaviour
             luck += 1 + rarity;
         }
         DisplayCourse();
+        UpdateStatusEffectDisplay();
     }
 
     //Highlight the part of the course that a hit would land on
@@ -1228,6 +1287,11 @@ public class Course : MonoBehaviour
             GameObject.Find("StatusEffects").GetComponentsInChildren<Image>()[statusIndex].enabled = true;
             GameObject.Find("StatusEffects").GetComponentsInChildren<Image>()[statusIndex].sprite = statusEffectIcons[2];
         }
+        //Update Putt Meter
+        puttMeterTextObjs[0].GetComponent<TextMeshProUGUI>().text = puttDistances[0].ToString();
+        puttMeterTextObjs[1].GetComponent<TextMeshProUGUI>().text = puttDistances[1].ToString();
+        //Update stroke count
+        GameObject.Find("StrokeCount").GetComponent<TextMeshProUGUI>().text = strokeCount.ToString();
     }
 
     public void DrawArc(Vector3 start, Vector3 end, float targetX, GameObject endObj)
