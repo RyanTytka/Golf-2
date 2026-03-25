@@ -2,7 +2,7 @@ ideas:
 fringe: course type around greens that slows down roll to prevent from rolling into hole from across the map
 
 mechanics to add/work:
-putting
+    putting
 drinks (/snacks?)
 ascension modes (full version only) (called handicap?)
 

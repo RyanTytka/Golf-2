@@ -16,6 +16,7 @@ public class CoursePiece : MonoBehaviour
     public GameObject rollOverPrefab; //obj created when ball rolls over this piece
     public Sprite rollOverSprite; //sprite to set for rollOverPrefab
     private GameObject currentDataObj = null;
+    public GameObject puttScoreTextObj;
 
     void Update()
     {

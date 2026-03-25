@@ -138,6 +138,7 @@ public class Course : MonoBehaviour
     //putting
     int[] puttDistances; //distance <= [0] = 1 putt, d <= [1] = 2 putt, else 3 putt
     //default = [1, 4]. Resets each hole but can be modified
+    public List<GameObject> puttMeterTextObjs; //text objs that display your current putt ranges
 
 
     void Update()
@@ -173,17 +174,47 @@ public class Course : MonoBehaviour
                 //3 Putt 
                 for (int i = greenStart; i <= greenEnd; i++)
                 {
-                    courseLayout[i].GetComponent<SpriteRenderer>().color = Color.red;
+                    courseLayout[i].GetComponentInChildren<TextMeshProUGUI>(true).gameObject.SetActive(true);
+                    courseLayout[i].GetComponentInChildren<TextMeshProUGUI>().color = Color.red;
+                    courseLayout[i].GetComponentInChildren<TextMeshProUGUI>().text = "+3";
                 }
                 //2 Putt 
                 for (int i = Mathf.Max(greenStart, holePos - puttDistances[1]); i <= Mathf.Min(greenEnd, holePos + puttDistances[1]); i++)
                 {
-                    courseLayout[i].GetComponent<SpriteRenderer>().color = Color.yellow;
+                    courseLayout[i].GetComponentInChildren<TextMeshProUGUI>().color = new Color(0.8f, 0.5f, 0f);
+                    courseLayout[i].GetComponentInChildren<TextMeshProUGUI>().text = "+2";
                 }
                 //1 Putt
                 for (int i = Mathf.Max(greenStart, holePos - puttDistances[0]); i <= Mathf.Min(greenEnd, holePos + puttDistances[0]); i++)
                 {
-                    courseLayout[i].GetComponent<SpriteRenderer>().color = Color.blue;
+                    courseLayout[i].GetComponentInChildren<TextMeshProUGUI>().color = Color.yellow;
+                    courseLayout[i].GetComponentInChildren<TextMeshProUGUI>().text = "+1";
+                }
+            }
+        }
+        if (Input.GetKeyUp(KeyCode.Tab))
+        {
+            //remove putt distance indicators
+            if (gameState == GameState.PLAYING) //only if on course
+            {
+                int greenStart = 0, greenEnd = 0;
+                bool onGreenFlag = false;
+                for (int i = 0; i < courseLayout.Count; i++)
+                {
+                    if (courseLayout[i].GetComponent<CoursePiece>().myType == (int)CoursePieces.GREEN)
+                    {
+                        if (onGreenFlag == false)
+                        {
+                            greenStart = i;
+                        }
+                        onGreenFlag = true;
+                        greenEnd = i;
+                    }
+                }
+                //3 Putt 
+                for (int i = greenStart; i <= greenEnd; i++)
+                {
+                    courseLayout[i].GetComponentInChildren<TextMeshProUGUI>(true).gameObject.SetActive(false);
                 }
             }
         }
@@ -382,7 +413,7 @@ public class Course : MonoBehaviour
         courseLayout = new List<GameObject>();
         power = 0;
         pinpoint = 0;
-        puttDistances = new int[] { 1, 4};
+        puttDistances = new int[] { 1, 4 };
 
         GetComponent<BoxCollider2D>().enabled = true;
         //Generate Fairway
