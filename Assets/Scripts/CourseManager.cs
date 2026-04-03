@@ -737,13 +737,14 @@ public class Course : MonoBehaviour
         if (swing.landIndex - swing.endIndex == 0)
             ratio = 0;
         else
-            ratio = (swing.landIndex - swing.startIndex) / (swing.landIndex - swing.endIndex);
+            ratio = Mathf.Abs((swing.landIndex - swing.startIndex) / (swing.landIndex - swing.endIndex));
         AnimationCurve curve = new AnimationCurve(new Keyframe(0f, 1f, 0f, -2f), new Keyframe(1f + ratio, 0f, -2f, 0f));
         // need less linear curve. short shots too fast and long shots too slow
-        float shotLength = (swing.endIndex - swing.startIndex) / 10f;
+        float shotLength = Mathf.Abs((swing.endIndex - swing.startIndex)) / 10f;
         isBallMoving = true;
         GameObject.Find("SwingButton").GetComponent<Button>().interactable = false;
         GameObject.Find("MulliganButton").GetComponent<Button>().interactable = false;
+        int luckUsed = 0;
         //send the ball on its path
         DOPath = ballObj.transform.DOPath(path, shotLength, PathType.Linear).SetEase(Ease.OutCubic).OnUpdate(() =>
         {
@@ -759,8 +760,20 @@ public class Course : MonoBehaviour
             int currentIndex = swing.landIndex + rollDirection * Mathf.FloorToInt(rollT * (float)totalTiles);
             if (currentIndex != lastTriggeredIndex)
             {
+                bool usingLuck = false;
                 lastTriggeredIndex = currentIndex;
-                courseLayout[currentIndex].GetComponent<CoursePiece>().RolledOver();
+                if(courseLayout[currentIndex].GetComponent<CoursePiece>().myType == (int)CoursePieces.WATER ||
+                    courseLayout[currentIndex].GetComponent<CoursePiece>().myType == (int)CoursePieces.SAND ||
+                    courseLayout[currentIndex].GetComponent<CoursePiece>().myType == (int)CoursePieces.ROUGH)
+                {
+                    //check if hazard is being applied or luck is being used
+                    if(luck + swing.luckGained > luckUsed)
+                    {
+                        luckUsed++;
+                        usingLuck = true;
+                    }
+                }
+                courseLayout[currentIndex].GetComponent<CoursePiece>().RolledOver(usingLuck);
             }
         }).OnComplete(AfterHitBall);
         //make the camera move with the ball
@@ -1407,10 +1420,10 @@ public class Course : MonoBehaviour
         {
             //set gamestate to card select once done moving up
             gameState = GameState.NEW_CARD_SELECT;
+            GameObject.Find("GameManager").GetComponent<Hand>().RemoveDeck();
         });
         //set up new card select
         GetComponent<BoxCollider2D>().enabled = false;
-        GameObject.Find("GameManager").GetComponent<Hand>().RemoveDeck();
         GameObject newCard = GameObject.Find("GameManager").GetComponent<Hand>().RandomUpgrade();
         int teeReward = Mathf.Max(pars[holeNum - 1] - strokeCount + 3, 1);
         if (currentRival == 4 && holeNum <= scores.Count && pars[holeNum - 1] < scores[holeNum - 1]) //must par or better to get tees against rival 4

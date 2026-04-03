@@ -151,6 +151,7 @@ MonoBehaviour:
   distanceDataObj: {fileID: 8740734744052633445, guid: e4704e01d8000004fb1c8e0dae3cac10, type: 3}
   rollOverPrefab: {fileID: 6512579119685032926, guid: 46ff576f1eb5252428d84a6599d2ade5, type: 3}
   rollOverSprite: {fileID: 805169711, guid: 25f593f459262724aab761ece0878ac2, type: 3}
+  luckSprite: {fileID: 21300000, guid: ee6f51d90e1b0144eb22e3623f034c8a, type: 3}
   puttScoreTextObj: {fileID: 2346700322918195357}
 --- !u!1 &1907510256531673461
 GameObject:

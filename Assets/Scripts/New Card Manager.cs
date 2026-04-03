@@ -141,7 +141,7 @@ public class NewCardManager : MonoBehaviour
             //clear continue text/button
             Destroy(c.continueObj);
             //clear bg elements
-            GameObject.Find("BackgroundManager").GetComponent<backgroundManager>().RemoveSprites();
+            GameObject.Find("BackgroundManager").GetComponent<backgroundManager>().RemoveSprites(true);
             //go to shop
             SceneManager.LoadScene("Shop");
         }
@@ -162,7 +162,7 @@ public class NewCardManager : MonoBehaviour
             //clear continue text/button
             Destroy(c.continueObj);
             //clear bg elements
-            GameObject.Find("BackgroundManager").GetComponent<backgroundManager>().RemoveSprites();
+            GameObject.Find("BackgroundManager").GetComponent<backgroundManager>().RemoveSprites(false);
             //new hole
             c.NewHole();
             //updatestatus effects

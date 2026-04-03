@@ -63,6 +63,7 @@ public class Draggable : MonoBehaviour
     public GameObject baseReference; //reference to the obj this is cloned from in the base deck
     public GameObject cardBack; //card back that is shown when card is face down and disabled when face up
     public bool isHoverable = false; //do not enlarge card when hovered if this is false
+    public bool beingDrawn = false; //true while this card is being drawn to hand
     public Sprite caddieIcon; //if this is a caddie and is played, this image will be the caddie icon
     public int rarity; //0 - Rookie, 1 - Pro, 2 - Legend
     public Sprite[] raritySymbols; //list of icons that the card siplays
@@ -101,7 +102,9 @@ public class Draggable : MonoBehaviour
 
     public void ClickCard()
     {
+        if (beingDrawn) return;
         if (GameObject.Find("CourseManager").GetComponent<Course>().paused) return;
+        if (GameObject.Find("CourseManager").GetComponent<Course>().gameState == Course.GameState.SHOWING_SCORE) return;
 
         if (isRemoveView || isUpgradeView)
         {
@@ -121,7 +124,7 @@ public class Draggable : MonoBehaviour
                 // Start animation to center
                 Vector3 centerScreen = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, 0));
                 centerScreen.z = 0;
-                centerScreen.x = -3f;
+                centerScreen.x = isRemoveView ? 0 : -3f;
                 StartCoroutine(AnimateToPoint(centerScreen, transform.localScale * 1.5f, false, true));
                 GameObject.Find("ShopManager").GetComponent<shopManager>().OpenPreview(this.gameObject, isRemoveView, isUpgradeView);
             }
@@ -659,6 +662,7 @@ public class Draggable : MonoBehaviour
     public void AnimateDraw(int drawAmount, System.Action completeCallback = null)
     {
         isHoverable = false;
+        beingDrawn = true;
         Vector3 startPosition = new(-8f, -8f);
         Vector3 handPosition = new(-2f, 0f);
         float moveDuration = 0.5f;
@@ -773,8 +777,8 @@ public class Draggable : MonoBehaviour
         isHoverable = false;
         Hand h = GameObject.Find("GameManager").GetComponent<Hand>();
         //animation variables
-        float moveDuration = 1.0f;
         Vector3 endPos = new(h.caddieDisplays.Count - 6f, 4.25f);
+        float moveDuration = Mathf.Max(0.5f, Mathf.Abs(endPos.x - transform.position.x) * 0.05f);
         // Set sort order so it is in front of everything
         GetComponentInChildren<Canvas>().sortingOrder = 1000;
         GetComponent<SpriteRenderer>().sortingOrder = 1000;

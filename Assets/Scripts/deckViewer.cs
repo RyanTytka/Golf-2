@@ -96,9 +96,9 @@ public class deckViewer : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             newCard.GetComponent<Draggable>().cardId = i;
             newCard.GetComponent<Draggable>().SetSortOrder(2000);
             list[i].GetComponent<Draggable>().cardId = i;
-            if (isUpgrading && newCard.GetComponent<Draggable>().rarity > 1 || (newCard.GetComponent<Draggable>().rarity + 1) * 5 > GameObject.Find("CourseManager").GetComponent<Course>().tees)
+            if (isUpgrading && (newCard.GetComponent<Draggable>().rarity > 1 || (newCard.GetComponent<Draggable>().rarity + 1) * 5 > GameObject.Find("CourseManager").GetComponent<Course>().tees))
             {
-                //TODO: make this in previoew instead of making it unclickable
+                //TODO: make this in preview instead of making it unclickable
                 newCard.GetComponent<SpriteRenderer>().color = Color.gray;
                 newCard.GetComponentInChildren<Image>().color = Color.gray;
             }

@@ -177,17 +177,21 @@ public class backgroundManager : MonoBehaviour
     }
 
     //delete all bg elements for this hole
-    public void RemoveSprites()
+    //if removeClouds is true, destroy clouds, otherwise dont
+    public void RemoveSprites(bool removeClouds)
     {
         for (int i = 0; i < bgObjs.Count; i++)
         {
             Destroy(bgObjs[i]);
         }
-        for (int i = 0; i < cloudObjs.Count; i++)
+        if (removeClouds)
         {
-            Destroy(cloudObjs[i]);
+            for (int i = 0; i < cloudObjs.Count; i++)
+            {
+                Destroy(cloudObjs[i]);
+            }
+            cloudObjs.Clear();
         }
         bgObjs.Clear();
-        cloudObjs.Clear();
     }
 }

@@ -15,6 +15,7 @@ public class CoursePiece : MonoBehaviour
     public GameObject distanceDataObj;
     public GameObject rollOverPrefab; //obj created when ball rolls over this piece
     public Sprite rollOverSprite; //sprite to set for rollOverPrefab
+    public Sprite luckSprite; //sprite to set when spending luck
     private GameObject currentDataObj = null;
     public GameObject puttScoreTextObj;
 
@@ -77,7 +78,7 @@ public class CoursePiece : MonoBehaviour
     }
 
     //create pop up effect that triggers when landing on this piece
-    public void RolledOver()
+    public void RolledOver(bool usingLuck)
     {
         GameObject particle = rollOverPrefab;
         //check for card effects
@@ -95,7 +96,7 @@ public class CoursePiece : MonoBehaviour
         //create particle effect
         GameObject obj = Instantiate(rollOverPrefab, transform);
         obj.transform.localPosition = new Vector3(0, 1, 0);
-        obj.GetComponent<SpriteRenderer>().sprite = rollOverSprite;
+        obj.GetComponent<SpriteRenderer>().sprite = usingLuck ? luckSprite : rollOverSprite;
         obj.transform.DOLocalMoveY(transform.position.y + 1.25f, 2f)
             .SetEase(Ease.OutCubic)
             .OnComplete(() =>

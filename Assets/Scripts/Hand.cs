@@ -174,6 +174,7 @@ public class Hand : MonoBehaviour
             card.DOMove(targetPos, moveDuration).SetEase(Ease.OutQuad).OnComplete(() =>
             {
                 card.GetComponent<Draggable>().isHoverable = true;
+                card.GetComponent<Draggable>().beingDrawn = false;
             });
             card.DORotateQuaternion(targetRot, moveDuration);
             // Sorting so middle cards appear on top
@@ -481,14 +482,17 @@ public class Hand : MonoBehaviour
                     {
                         if (topHit.collider.gameObject.GetComponent<Draggable>().isHoverable)
                         {
-                            //start hovering the card
-                            hoveringCard = topHit.collider.gameObject;
-                            DisplayHand();
-                            // hoveringCard.GetComponentInChildren<Canvas>().sortingOrder = 1000;
-                            // hoveringCard.GetComponent<SpriteRenderer>().sortingOrder = 1000;
-                            // hoveringCard.transform.DOKill();
-                            // hoveringCard.transform.DOScale(1.2f, 0.15f).SetEase(Ease.OutQuad);
-                            // hoveringCard.transform.DOLocalMoveY(hoveringCard.transform.localPosition.y + 0.25f, 0.15f).SetEase(Ease.OutQuad);
+                            if (GameObject.Find("CourseManager").GetComponent<Course>().gameState != Course.GameState.SHOWING_SCORE)
+                            {
+                                //start hovering the card
+                                hoveringCard = topHit.collider.gameObject;
+                                DisplayHand();
+                                // hoveringCard.GetComponentInChildren<Canvas>().sortingOrder = 1000;
+                                // hoveringCard.GetComponent<SpriteRenderer>().sortingOrder = 1000;
+                                // hoveringCard.transform.DOKill();
+                                // hoveringCard.transform.DOScale(1.2f, 0.15f).SetEase(Ease.OutQuad);
+                                // hoveringCard.transform.DOLocalMoveY(hoveringCard.transform.localPosition.y + 0.25f, 0.15f).SetEase(Ease.OutQuad);
+                            }
                         }
                     }
                 }
