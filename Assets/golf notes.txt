@@ -16,14 +16,17 @@ courses too long/varied
  - make amount of hazards more consistent but also reduced at early courses
  - scale course length with amount of hazards inversely
 balance tee earnings/costs
-distance marker is not deleted if active when you finish a hole
-No exit app button
-how to play
-choose next course in shop is broken
-continue button in shop is broken
-bugfix individual cards
+how to play: (tutorial course?)
+    -Select a club (use driver since it goes away)
+    -This is path ball will take. Watch out for hazards
+    -Play an ability/select a ball
+    -Here is the flag, try to make it onto the green in as few shots as you can
+    -This is putting meter. Putt is auto once you land on the green
+    -This is your rival, each course has one. score and ability.
+    -after done with hole: add new card or tees. Show rarities. Shop after each course
 
 medium:
+distance marker is not deleted if active when you finish a hole
 stacking multiple of same caddie
 make cards more readable
 view discard pile
@@ -33,6 +36,7 @@ using arrow keys to move course before clicking makes bg jump (not always based 
 add camera track ball while moving
 
 low:
+animations for getting/spending tees and adding card to deck
 move distance data marker to manager script so it does not snap to start of animation (also new sprite)
 can drag course while waiting for discard. (or make it so you can and turn full black panel into just an area?)
 clicking card while waiting for discard and dragging mouse fast breaks hovering/dragging card
@@ -151,14 +155,12 @@ cards list
         ball on a tee
         Draw 2/3/4. You cannot play any more abilities until your next shot
         art: pending
-        bugs: 
-            stops you from using balls and abilities?
+        bugs: none
     Pinpoint Accuracy - 
         When the ball stops instead of rolls
         gain 30/40/50 backspin
         art: done
-        bugs: 
-            rename to pinpoint
+        bugs: none
     Dead Stop Iron - (new name)
         Haunted looking golf club. Made of Bones/Grim Reaper Scythe, tombstone in background.
         iron. power 50/70/100, roll 30. +10 power for each card tossed this hole

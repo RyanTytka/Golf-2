@@ -28,7 +28,7 @@ public class shopManager : MonoBehaviour
     public GameObject upgradeArrow;
 
     //private GameObject currentUpgrade;
-    private int removeCost = 2; //doubles each time you remove a card (resets each course)
+    private int removeCost = 5; //doubles each time you remove a card (resets each course)
     private GameObject previewCard;
     private Vector3 previewCardPos, previewCardScale;
 
@@ -68,6 +68,7 @@ public class shopManager : MonoBehaviour
             index++;
         }
         Destroy(costObj);
+        UpdateUI();
         //reset rival
         GameObject.Find("CourseManager").GetComponent<Course>().currentRival = -1;
     }
@@ -133,10 +134,10 @@ public class shopManager : MonoBehaviour
                 (GameObject.Find("CourseManager").GetComponent<Course>().Swing);
             GameObject.Find("MulliganButton").GetComponent<Button>().onClick.AddListener
                 (GameObject.Find("CourseManager").GetComponent<Course>().Mulligan);
-            GameObject.Find("TeesCount").GetComponent<TextMeshProUGUI>().text = GameObject.Find("CourseManager").GetComponent<Course>().tees.ToString();
-            GameObject.Find("ContinueButton").GetComponent<Button>().onClick.AddListener(ToNewHole);
-            upgradeButton.GetComponent<Button>().onClick.AddListener(ClickUpgrade);
-            UpdateUI();
+            //GameObject.Find("TeesCount").GetComponent<TextMeshProUGUI>().text = GameObject.Find("CourseManager").GetComponent<Course>().tees.ToString();
+            //GameObject.Find("ContinueButton").GetComponent<Button>().onClick.AddListener(ToNewHole);
+            //upgradeButton.GetComponent<Button>().onClick.AddListener(ClickUpgrade);
+            //UpdateUI();
             // Unsubscribe to avoid duplicate calls in the future
             SceneManager.sceneLoaded -= OnSceneLoaded;
         }
@@ -264,8 +265,9 @@ public class shopManager : MonoBehaviour
         yesButton.SetActive(false);
         noButton.SetActive(false);
         previewCanvas.SetActive(true);
-        upgradePreview.SetActive(false);
         courseImagesObj.SetActive(true);
+        upgradeArrow.SetActive(false);
+        upgradeTeeCostObj.SetActive(false);
         previewText.text = "Select the next course:";
         List<int> courseOptions = new List<int> { 0, 1, 2, 3, 4 };
         for (int i = 0; i < 3; i++)

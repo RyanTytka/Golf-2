@@ -29,7 +29,12 @@ public class Course : MonoBehaviour
             GameObject.Find("AddTees").GetComponent<Button>().onClick.AddListener(GameObject.Find("CourseManager").GetComponent<Course>().AddTees);
         if (GameObject.Find("NextHole") != null)
             GameObject.Find("NextHole").GetComponent<Button>().onClick.AddListener(GameObject.Find("CourseManager").GetComponent<Course>().AddHole);
-
+        //set up UI
+        Button startButton = GameObject.Find("ReferenceManager").GetComponent<referenceManager>().startButton.GetComponent<Button>();
+        startButton.onClick.AddListener(GameObject.Find("GameManager").GetComponent<mainMenuUI>().ScrollDown);
+        startButton.onClick.AddListener(StartGame);
+        Button quitButton = GameObject.Find("ReferenceManager").GetComponent<referenceManager>().startButton.GetComponent<Button>();
+        quitButton.onClick.AddListener(CloseGame);
         //
         if (courseManagerObj == null)
         {
@@ -138,7 +143,12 @@ public class Course : MonoBehaviour
     int[] puttDistances; //distance <= [0] = 1 putt, d <= [1] = 2 putt, else 3 putt
     //default = [1, 4]. Resets each hole but can be modified
     public List<GameObject> puttMeterTextObjs; //text objs that display your current putt ranges
-
+    
+    //exit the application
+    public void CloseGame()
+    {
+        Application.Quit();
+    }
 
     void Update()
     {
@@ -319,10 +329,21 @@ public class Course : MonoBehaviour
             //show scorecard
             GameObject.Find("ReferenceManager").GetComponent<referenceManager>().pauseScorecard.GetComponent<scorecard>().ShowCurrentCard();
         }
-        //add unpause function to resume button
+        //add listeners to button
         GameObject.Find("ReferenceManager").GetComponent<referenceManager>().pauseButton.GetComponent<Button>().onClick.RemoveAllListeners();
         GameObject.Find("ReferenceManager").GetComponent<referenceManager>().pauseButton.GetComponent<Button>().onClick.AddListener(TogglePause);
+        GameObject.Find("ReferenceManager").GetComponent<referenceManager>().mainMenuButton.GetComponent<Button>().onClick.RemoveAllListeners();
+        GameObject.Find("ReferenceManager").GetComponent<referenceManager>().mainMenuButton.GetComponent<Button>().onClick.AddListener(ToMainMenu);
+    }
 
+    public void ToMainMenu()
+    {
+        //clean up game state and reload main menu
+        paused = false;
+        Destroy(GameObject.Find("GameManager"));
+        Destroy(GameObject.Find("CourseManager"));
+        Destroy(GameObject.Find("Music Manager"));
+        SceneManager.LoadScene("Course");
     }
 
     public void StartGame()
@@ -1301,8 +1322,8 @@ public class Course : MonoBehaviour
             GameObject.Find("StatusEffects").GetComponentsInChildren<Image>()[statusIndex].sprite = statusEffectIcons[2];
         }
         //Update Putt Meter
-        puttMeterTextObjs[0].GetComponent<TextMeshProUGUI>().text = puttDistances[0].ToString();
-        puttMeterTextObjs[1].GetComponent<TextMeshProUGUI>().text = puttDistances[1].ToString();
+        GameObject.Find("ReferenceManager").GetComponent<referenceManager>().puttMeterTextObjs[0].GetComponent<TextMeshProUGUI>().text = puttDistances[0].ToString();
+        GameObject.Find("ReferenceManager").GetComponent<referenceManager>().puttMeterTextObjs[1].GetComponent<TextMeshProUGUI>().text = puttDistances[1].ToString();
         //Update stroke count
         GameObject.Find("StrokeCount").GetComponent<TextMeshProUGUI>().text = strokeCount.ToString();
     }

@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class referenceManager : MonoBehaviour
 {
+    //main menu
+    public GameObject startButton;
+    public GameObject quitButton;
     //adding new card to deck
     public GameObject mainCamera;
     public GameObject newCardCanvas;
@@ -17,7 +20,10 @@ public class referenceManager : MonoBehaviour
     public GameObject pauseCanvas;
     public GameObject pauseScorecard;
     public GameObject pauseButton; //resume button
+    public GameObject mainMenuButton;
     //hand highlight canvas
     public GameObject handHighlightCanvas;
     public GameObject handHighlightText;
+    //course objs
+    public GameObject[] puttMeterTextObjs;
 }
