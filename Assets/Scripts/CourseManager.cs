@@ -35,6 +35,9 @@ public class Course : MonoBehaviour
         startButton.onClick.AddListener(StartGame);
         Button quitButton = GameObject.Find("ReferenceManager").GetComponent<referenceManager>().startButton.GetComponent<Button>();
         quitButton.onClick.AddListener(CloseGame);
+        Button tutorialButton = GameObject.Find("ReferenceManager").GetComponent<referenceManager>().tutorialButton.GetComponent<Button>();
+        tutorialButton.onClick.AddListener(GameObject.Find("GameManager").GetComponent<mainMenuUI>().ScrollDown);
+        startButton.onClick.AddListener(StartGame);
         //
         if (courseManagerObj == null)
         {

@@ -11,18 +11,18 @@ PrefabInstance:
     - target: {fileID: 1636312264385510429, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 6d531dfaca923834aa4599dee4caf3b3, type: 3}
+      objectReference: {fileID: 21300000, guid: 6f8220e0bc5d5de4a91faa3377877cc0, type: 3}
     - target: {fileID: 1683249602816217892, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: e7ab928af97b1cb4f812ff13cdd8c498, type: 3}
+      objectReference: {fileID: 21300000, guid: 4cdd371a575be8543b5b1e149dbde06d, type: 3}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: roll
-      value: 0
+      value: 10/20/30
       objectReference: {fileID: 0}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: carry
-      value: 0
+      value: 10/20/30
       objectReference: {fileID: 0}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: myCost
@@ -30,24 +30,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: cardName
-      value: Practice Swing
+      value: Foot Wedge
       objectReference: {fileID: 0}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
-      propertyPath: cardType
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
-      propertyPath: draggable
-      value: 1
+      propertyPath: clubType
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: description
-      value: 'If you have {6/5/4} or more other cards in hand, subtract a stroke
-        and Toss this.  '
+      value: Does not cost a stroke if you are hitting out of sand or rough.
       objectReference: {fileID: 0}
     - target: {fileID: 7053857363415383679, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: m_Name
-      value: Practice Swing
+      value: Foot Wedge
       objectReference: {fileID: 0}
     - target: {fileID: 8307558494132384029, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: m_LocalPosition.x

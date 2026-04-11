@@ -7,6 +7,7 @@ public class referenceManager : MonoBehaviour
     //main menu
     public GameObject startButton;
     public GameObject quitButton;
+    public GameObject tutorialButton;
     //adding new card to deck
     public GameObject mainCamera;
     public GameObject newCardCanvas;

@@ -16,24 +16,18 @@ courses too long/varied
  - make amount of hazards more consistent but also reduced at early courses
  - scale course length with amount of hazards inversely
 balance tee earnings/costs
-how to play: (tutorial course?)
-    -Select a club (use driver since it goes away)
-    -This is path ball will take. Watch out for hazards
-    -Play an ability/select a ball
-    -Here is the flag, try to make it onto the green in as few shots as you can
-    -This is putting meter. Putt is auto once you land on the green
-    -This is your rival, each course has one. score and ability.
-    -after done with hole: add new card or tees. Show rarities. Shop after each course
+how to play: (tutorial course)
+
+settings menu
 
 medium:
 distance marker is not deleted if active when you finish a hole
 stacking multiple of same caddie
-make cards more readable
 view discard pile
-need new tees Icon
-new ball sprite
 using arrow keys to move course before clicking makes bg jump (not always based on bg element distance maybe?)
 add camera track ball while moving
+need new tees Icon
+new ball sprite
 
 low:
 animations for getting/spending tees and adding card to deck
@@ -387,7 +381,7 @@ new:
             not yet implemented
     Foot Wedge
         foot kicking a ball
-        wedge. power 10/20/30, roll 10/20/30. Does not cost a stroke
+        wedge. power 10/20/30, roll 10/20/30. Does not cost a stroke if you are in snad or rough.
         art: missing
         bugs:
             not yet implemented
