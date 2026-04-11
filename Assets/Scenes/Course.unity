@@ -928,7 +928,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startButton: {fileID: 290559303}
-  quitButton: {fileID: 0}
+  quitButton: {fileID: 1175476067}
+  tutorialButton: {fileID: 531728742}
   mainCamera: {fileID: 519420028}
   newCardCanvas: {fileID: 540167931}
   addTeesText: {fileID: 987446150}
