@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class tutorialManager : MonoBehaviour
 {
@@ -13,10 +14,41 @@ public class tutorialManager : MonoBehaviour
     //6 This is your rival, each course has one. score and ability.
     //7 after done with hole: add new card or tees.Show rarities.Shop after each course
 
+    public GameObject msgPanel; //black background
+    public GameObject msgTextObj;
+    public GameObject continueButton; 
+
     //when the user clicks the tutorial button
     public void StartTutorial()
     {
-        tutorialState = 0;
+        tutorialState = 1;
         Course c = gameObject.GetComponent<Course>();
+    }
+
+    //opens a black screen that displays a msg
+    public void DisplayMessage(string msg)
+    {
+        msgPanel.SetActive(true);
+        continueButton.SetActive(true);
+        msgTextObj.GetComponent<TextMeshProUGUI>().text = msg;
+    }
+
+    //disable black panel
+    public void HideMessage()
+    {
+        msgPanel.SetActive(false);
+        continueButton.SetActive(false);
+    }
+
+    public void Update()
+    {
+        if(tutorialState == 1)
+        {
+            if(gameObject.GetComponent<Course>().gameState == Course.GameState.PLAYING)
+            {
+                tutorialState = 2;
+                DisplayMessage("Drag the course or use arrow keys to look around the course");
+            }
+        }
     }
 }

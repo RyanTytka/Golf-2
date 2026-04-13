@@ -17,6 +17,7 @@ courses too long/varied
  - scale course length with amount of hazards inversely
 balance tee earnings/costs
 how to play: (tutorial course)
+not what kind of club each club is (wood/iron/etc) on card
 
 settings menu
 
