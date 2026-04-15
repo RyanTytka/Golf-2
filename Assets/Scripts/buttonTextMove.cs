@@ -13,5 +13,16 @@ public class buttonTextMove : MonoBehaviour
         // deselect this button after clicked
         if(amount == 0)
             EventSystem.current.SetSelectedGameObject(null);
+        //play sound effect
+        if(amount == 0)
+        {
+            //release
+            GameObject.Find("Music Manager").GetComponent<musicmanager>().PlaySounEffect(0);
+        }
+        else
+        {
+            //down
+
+        }
     }
 }

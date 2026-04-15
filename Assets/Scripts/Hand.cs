@@ -465,6 +465,7 @@ public class Hand : MonoBehaviour
             hoveringCard = null;
             DisplayHand();
         }
+        if (GameObject.Find("CourseManager").GetComponent<tutorialManager>().disableHandSelection) return;
         //only care about hovering cards
         if (topHit.collider.GetComponent<Draggable>() != null)
         {
