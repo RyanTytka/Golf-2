@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using DG.Tweening;
 
 public class tutorialManager : MonoBehaviour
 {
-    public int tutorialState; //increments as player progesses through tutorial
     //1 Select a club(use driver since it goes away)
     //2 This is path ball will take.Watch out for hazards
     //3 Play an ability/select a ball
@@ -21,61 +21,53 @@ public class tutorialManager : MonoBehaviour
     //      Clubs - You need a club to hit the ball. Click a club to select it for your next swing.
     //      Balls - Click a ball
 
-    public GameObject msgPanel; //black background
-    public GameObject msgTextObj;
-    public GameObject continueButton;
-    public bool disableHandSelection = false;
 
-    //when the user clicks the tutorial button
-    public void StartTutorial()
+    public GameObject[] panels; //Each panel is a page of the tutorial
+    public int pageNum;
+    public GameObject prevButton, nextButton, bgPanel;
+
+    public void OpenTutorial()
     {
-        tutorialState = 1;
+        //set to first page
+        gameObject.SetActive(true);
+        pageNum = 0;
+        foreach (GameObject go in panels)
+        {
+            go.SetActive(false);
+        }
+        panels[0].SetActive(true);
+        nextButton.GetComponent<Button>().interactable = true;
+        prevButton.GetComponent<Button>().interactable = false;
+        //animate opening
+        bgPanel.GetComponent<RectTransform>().transform.localScale = new Vector3(0, 0, 0);
+        bgPanel.GetComponent<RectTransform>().transform.DOScale(new Vector3(1, 1, 1), 0.15f);//.SetEase(Ease.OutBounce);
     }
 
-    //opens a black screen that displays a msg
-    public void DisplayMessage(string msg)
+    public void CloseTutorial()
     {
-        msgPanel.SetActive(true);
-        //continueButton.SetActive(true);
-        msgTextObj.GetComponent<TextMeshProUGUI>().text = msg;
+        bgPanel.GetComponent<RectTransform>().transform.DOScale(new Vector3(0,0,0), 0.15f).onComplete = () =>
+        {
+            gameObject.SetActive(false);
+        };//.SetEase(Ease.OutBounce);
     }
 
-    //disable black panel
-    public void HideMessage()
+    public void NextPage()
     {
-        disableHandSelection = false;
-        msgPanel.SetActive(false);
-        //continueButton.SetActive(false);
+        panels[pageNum].SetActive(false);
+        pageNum++;
+        panels[pageNum].SetActive(true);
+        if (pageNum >= panels.Length - 1)
+            nextButton.GetComponent<Button>().interactable = false;
+        prevButton.GetComponent<Button>().interactable = true;
     }
 
-    public void Update()
+    public void PrevPage()
     {
-        if(tutorialState == 1)
-        {
-            if(gameObject.GetComponent<Course>().gameState == Course.GameState.PLAYING)
-            {
-                disableHandSelection = true;
-                DisplayMessage("Drag the course or use arrow keys to look around the course");
-                //msgPanel.GetComponent<Canvas>().sortingOrder = 200;
-                continueButton.GetComponent<Button>().onClick.RemoveAllListeners();
-                continueButton.GetComponent<Button>().onClick.AddListener(() =>
-                {
-                    tutorialState = 2;
-                });
-            }
-        }
-        if(tutorialState == 2)
-        {
-            DisplayMessage("Click a club in your hand to select it. Then click the SWING button to hit the ball.");
-            continueButton.GetComponent<Button>().onClick.RemoveAllListeners();
-            continueButton.GetComponent<Button>().onClick.AddListener(() =>
-            {
-                tutorialState = 3;
-            });
-        }
-        if (tutorialState == 3)
-        {
-            HideMessage();
-        }
+        panels[pageNum].SetActive(false);
+        pageNum--;
+        panels[pageNum].SetActive(true);
+        if (pageNum <= 1)
+            prevButton.GetComponent<Button>().interactable = false;
+        nextButton.GetComponent<Button>().interactable = true;
     }
 }
