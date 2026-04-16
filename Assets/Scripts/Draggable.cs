@@ -44,6 +44,7 @@ public class Draggable : MonoBehaviour
     }
     public GameObject titleObj; //reference to the card's name obj
     public GameObject descObj; //reference to the card's description obj
+    public GameObject clubTypeObj; //reference to text obj that displays club type
     public GameObject rollTextObj, carryTextObj;
     public GameObject clubStatBlock; //top of description box that shows carry and roll icons for clubs
     public GameObject typeIconObj;
@@ -345,7 +346,7 @@ public class Draggable : MonoBehaviour
     public void UpdateCard()
     {
         //get upgrade info
-        GetComponent<upgrades>().UpdateView();
+        //GetComponent<upgrades>().UpdateView();
 
         //set text
         titleObj.GetComponent<TextMeshProUGUI>().text = cardName;
@@ -353,11 +354,13 @@ public class Draggable : MonoBehaviour
         clubStatBlock.SetActive(cardType == CardTypes.Club);
         carryTextObj.SetActive(cardType == CardTypes.Club);
         rollTextObj.SetActive(cardType == CardTypes.Club);
+        clubTypeObj.SetActive(cardType == CardTypes.Club);
         typeIconObj.GetComponent<Image>().sprite = typeIcons[(int)cardType];
         if (cardType == CardTypes.Club)
         {
             carryTextObj.GetComponent<TextMeshProUGUI>().text = Carry.ToString();
             rollTextObj.GetComponent<TextMeshProUGUI>().text = Roll.ToString();
+            clubTypeObj.GetComponent<TextMeshProUGUI>().text = clubType.ToString();
         }
         //set image
         rarityIconRef.GetComponent<Image>().sprite = raritySymbols[rarity];

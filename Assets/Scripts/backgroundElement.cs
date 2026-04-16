@@ -11,6 +11,13 @@ public class backgroundElement : MonoBehaviour
     public float sizeVariation;
     public float yBonus; //moves the y pos up for this element
     public float spawnWeight; //higher = more likely to spawn
+    public layers layer; //each layer is spawned sperately
+    public enum layers
+    {
+        FOREGROUND,
+        MIDDLEGROUND,
+        BACKGROUND
+    }
     public float parrallaxFactor { get; set; }
     public float startX { get; set; }
     public float courseStartX { get; set; }

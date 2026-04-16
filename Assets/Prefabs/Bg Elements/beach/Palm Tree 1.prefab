@@ -126,3 +126,4 @@ MonoBehaviour:
   sizeVariation: 1
   yBonus: 0
   spawnWeight: 5
+  layer: 1

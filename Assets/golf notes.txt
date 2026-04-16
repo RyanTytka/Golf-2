@@ -16,21 +16,40 @@ courses too long/varied
  - make amount of hazards more consistent but also reduced at early courses
  - scale course length with amount of hazards inversely
 balance tee earnings/costs
-how to play: (tutorial course)
-not what kind of club each club is (wood/iron/etc) on card
-
+how to play
 settings menu
+    -sound volume (effects/music)
+    -windows mode?
+music overlaps itself after first course
+tab stops working after first course
+back to basics does not reset on final swing between holes
+started game, then exited, then started again, and how to play/exit buttons did not hide themselves
 
 medium:
+iron shot that lands in water still gave putt range?
 distance marker is not deleted if active when you finish a hole
 stacking multiple of same caddie
 view discard pile
-using arrow keys to move course before clicking makes bg jump (not always based on bg element distance maybe?)
 add camera track ball while moving
 need new tees Icon
 new ball sprite
 
+cards that need update:
+big betty: rename
+big iron: needs art
+caddies need names
+club of greed: rename
+dead stop iron: rename
+rework golf glove to give putt accuracy
+jungle ball implemented?
+foot wedge implemented?
+long ranger: need art
+reckless swing: need art
+swiss army wedge: rework ability
+the finisher: need art
+
 low:
+using arrow keys to move course before clicking makes bg jump (not always based on bg element distance maybe?)
 animations for getting/spending tees and adding card to deck
 move distance data marker to manager script so it does not snap to start of animation (also new sprite)
 can drag course while waiting for discard. (or make it so you can and turn full black panel into just an area?)

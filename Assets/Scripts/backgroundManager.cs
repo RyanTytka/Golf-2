@@ -51,54 +51,66 @@ public class backgroundManager : MonoBehaviour
         //sky
         //skyObj.GetComponent<Image>().sprite = skyImages[Random.Range(0, skyImages.Length)];
         //misc bg elements
-        float totalDistance = Random.Range(0f, 3f);
-        int courseLength = GameObject.Find("CourseManager").GetComponent<Course>().courseLayout.Count;
-        //calculate total weight
-        int totalWeight = 0;
-        foreach (GameObject go in bgElements[courseType].items)
+        for (int i = 0; i < 3; i++)
         {
-            totalWeight += (int)go.GetComponent<backgroundElement>().spawnWeight;
-        }
-        //spawn new objs
-        while (totalDistance < courseLength)
-        {
-            //caluclate random obj
-            int randValue = Random.Range(0, totalWeight);
-            GameObject newElement = null;
-            foreach (GameObject randomGo in bgElements[courseType].items)
+            //once for each bg layer
+            List<GameObject> layerObjs = new();
+            float totalDistance = Random.Range(0f, 3f);
+            int courseLength = GameObject.Find("CourseManager").GetComponent<Course>().courseLayout.Count;
+            //calculate total weight for this layer
+            int totalWeight = 0;
+            foreach (GameObject go in bgElements[courseType].items)
             {
-                randValue -= (int)randomGo.GetComponent<backgroundElement>().spawnWeight;
-                if (randValue < 0)
+                if ((int)go.GetComponent<backgroundElement>().layer == i)
                 {
-                    newElement = randomGo;
-                    break;
+                    layerObjs.Add(go);
+                    totalWeight += (int)go.GetComponent<backgroundElement>().spawnWeight;
                 }
             }
-            //spawn it and init it
-            GameObject go = Instantiate(newElement, GameObject.Find("CourseDisplay").transform);
-            backgroundElement be = go.GetComponent<backgroundElement>();
-            go.transform.localPosition = new Vector3(totalDistance, 1.25f + be.yBonus, 1 + be.distance);
-            be.startX = go.transform.localPosition.x;
-            float size = be.size + Random.Range(0f, be.sizeVariation);
-            be.parrallaxFactor = 1f / be.size * be.distance;
-            go.transform.localScale = new Vector3(size, size);
-            totalDistance += Random.Range(0.25f, 5f);
-            if (be.sprite != null)
+            //spawn new objs
+            if (totalWeight > 0)
             {
-                go.GetComponent<SpriteRenderer>().sprite = be.sprite;
-                go.GetComponent<Animator>().enabled = false;
+                while (totalDistance < courseLength)
+                {
+                    //calculate random obj
+                    int randValue = Random.Range(0, totalWeight);
+                    GameObject newElement = null;
+                    foreach (GameObject randomGo in layerObjs)
+                    {
+                        randValue -= (int)randomGo.GetComponent<backgroundElement>().spawnWeight;
+                        if (randValue < 0)
+                        {
+                            newElement = randomGo;
+                            break;
+                        }
+                    }
+                    //spawn it and init it
+                    GameObject go = Instantiate(newElement, GameObject.Find("CourseDisplay").transform);
+                    backgroundElement be = go.GetComponent<backgroundElement>();
+                    go.transform.localPosition = new Vector3(totalDistance, 1.25f + be.yBonus, 1 + be.distance);
+                    be.startX = go.transform.localPosition.x;
+                    float size = be.size + Random.Range(0f, be.sizeVariation);
+                    be.parrallaxFactor = 1f / be.size * be.distance;
+                    go.transform.localScale = new Vector3(size, size);
+                    totalDistance += Random.Range(1f, 5f);
+                    if (be.sprite != null)
+                    {
+                        go.GetComponent<SpriteRenderer>().sprite = be.sprite;
+                        go.GetComponent<Animator>().enabled = false;
+                    }
+                    else
+                    {
+                        AnimationClip clip = be.animationClip;
+                        Animator animator = go.GetComponent<Animator>();
+                        AnimatorOverrideController overrideController = new(animator.runtimeAnimatorController);
+                        overrideController[overrideController.animationClips[0]] = clip;
+                        animator.runtimeAnimatorController = overrideController;
+                        animator.speed = Random.Range(0.5f, 1.25f);
+                        animator.Play("DefaultClip", 0, Random.Range(0f, 1f));
+                    }
+                    bgObjs.Add(go);
+                }
             }
-            else
-            {
-                AnimationClip clip = be.animationClip;
-                Animator animator = go.GetComponent<Animator>();
-                AnimatorOverrideController overrideController = new(animator.runtimeAnimatorController);
-                overrideController[overrideController.animationClips[0]] = clip;
-                animator.runtimeAnimatorController = overrideController;
-                animator.speed = Random.Range(0.5f, 1.25f);
-                animator.Play("DefaultClip", 0, Random.Range(0f, 1f));
-            }
-            bgObjs.Add(go);
         }
     }
 

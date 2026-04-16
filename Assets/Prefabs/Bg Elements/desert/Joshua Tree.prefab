@@ -122,7 +122,8 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 7f7b1967a1f7e324e8175a793b8ff7d5, type: 3}
   animationClip: {fileID: 0}
   size: 4
-  distance: 1
+  distance: 0
   sizeVariation: 0.5
   yBonus: 0
   spawnWeight: 3
+  layer: 1
