@@ -37,18 +37,29 @@ need new tees Icon
 new ball sprite
 
 cards that need update:
-big betty: rename
-big iron: needs art
-caddies need names
-club of greed: rename
-dead stop iron: rename
-rework golf glove to give putt accuracy
-jungle ball implemented?
-foot wedge implemented?
-long ranger: need art
-reckless swing: need art
-swiss army wedge: rework ability
-the finisher: need art
+ - new name: 
+big betty > Hot Rod
+club of greed > ?
+dead stop iron > ?
+caddies
+ - rework:
+Recycle
+golf glove: give putt accuracy
+swiss army wedge
+tee up
+ - Upgrade versions:
+old scorecard
+ - implement:
+jungle ball?
+foot wedge?
+disco ball
+ - need art:
+long ranger
+big iron
+reckless swing
+the finisher
+ - bugs:
+ pocket aces is slow long animation 
 
 low:
 using arrow keys to move course before clicking makes bg jump (not always based on bg element distance maybe?)
