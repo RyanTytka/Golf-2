@@ -20,6 +20,8 @@ how to play
 settings menu
     -sound volume (effects/music)
     -windows mode?
+    credits
+mouse cursor icon
 music overlaps itself after first course
 tab stops working after first course
 back to basics does not reset on final swing between holes
