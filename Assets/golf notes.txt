@@ -26,6 +26,7 @@ music overlaps itself after first course
 tab stops working after first course
 back to basics does not reset on final swing between holes
 started game, then exited, then started again, and how to play/exit buttons did not hide themselves
+test on wide resolution
 
 medium:
 iron shot that lands in water still gave putt range?

@@ -25,7 +25,7 @@ public class tutorialManager : MonoBehaviour
         //Once you make it to the green, you will automatically putt it into the hole to finish the hole. 
             // The further you are form the hole, the more putts it will take. Hold tab to show ???. Look at Meter.
     //This is your rival, each course has one. score and ability.
-
+    //toss, backspin, power
 
     public GameObject[] panels; //Each panel is a page of the tutorial
     public int pageNum;
@@ -71,7 +71,7 @@ public class tutorialManager : MonoBehaviour
         panels[pageNum].SetActive(false);
         pageNum--;
         panels[pageNum].SetActive(true);
-        if (pageNum <= 1)
+        if (pageNum <= 0)
             prevButton.GetComponent<Button>().interactable = false;
         nextButton.GetComponent<Button>().interactable = true;
     }
