@@ -15,6 +15,9 @@ courses too long/varied
  - desert can have possibly no hazards
  - make amount of hazards more consistent but also reduced at early courses
  - scale course length with amount of hazards inversely
+ - hole at front of green is easier than back of green
+ - course 1 is very easy. make holes a bit longer to account for being able to hit ball in from far out?
+ - idea: make it so cannot hit ball into the hole from off the green, just rolls over (unless you land on hole), must land on the green.
 balance tee earnings/costs
 how to play
 settings menu
@@ -23,26 +26,34 @@ settings menu
     credits
 mouse cursor icon
 music overlaps itself after first course
-tab stops working after first course
+tab stops working after first course, so does continue after hole and pause button
 back to basics does not reset on final swing between holes
 started game, then exited, then started again, and how to play/exit buttons did not hide themselves
 test on wide resolution
-
-medium:
-iron shot that lands in water still gave putt range?
-distance marker is not deleted if active when you finish a hole
-stacking multiple of same caddie
-view discard pile
-add camera track ball while moving
-need new tees Icon
-new ball sprite
+idea: show what par is at start of each hole?
+test playing rangefinder with no cards in hand
+make putter meter pulse every time putt is hit
+Phone a Friend/Dig in bag/Dead stop iron title goes to next line
 
 cards that need update:
  - new name: 
 big betty > Hot Rod
-club of greed > ?
-dead stop iron > ?
+club of greed > club of riches
+dead stop iron > Reaper Club
 caddies
+(
+    Josef Santos
+    Tommy Bunker
+    Elijah Richardson
+    Rose Quarterson
+    Ray Scratch
+    Paula Sneed
+    Fabio Hernandez
+    Betsy Watson
+    Leo Woods
+    Elsa Cooke
+    Archie Ball
+)
  - rework:
 Recycle
 golf glove: give putt accuracy
@@ -61,6 +72,16 @@ reckless swing
 the finisher
  - bugs:
  pocket aces is slow long animation 
+
+
+medium:
+iron shot that lands in water still gave putt range?
+distance marker is not deleted if active when you finish a hole
+stacking multiple of same caddie
+view discard pile
+add camera track ball while moving
+need new tees Icon
+new ball sprite
 
 low:
 using arrow keys to move course before clicking makes bg jump (not always based on bg element distance maybe?)
