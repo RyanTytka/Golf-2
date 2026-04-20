@@ -87,7 +87,7 @@ public class CoursePiece : MonoBehaviour
         {
             if (myType == (int)Course.CoursePieces.ROUGH)
             {
-                if (c.selectedBall.GetComponent<Draggable>().cardName == "Lawnmower Ball")
+                if (c.selectedBall.GetComponent<Draggable>().cardName == "Jungle Ball")
                 {
                     // particle = ???; //TODO: make new particle for here
                 }

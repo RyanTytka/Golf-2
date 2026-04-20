@@ -846,8 +846,12 @@ public class Course : MonoBehaviour
         //card effects
         //clubs
         if (selectedClub.GetComponent<Draggable>().cardName == "Swiss Army Wedge")
-        { //draw for each upgrade on this club
-            GameObject.Find("GameManager").GetComponent<Hand>().DrawCard(selectedClub.GetComponentsInChildren<upgradeBuy>().Length);
+        { //Swing - Gain {1/2/2} Luck, {1/2/2} Putt Range, Draw {1/1/2} card, Gain {1/1/2} Tees.
+            int rarity = selectedClub.GetComponent<Draggable>().rarity;
+            luck += rarity == 0 ? 1 : 2;
+            ModifyPuttDistances(rarity == 0 ? 1 : 2);
+            tees += rarity == 2 ? 2 : 1;
+            GameObject.Find("GameManager").GetComponent<Hand>().DrawCard(rarity == 2 ? 2 : 1);
         }
         //if out of bounds
         if (swing.endIndex >= courseLayout.Count)
@@ -870,7 +874,7 @@ public class Course : MonoBehaviour
                 }
                 else
                 {
-                    if (selectedBall != null && selectedBall.GetComponent<Draggable>().cardName == "Lawnmower Ball")
+                    if (selectedBall != null && selectedBall.GetComponent<Draggable>().cardName == "Jungle Ball")
                         power += 10;
                     else
                         power -= 10;
@@ -1602,5 +1606,11 @@ public class Course : MonoBehaviour
     {
         holeNum++;
         DisplayCourse();
+    }
+
+    public void ModifyPuttDistances(int amount)
+    {
+        puttDistances[0] = Mathf.Max(0, puttDistances[0] + amount);
+        puttDistances[1] = Mathf.Max(0, puttDistances[1] + amount);
     }
 }

@@ -521,9 +521,9 @@ public class Draggable : MonoBehaviour
                 }
                 break;
             case "Golf Glove":
-                //Gain 1/2/3 Luck 20/30/40 backspin
-                c.luck += 1 + rarity;
-                c.pinpoint += 20 + (rarity * 10);
+                //Gain 20 backspin and {+1/+2/+3} Putt Range.
+                c.pinpoint += 20;
+                c.ModifyPuttDistances(rarity + 1);
                 break;
             case "Phone a Friend":
                 //draw a random caddie from your deck, then gain luck
@@ -535,12 +535,12 @@ public class Draggable : MonoBehaviour
                         caddies.Add(go);
                 }
                 //draw a random caddie
-                if(caddies.Count > 0)
+                if (caddies.Count > 0)
                     h.DrawCard(caddies[Random.Range(0, caddies.Count - 1)]);
                 c.luck += 2 + rarity;
                 break;
             case "Tee Up":
-                //if in fairway, add all drivers to hand
+                //Add your drivers to your hand. Lose {30/20/10} Power.
                 if (c.courseLayout[c.ballPos].GetComponent<CoursePiece>().myType == 0)
                     foreach (GameObject go in h.baseDeck)
                     {
@@ -550,6 +550,7 @@ public class Draggable : MonoBehaviour
                             h.hand.Add(newObj);
                         }
                     }
+                c.power -= 30 - (rarity * 10);
                 break;
             case "Back to Basics":
                 //draw 2/3/4. disable abilities until next swing
@@ -563,12 +564,14 @@ public class Draggable : MonoBehaviour
                 AnimateDiscard(true);
                 break;
             case "Reckless Swing":
-                List<GameObject> otherCards = h.hand.Where(card => card != this.gameObject).ToList();
-                if (otherCards.Count == 0)
-                    break;
-                GameObject cardToToss = otherCards[Random.Range(0, otherCards.Count)];
-                cardToToss.GetComponent<Draggable>().AnimateDiscard(true);
-                c.power += 30 + (rarity * 20);
+                // Gain {20/40/60} Power. Lose 2 Putt Range.
+                // List<GameObject> otherCards = h.hand.Where(card => card != this.gameObject).ToList();
+                // if (otherCards.Count == 0)
+                //     break;
+                // GameObject cardToToss = otherCards[Random.Range(0, otherCards.Count)];
+                // cardToToss.GetComponent<Draggable>().AnimateDiscard(true);
+                c.power += 20 + (rarity * 20);
+                c.ModifyPuttDistances(-2);
                 break;
             case "Practice Swing":
                 if (h.hand.Count > 6 - rarity)
@@ -594,9 +597,10 @@ public class Draggable : MonoBehaviour
                 c.luck += 2 + rarity;
                 break;
             case "Unburden":
-                //toss each card left in your deck. Gain 10 power for each
-                float timeBetweenToss = h.currentDeck.Count == 0 ? 0 : Mathf.Min(0.25f, 1.0f / h.currentDeck.Count);
-                while (h.currentDeck.Count > 0)
+                //Toss {2/4/6} cards from your deck. Gain 10 power for each card tossed.
+                int tossAmount = Mathf.Min(h.currentDeck.Count, 2 + (rarity * 2));
+                float timeBetweenToss = tossAmount == 0 ? 0 : Mathf.Min(0.25f, 1.0f / tossAmount);
+                for(int i = 0; i < tossAmount; i++)
                 {
                     h.Toss(h.currentDeck[0]); //TODO: need animation
                     c.power += 10;
@@ -606,7 +610,7 @@ public class Draggable : MonoBehaviour
                 }
                 break;
             case "Recycle":
-                //toss your hand. then draw your deck
+                //Toss your hand. Then draw that many cards{/ plus 1/ plus 2}.
                 timeBetweenToss = h.hand.Count == 0 ? 0 : Mathf.Min(0.25f, 1.0f / h.hand.Count);
                 while (h.hand.Count > 0)
                 {

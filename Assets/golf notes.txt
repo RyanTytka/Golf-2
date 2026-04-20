@@ -55,23 +55,23 @@ caddies
     Archie Ball
 )
  - rework:
-Recycle
-golf glove: give putt accuracy
-swiss army wedge
-tee up
- - Upgrade versions:
-old scorecard
+unburden: Toss {2/4/6} cards from your deck. Gain 10 power for each card tossed. (test) (need toss animation)
+Recycle: Toss your hand. Then draw that many cards{/ plus 1/ plus 2}. (should this toss itself? if not, needs to remove from hand before tossing hand)
+golf glove: Gain 20 backspin and {+1/+2/+3} Putt Range. (test)
+swiss army wedge: Swing - Gain {1/2/2} Luck, {1/2/2} Putt Range, Draw {1/1/2} card, Gain {1/1/2} Tees. (test)
+tee up: Add your drivers to your hand. Lose {30/20/10} Power. (test)
+Reckless Swing: Gain {20/40/60} Power. Lose 2 Putt Range. (test)
  - implement:
-jungle ball?
-foot wedge?
-disco ball
+foot wedge (test it)
  - need art:
-long ranger
-big iron
+long ranger (rename to showoff?)
+big iron (rename?)
 reckless swing
-the finisher
+recycle (rename?)
+the finisher (rename?)
  - bugs:
  pocket aces is slow long animation 
+ old scorecard draws 1 card if you have 0 strokes
 
 
 medium:
@@ -98,7 +98,7 @@ clubs that have variable stats need to update their card text. (also change colo
 
 
 ready for test:
-(this was intended. need to update card desc)--bug: "dig through bag" card has timing issues (discards before done drawing)  
+(this was intended. need to update card desc) bug: "dig through bag" card has timing issues (discards before done drawing)  
 bug: "lone ranger" card does not update its carry text when hand changes 
 bug: clouds can appear on screen
 add: support for reverse ball rolling
@@ -237,16 +237,10 @@ cards list
         draw a card for each stroke you have taken this hole. Toss this. (/Gain 1/2 Luck)
         art:done
         bugs:  
----            draws 1 card with 0 strokes
-               upgrade versions?
+               draws 1 card with 0 strokes
     Reckless Swing - 
         Discard a card to make your next shot go farther
         +30/50/70 power. Toss a random card from your hand
-        art: missing
-        bugs: none
---    Square Ball - (just delete this for now)
-        Cube shaped ball that does not roll at all
-        this shot has -20 power and 0 roll
         art: missing
         bugs: none
     Swiss Army Wedge - 
@@ -263,7 +257,7 @@ cards list
         bugs: 
             make it so it cannot be played if you are not on the fairway
             rework this?
-    X-- Long Ranger --X  (The Showoff?)
+    Long Ranger
         Bigger shot if this is only club in hand
         (wood) power 80 roll 40. Gain {50/80/110} power and {20/30/40} Backspin if there are no other clubs in hand.
         art: missing
@@ -279,12 +273,12 @@ cards list
         art: pending
         bugs: 
             does not update shot arc when you mulligan
---    Finisher (new name?) - 
+    Finisher (new name?) - 
         get tees when hit into hole
         Swing: Gain 1/2/3 lucky. If this shot goes in the hole, gain 3/4/5 tees
         art: missing
         bugs: none
---    Club of Greed (new name) - 
+    Club of Greed (new name) - 
         Gold/Fancy golf club
         power 90/100/120, roll 20/30/30. Fairway Landing: Gain 2/3/4 Tees
         art: pending
@@ -305,7 +299,7 @@ cards list
         Gain 1/2/3 luck and 20/30/40 backspin
         art: done
         bugs: none
---    Lion Forest (woody ___)
+Lion Forest
         desc
         your woods have +30/40/50 power and 30/40/50 backspin
         art: missing
@@ -334,17 +328,15 @@ cards list
     ////toss
     Unburden - 
         Tossing your bag of clubs into the water
-        toss each card left in your deck. Gain 10 power for each
+        toss 2/4/6 cards from your deck. Gain 10 power for each card tossed.
         art: pending
         bugs: none
-            rework??
     Recycle - (new name? beer?)
-        Toss your hand. Then draw your deck.
+        Toss your hand. Then draw that many cards{/ plus 1/ plus 2}.
         effect
         art: missing
         bugs: 
             should this toss itself? if not, needs to remove from hand before tossing hand
-            rework?
 
     ////caddie
     Phone a Friend - 
@@ -386,7 +378,7 @@ cards list
         30/40/50 carry, 10/10/20 Roll. draw 2/3/4 after hitting out of the sand
         art: pending
         bugs: none
---    Big Iron - (new name?)
+Big Iron
         Large and powerful iron. Hits out of the rough
         70 power, 30 roll. +50/80/110 power if hitting out of the rough
         art: missing
@@ -426,7 +418,6 @@ new:
         gain 10/20/30 power instead of lose it when roll over rough
         art: missing
         bugs:
-            not yet implemented
             rough shows -10 power particle when roll over
     Low Rider (name?)
         desc
