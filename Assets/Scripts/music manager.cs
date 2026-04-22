@@ -9,14 +9,28 @@ public class musicmanager : MonoBehaviour
     public int musicNumber;
     public AudioClip[] UIPlaylist; //list of audio clips for UI
 
+
+    public static musicmanager Instance;
+
+    void Awake()
+    {
+        // If another instance already exists, destroy this one
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        // Otherwise, set this as the instance
+        Instance = this;
+
+        // Make it persist between scenes
+        DontDestroyOnLoad(gameObject);
+    }
+
     public enum UISounds
     {
         ButtonClick
-    }
-
-    private void Awake()
-    {
-        DontDestroyOnLoad(gameObject);
     }
 
     void Start()

@@ -69,6 +69,8 @@ public class mainMenuUI : MonoBehaviour
         {
             GameObject.Find("Title Image").SetActive(false);
             GameObject.Find("StartButton").SetActive(false);
+            GameObject.Find("StartTutorialButton").SetActive(false);
+            GameObject.Find("QuitButton").SetActive(false);
         }
     }
 

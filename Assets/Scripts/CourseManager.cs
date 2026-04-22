@@ -36,8 +36,9 @@ public class Course : MonoBehaviour
         Button quitButton = GameObject.Find("ReferenceManager").GetComponent<referenceManager>().quitButton.GetComponent<Button>();
         quitButton.onClick.AddListener(CloseGame);
         Button tutorialButton = GameObject.Find("ReferenceManager").GetComponent<referenceManager>().tutorialButton.GetComponent<Button>();
-        tutorialButton.onClick.AddListener(() => {
-            GameObject.Find("ReferenceManager").GetComponent<referenceManager>().tutorialCanvas.GetComponent<tutorialManager>().OpenTutorial(); 
+        tutorialButton.onClick.AddListener(() =>
+        {
+            GameObject.Find("ReferenceManager").GetComponent<referenceManager>().tutorialCanvas.GetComponent<tutorialManager>().OpenTutorial();
         });
         //
         if (courseManagerObj == null)
@@ -147,7 +148,7 @@ public class Course : MonoBehaviour
     int[] puttDistances; //distance <= [0] = 1 putt, d <= [1] = 2 putt, else 3 putt
     //default = [1, 4]. Resets each hole but can be modified
     public List<GameObject> puttMeterTextObjs; //text objs that display your current putt ranges
-    
+
     //exit the application
     public void CloseGame()
     {
@@ -187,21 +188,30 @@ public class Course : MonoBehaviour
                 //3 Putt 
                 for (int i = greenStart; i <= greenEnd; i++)
                 {
-                    courseLayout[i].GetComponentInChildren<TextMeshProUGUI>(true).gameObject.SetActive(true);
-                    courseLayout[i].GetComponentInChildren<TextMeshProUGUI>().color = Color.red;
-                    courseLayout[i].GetComponentInChildren<TextMeshProUGUI>().text = "+3";
+                    if (i != holePos)
+                    {
+                        courseLayout[i].GetComponentInChildren<TextMeshProUGUI>(true).gameObject.SetActive(true);
+                        courseLayout[i].GetComponentInChildren<TextMeshProUGUI>().color = Color.red;
+                        courseLayout[i].GetComponentInChildren<TextMeshProUGUI>().text = "+3";
+                    }
                 }
                 //2 Putt 
                 for (int i = Mathf.Max(greenStart, holePos - puttDistances[1]); i <= Mathf.Min(greenEnd, holePos + puttDistances[1]); i++)
                 {
-                    courseLayout[i].GetComponentInChildren<TextMeshProUGUI>().color = new Color(0.8f, 0.5f, 0f);
-                    courseLayout[i].GetComponentInChildren<TextMeshProUGUI>().text = "+2";
+                    if (i != holePos)
+                    {
+                        courseLayout[i].GetComponentInChildren<TextMeshProUGUI>().color = new Color(0.8f, 0.5f, 0f);
+                        courseLayout[i].GetComponentInChildren<TextMeshProUGUI>().text = "+2";
+                    }
                 }
                 //1 Putt
                 for (int i = Mathf.Max(greenStart, holePos - puttDistances[0]); i <= Mathf.Min(greenEnd, holePos + puttDistances[0]); i++)
                 {
-                    courseLayout[i].GetComponentInChildren<TextMeshProUGUI>().color = Color.yellow;
-                    courseLayout[i].GetComponentInChildren<TextMeshProUGUI>().text = "+1";
+                    if (i != holePos)
+                    {
+                        courseLayout[i].GetComponentInChildren<TextMeshProUGUI>().color = Color.yellow;
+                        courseLayout[i].GetComponentInChildren<TextMeshProUGUI>().text = "+1";
+                    }
                 }
             }
         }
@@ -471,7 +481,7 @@ public class Course : MonoBehaviour
             holeLength -= (7 + 3 * courseNum);
         if (test_par == 5 || pars[holeNum - 1] == 5)
             holeLength += (7 + 3 * courseNum);
-        int[] tutorialCourse = { 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 
+        int[] tutorialCourse = { 0, 0, 0, 1, 1, 1, 1, 0, 0, 0,
                                  0, 0, 1, 1, 1, 0, 0, 0, 2, 2,
                                  0, 0, 0, 0, 0, 3, 3, 3, 0, 0,
                                  4, 4, 5, 4, 4, 4, 0, 0, 0, 0};
@@ -799,12 +809,12 @@ public class Course : MonoBehaviour
             {
                 bool usingLuck = false;
                 lastTriggeredIndex = currentIndex;
-                if(courseLayout[currentIndex].GetComponent<CoursePiece>().myType == (int)CoursePieces.WATER ||
+                if (courseLayout[currentIndex].GetComponent<CoursePiece>().myType == (int)CoursePieces.WATER ||
                     courseLayout[currentIndex].GetComponent<CoursePiece>().myType == (int)CoursePieces.SAND ||
                     courseLayout[currentIndex].GetComponent<CoursePiece>().myType == (int)CoursePieces.ROUGH)
                 {
                     //check if hazard is being applied or luck is being used
-                    if(luck + swing.luckGained > luckUsed)
+                    if (luck + swing.luckGained > luckUsed)
                     {
                         luckUsed++;
                         usingLuck = true;
@@ -841,8 +851,11 @@ public class Course : MonoBehaviour
         string ballName = selectedBall != null ? selectedBall.GetComponent<Draggable>().cardName : "";
         luck += swing.luckGained;
         luck -= swing.luckUsed;
-        if (selectedClub.GetComponent<Draggable>().cardName != "Foot Wedge")
-            strokeCount++;
+        if (selectedClub.GetComponent<Draggable>().cardName == "Foot Wedge")
+            if (courseLayout[ballPos].GetComponent<CoursePiece>().pieceName == "Sand" ||
+                courseLayout[ballPos].GetComponent<CoursePiece>().pieceName == "Rough")
+                strokeCount--;
+        strokeCount++;
         //card effects
         //clubs
         if (selectedClub.GetComponent<Draggable>().cardName == "Swiss Army Wedge")
@@ -855,7 +868,7 @@ public class Course : MonoBehaviour
         }
         //if out of bounds
         if (swing.endIndex >= courseLayout.Count)
-        { 
+        {
             //ball stays where it is and you lose a stroke
             strokeCount++;
             pinpoint = 0;
@@ -1032,7 +1045,7 @@ public class Course : MonoBehaviour
             Vector3 currentPos = ballObj.transform.position;
             Sequence sequence = DOTween.Sequence();
             sequence.AppendInterval(1.0f); //wait for cards to finish discarding
-            int holeIndex = courseLayout.Find(obj => 
+            int holeIndex = courseLayout.Find(obj =>
                 obj.GetComponent<CoursePiece>().myType == (int)CoursePieces.HOLE
             ).GetComponent<CoursePiece>().myIndex;
             Vector3 target = courseLayout[holeIndex].transform.position;
@@ -1066,7 +1079,7 @@ public class Course : MonoBehaviour
             {
                 ballPos = holeIndex;
                 GoToNextHole();
-            }); 
+            });
             sequence.Play();
             return;
         }
@@ -1391,6 +1404,7 @@ public class Course : MonoBehaviour
     public GameObject continueObj;
     public void GoToNextHole()
     {
+        canPlayAbilities = true;
         gameState = GameState.SHOWING_SCORE;
         foreach (int rarity in GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Caddie 1"))
         {

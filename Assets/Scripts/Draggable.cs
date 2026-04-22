@@ -451,6 +451,8 @@ public class Draggable : MonoBehaviour
         switch (cardName)
         {
             case "Rangefinder":
+                //does nothing if no other cards in hand
+                if (h.hand.Count <= 1) break;
                 //set this card to middle of screen and stop shaking
                 onDisplay = true;
                 displayPos = new Vector3(-2, 1.5f, -2); //TODO: Make this tween to the pos instead of instant
@@ -611,13 +613,16 @@ public class Draggable : MonoBehaviour
                 break;
             case "Recycle":
                 //Toss your hand. Then draw that many cards{/ plus 1/ plus 2}.
+                h.DiscardCard(this.gameObject);
                 timeBetweenToss = h.hand.Count == 0 ? 0 : Mathf.Min(0.25f, 1.0f / h.hand.Count);
+                int drawAmount = h.hand.Count + rarity;
                 while (h.hand.Count > 0)
                 {
                     h.hand[0].GetComponent<Draggable>().AnimateDiscard(true);
                     yield return new WaitForSeconds(timeBetweenToss);
                 }
-                h.DrawCard(h.currentDeck.Count);
+                h.DrawCard(drawAmount);
+                isStillActive = false;
                 break;
         }
         //Update view

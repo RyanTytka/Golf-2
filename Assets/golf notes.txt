@@ -19,21 +19,14 @@ courses too long/varied
  - course 1 is very easy. make holes a bit longer to account for being able to hit ball in from far out?
  - idea: make it so cannot hit ball into the hole from off the green, just rolls over (unless you land on hole), must land on the green.
 balance tee earnings/costs
-how to play
+how to play screen
 settings menu
     -sound volume (effects/music)
     -windows mode?
     credits
-mouse cursor icon
-music overlaps itself after first course
-tab stops working after first course, so does continue after hole and pause button
-back to basics does not reset on final swing between holes
-started game, then exited, then started again, and how to play/exit buttons did not hide themselves
-test on wide resolution
-idea: show what par is at start of each hole?
-test playing rangefinder with no cards in hand
-make putter meter pulse every time putt is hit
-Phone a Friend/Dig in bag/Dead stop iron title goes to next line
+tab does not work on course 2 hole 1
+tee up sometimes does not give driver
+scores on end screen dont seem right
 
 cards that need update:
  - new name: 
@@ -54,15 +47,6 @@ caddies
     Elsa Cooke
     Archie Ball
 )
- - rework:
-unburden: Toss {2/4/6} cards from your deck. Gain 10 power for each card tossed. (test) (need toss animation)
-Recycle: Toss your hand. Then draw that many cards{/ plus 1/ plus 2}. (should this toss itself? if not, needs to remove from hand before tossing hand)
-golf glove: Gain 20 backspin and {+1/+2/+3} Putt Range. (test)
-swiss army wedge: Swing - Gain {1/2/2} Luck, {1/2/2} Putt Range, Draw {1/1/2} card, Gain {1/1/2} Tees. (test)
-tee up: Add your drivers to your hand. Lose {30/20/10} Power. (test)
-Reckless Swing: Gain {20/40/60} Power. Lose 2 Putt Range. (test)
- - implement:
-foot wedge (test it)
  - need art:
 long ranger (rename to showoff?)
 big iron (rename?)
@@ -72,9 +56,14 @@ the finisher (rename?)
  - bugs:
  pocket aces is slow long animation 
  old scorecard draws 1 card if you have 0 strokes
-
+its possible to toss all clubs in your deck, then you are stuck
+if your deck has 2 cards and you draw 3 (for example), doesnt reshuffle before 3rd card
 
 medium:
+scroll bar/wheel for deck view
+make putter meter pulse every time putt is hit
+test on wide resolution
+idea: show what par is at start of each hole?
 iron shot that lands in water still gave putt range?
 distance marker is not deleted if active when you finish a hole
 stacking multiple of same caddie
@@ -82,6 +71,7 @@ view discard pile
 add camera track ball while moving
 need new tees Icon
 new ball sprite
+unburden: (need toss animation)
 
 low:
 using arrow keys to move course before clicking makes bg jump (not always based on bg element distance maybe?)
