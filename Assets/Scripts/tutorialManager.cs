@@ -29,7 +29,7 @@ public class tutorialManager : MonoBehaviour
 
     public GameObject[] panels; //Each panel is a page of the tutorial
     public int pageNum;
-    public GameObject prevButton, nextButton, bgPanel;
+    public GameObject prevButton, nextButton, bgPanel, settingsPanel;
 
     public void OpenTutorial()
     {
@@ -41,8 +41,27 @@ public class tutorialManager : MonoBehaviour
             go.SetActive(false);
         }
         panels[0].SetActive(true);
+        settingsPanel.SetActive(false);
         nextButton.GetComponent<Button>().interactable = true;
         prevButton.GetComponent<Button>().interactable = false;
+        nextButton.SetActive(true);
+        prevButton.SetActive(true);
+        //animate opening
+        bgPanel.GetComponent<RectTransform>().transform.localScale = new Vector3(0, 0, 0);
+        bgPanel.GetComponent<RectTransform>().transform.DOScale(new Vector3(1, 1, 1), 0.15f);//.SetEase(Ease.OutBounce);
+    }
+
+    public void OpenSettings()
+    {
+        //set to first page
+        gameObject.SetActive(true);
+        foreach (GameObject go in panels)
+        {
+            go.SetActive(false);
+        }
+        settingsPanel.SetActive(true);
+        nextButton.SetActive(false);
+        prevButton.SetActive(false);
         //animate opening
         bgPanel.GetComponent<RectTransform>().transform.localScale = new Vector3(0, 0, 0);
         bgPanel.GetComponent<RectTransform>().transform.DOScale(new Vector3(1, 1, 1), 0.15f);//.SetEase(Ease.OutBounce);

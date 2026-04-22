@@ -24,7 +24,7 @@ settings menu
     -sound volume (effects/music)
     -windows mode?
     credits
-tab does not work on course 2 hole 1
+tab does not work on course 2 hole 1 (pause button also breaks, and music sliders)
 tee up sometimes does not give driver
 scores on end screen dont seem right
 

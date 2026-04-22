@@ -23,6 +23,7 @@ public class referenceManager : MonoBehaviour
     public GameObject pauseScorecard;
     public GameObject pauseButton; //resume button
     public GameObject mainMenuButton;
+    public GameObject settingsButton;
     //hand highlight canvas
     public GameObject handHighlightCanvas;
     public GameObject handHighlightText;

@@ -40,7 +40,8 @@ public class Course : MonoBehaviour
         {
             GameObject.Find("ReferenceManager").GetComponent<referenceManager>().tutorialCanvas.GetComponent<tutorialManager>().OpenTutorial();
         });
-        //
+        Button pauseButton = GameObject.Find("ReferenceManager").GetComponent<referenceManager>().pauseButton.GetComponent<Button>();
+        pauseButton.onClick.AddListener(TogglePause);
         if (courseManagerObj == null)
         {
             //set up initial game state
@@ -344,10 +345,13 @@ public class Course : MonoBehaviour
             GameObject.Find("ReferenceManager").GetComponent<referenceManager>().pauseScorecard.GetComponent<scorecard>().ShowCurrentCard();
         }
         //add listeners to button
-        GameObject.Find("ReferenceManager").GetComponent<referenceManager>().pauseButton.GetComponent<Button>().onClick.RemoveAllListeners();
-        GameObject.Find("ReferenceManager").GetComponent<referenceManager>().pauseButton.GetComponent<Button>().onClick.AddListener(TogglePause);
-        GameObject.Find("ReferenceManager").GetComponent<referenceManager>().mainMenuButton.GetComponent<Button>().onClick.RemoveAllListeners();
-        GameObject.Find("ReferenceManager").GetComponent<referenceManager>().mainMenuButton.GetComponent<Button>().onClick.AddListener(ToMainMenu);
+        referenceManager rm = GameObject.Find("ReferenceManager").GetComponent<referenceManager>();
+        rm.pauseButton.GetComponent<Button>().onClick.RemoveAllListeners();
+        rm.pauseButton.GetComponent<Button>().onClick.AddListener(TogglePause);
+        rm.mainMenuButton.GetComponent<Button>().onClick.RemoveAllListeners();
+        rm.mainMenuButton.GetComponent<Button>().onClick.AddListener(ToMainMenu);
+        //rm.settingsButton.GetComponent<Button>().onClick.RemoveAllListeners();
+        //rm.settingsButton.GetComponent<Button>().onClick.AddListener(rm.tutorialCanvas.GetComponent<tutorialManager>().OpenSettings);
     }
 
     public void ToMainMenu()

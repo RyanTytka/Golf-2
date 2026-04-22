@@ -1,13 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
+using UnityEngine.UI;
 
 public class musicmanager : MonoBehaviour
 {
-    public AudioSource audioSource;
+    public AudioSource musicAudioSource;
+    public AudioSource sfxAudioSource;
+    public AudioMixer audioMixer;
     public AudioClip[] playlist;   // List of music tracks
     public int musicNumber;
     public AudioClip[] UIPlaylist; //list of audio clips for UI
+    public Slider musicSlider, sfxSlider;
 
 
     public static musicmanager Instance;
@@ -35,20 +40,44 @@ public class musicmanager : MonoBehaviour
 
     void Start()
     {
-        audioSource.clip = playlist[musicNumber];
-        audioSource.Play();
+        LoadVolumes();
+        musicAudioSource.clip = playlist[musicNumber];
+        musicAudioSource.Play();
     }
 
     public void NextSong()
     {
-        audioSource.Stop();
+        musicAudioSource.Stop();
         musicNumber = (musicNumber + 1) % playlist.Length;
-        audioSource.clip = playlist[musicNumber];
-        audioSource.Play();
+        musicAudioSource.clip = playlist[musicNumber];
+        musicAudioSource.Play();
     }
 
     public void PlaySounEffect(UISounds sound)
     {
-        audioSource.PlayOneShot(UIPlaylist[(int)sound]);
+        sfxAudioSource.PlayOneShot(UIPlaylist[(int)sound]);
+    }
+
+    public void SetMusicVolume(float volume)
+    {
+        audioMixer.SetFloat("MusicVolume", Mathf.Log10(volume) * 50);
+        PlayerPrefs.SetFloat("MusicVolume", volume);
+    }
+
+    public void SetSFXVolume(float volume)
+    {
+        audioMixer.SetFloat("SFXVolume", Mathf.Log10(volume) * 50);
+        PlayerPrefs.SetFloat("SFXVolume", volume);
+    }
+
+    public void LoadVolumes()
+    {
+        float music = PlayerPrefs.GetFloat("MusicVolume", 0.5f);
+        SetMusicVolume(music);
+        float sfx = PlayerPrefs.GetFloat("SFXVolume", 0.5f);
+        SetSFXVolume(sfx);
+        musicSlider.value = music;
+        sfxSlider.value = sfx;
+
     }
 }
