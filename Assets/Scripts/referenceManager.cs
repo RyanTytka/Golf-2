@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class referenceManager : MonoBehaviour
 {
@@ -21,9 +22,12 @@ public class referenceManager : MonoBehaviour
     //pause canvas
     public GameObject pauseCanvas;
     public GameObject pauseScorecard;
-    public GameObject pauseButton; //resume button
+    public GameObject pauseResumeButton; //resume button
+    public GameObject pauseButton;
     public GameObject mainMenuButton;
     public GameObject settingsButton;
+    public Slider musicSlider;
+    public Slider sfxSlider;
     //hand highlight canvas
     public GameObject handHighlightCanvas;
     public GameObject handHighlightText;

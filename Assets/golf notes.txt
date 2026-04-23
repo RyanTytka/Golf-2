@@ -19,14 +19,9 @@ courses too long/varied
  - course 1 is very easy. make holes a bit longer to account for being able to hit ball in from far out?
  - idea: make it so cannot hit ball into the hole from off the green, just rolls over (unless you land on hole), must land on the green.
 balance tee earnings/costs
-how to play screen
 settings menu
-    -sound volume (effects/music)
     -windows mode?
-    credits
-tab does not work on course 2 hole 1 (pause button also breaks, and music sliders)
-tee up sometimes does not give driver
-scores on end screen dont seem right
+    -credits
 
 cards that need update:
  - new name: 

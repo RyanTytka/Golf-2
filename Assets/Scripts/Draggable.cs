@@ -543,15 +543,14 @@ public class Draggable : MonoBehaviour
                 break;
             case "Tee Up":
                 //Add your drivers to your hand. Lose {30/20/10} Power.
-                if (c.courseLayout[c.ballPos].GetComponent<CoursePiece>().myType == 0)
-                    foreach (GameObject go in h.baseDeck)
+                foreach (GameObject go in h.baseDeck)
+                {
+                    if (go.GetComponent<Draggable>().isDriver)
                     {
-                        if (go.GetComponent<Draggable>().isDriver)
-                        {
-                            GameObject newObj = Instantiate(go, GameObject.Find("GameManager").transform);
-                            h.hand.Add(newObj);
-                        }
+                        GameObject newObj = Instantiate(go, GameObject.Find("GameManager").transform);
+                        h.hand.Add(newObj);
                     }
+                }
                 c.power -= 30 - (rarity * 10);
                 break;
             case "Back to Basics":
@@ -632,23 +631,6 @@ public class Draggable : MonoBehaviour
         if (cardType != CardTypes.Caddie && isStillActive)
             h.DiscardCard(this.gameObject);
         //h.DisplayHand();
-    }
-
-    //This is called once the course scene is finished loading
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        // Only run logic if it's the "Course" scene
-        if (scene.name == "Course")
-        {
-            GameObject.Find("CourseManager").GetComponent<Course>().NewHole();
-            GameObject.Find("GameManager").GetComponent<Hand>().NewDeck();
-            GameObject.Find("SwingButton").GetComponent<Button>().onClick.AddListener
-                (GameObject.Find("CourseManager").GetComponent<Course>().Swing);
-            GameObject.Find("MulliganButton").GetComponent<Button>().onClick.AddListener
-                (GameObject.Find("CourseManager").GetComponent<Course>().Mulligan);
-            // Unsubscribe to avoid duplicate calls in the future
-            SceneManager.sceneLoaded -= OnSceneLoaded;
-        }
     }
 
     //returns null if cant take upgrade, or the matching upgrade if it will be replaced, or the passed upgrade if it is new

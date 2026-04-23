@@ -361,37 +361,7 @@ public class Hand : MonoBehaviour
         }
         else
         {
-            SceneManager.sceneLoaded += OnSceneLoaded;
             SceneManager.LoadScene("Course");
-        }
-    }
-
-    //This is called once the scene is finished loading
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        // Only run logic if it's the "Course" scene
-        if (scene.name == "Course")
-        {
-            Course course = GameObject.Find("CourseManager").GetComponent<Course>();
-            if (course.comingFromShop)
-            {
-                //start new course
-                course.NewCourse();
-                course.comingFromShop = false;
-            }
-            else
-            {
-                //just need a new hole
-                course.NewHole();
-            }
-            //set up hand and UI
-            GameObject.Find("GameManager").GetComponent<Hand>().NewDeck();
-            GameObject.Find("SwingButton").GetComponent<Button>().onClick.AddListener
-                (course.Swing);
-            GameObject.Find("MulliganButton").GetComponent<Button>().onClick.AddListener
-                (course.Mulligan);
-            // Unsubscribe to avoid duplicate calls in the future
-            SceneManager.sceneLoaded -= OnSceneLoaded;
         }
     }
 

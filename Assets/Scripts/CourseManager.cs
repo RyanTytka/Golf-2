@@ -40,8 +40,6 @@ public class Course : MonoBehaviour
         {
             GameObject.Find("ReferenceManager").GetComponent<referenceManager>().tutorialCanvas.GetComponent<tutorialManager>().OpenTutorial();
         });
-        Button pauseButton = GameObject.Find("ReferenceManager").GetComponent<referenceManager>().pauseButton.GetComponent<Button>();
-        pauseButton.onClick.AddListener(TogglePause);
         if (courseManagerObj == null)
         {
             //set up initial game state
@@ -346,12 +344,14 @@ public class Course : MonoBehaviour
         }
         //add listeners to button
         referenceManager rm = GameObject.Find("ReferenceManager").GetComponent<referenceManager>();
-        rm.pauseButton.GetComponent<Button>().onClick.RemoveAllListeners();
-        rm.pauseButton.GetComponent<Button>().onClick.AddListener(TogglePause);
+        rm.pauseResumeButton.GetComponent<Button>().onClick.RemoveAllListeners();
+        rm.pauseResumeButton.GetComponent<Button>().onClick.AddListener(TogglePause);
         rm.mainMenuButton.GetComponent<Button>().onClick.RemoveAllListeners();
         rm.mainMenuButton.GetComponent<Button>().onClick.AddListener(ToMainMenu);
-        //rm.settingsButton.GetComponent<Button>().onClick.RemoveAllListeners();
-        //rm.settingsButton.GetComponent<Button>().onClick.AddListener(rm.tutorialCanvas.GetComponent<tutorialManager>().OpenSettings);
+        if (SceneManager.GetActiveScene().name == "Shop")
+        {
+            rm.settingsButton.GetComponent<Button>().onClick.AddListener(rm.tutorialCanvas.GetComponent<tutorialManager>().OpenSettings);
+        }
     }
 
     public void ToMainMenu()
@@ -415,7 +415,7 @@ public class Course : MonoBehaviour
             case CourseType.forest:
                 break;
         }
-        scores.Clear();
+        scores = new();
         pars = new();
         for (int i = 0; i < 9; i++)
         {
@@ -480,7 +480,7 @@ public class Course : MonoBehaviour
                 // fairwayType = CoursePieces.ROUGH;
                 break;
         }
-        int holeLength = Random.Range(35, 40) + courseNum * 5 + lengthMod; //full length of course
+        int holeLength = Random.Range(32, 38) + courseNum * 4 + lengthMod; //full length of course
         if (test_par == 3 || pars[holeNum - 1] == 3)
             holeLength -= (7 + 3 * courseNum);
         if (test_par == 5 || pars[holeNum - 1] == 5)
@@ -500,7 +500,7 @@ public class Course : MonoBehaviour
         if (!isTutorial)
         {
             //Create Hazards
-            int currentPos = Random.Range(1, 10);
+            int currentPos = Random.Range(1, 8);
             int greenStartOffsetMin = 6; //space behind green before out of bounds
             int greenStartOffsetMax = 10;
             int greenLengthMin = 6 - courseNum / 3;
@@ -514,11 +514,11 @@ public class Course : MonoBehaviour
                         int patchSize = Random.Range(1, 4 + courseNum / 2);
                         int patchType = WeightedRandomInt(
                             new List<int> { 1, 2, 3 }, //rough, sand, water
-                            new List<int> { 15, 10 + courseNum, 10 + courseNum });
+                            new List<int> { 20, 10 + courseNum, 10 + courseNum });
                         if (patchType == 1)
                             patchSize += Random.Range(1, 3);
                         AddHazardPatch(patchType, currentPos, patchSize);
-                        currentPos += patchSize + Random.Range(5 - courseNum / 2, 10 - courseNum / 2);
+                        currentPos += patchSize + Random.Range(6 - courseNum / 2, 12 - courseNum / 2);
                     }
                     //large green
                     greenStartOffsetMin += 2;
@@ -532,12 +532,12 @@ public class Course : MonoBehaviour
                     {
                         int patchSize = Random.Range(4, 8);
                         int patchType = WeightedRandomInt(
-                            new List<int> { 0, 1, 2 }, //fairway, rough, sand
-                            new List<int> { 10, 5, 5 + courseNum * 2 });
+                            new List<int> { 1, 2 }, //rough, sand
+                            new List<int> { 7, 7 + courseNum });
                         if (patchType == 2)
-                            patchSize -= Random.Range(1, 3);
+                            patchSize -= 3 - courseNum / 3;
                         AddHazardPatch(patchType, currentPos, patchSize);
-                        currentPos += patchSize + Random.Range(4 - courseNum / 3, 7);
+                        currentPos += patchSize + Random.Range(6 - courseNum / 3, 10);
                     }
                     //large green
                     greenStartOffsetMin = 8;
@@ -551,9 +551,9 @@ public class Course : MonoBehaviour
                         int patchSize = Random.Range(1, 4 + courseNum / 2);
                         int patchType = WeightedRandomInt(
                             new List<int> { 1, 2, 3 }, //rough, sand, water
-                            new List<int> { 1, 3, 4 });
+                            new List<int> { 10, 15 + courseNum, 20 + courseNum });
                         AddHazardPatch(patchType, currentPos, patchSize);
-                        currentPos += patchSize + Random.Range(3 - courseNum / 3, 9 - courseNum / 2);
+                        currentPos += patchSize + Random.Range(5 - courseNum / 3, 12 - courseNum / 2);
                     }
                     //small green
                     greenStartOffsetMax -= 2;
@@ -563,13 +563,13 @@ public class Course : MonoBehaviour
                     //patches of water and large rough
                     while (currentPos < courseLayout.Count)
                     {
-                        int patchSize = Random.Range(4, 8);
+                        int patchSize = Random.Range(3, 8);
                         int patchType = WeightedRandomInt(
                             new List<int> { 1, 3 }, //rough, water
-                            new List<int> { 20, 10 + courseNum });
+                            new List<int> { 25, 10 + courseNum });
                         if (patchType == 3) patchSize -= 3 - courseNum / 3;
                         AddHazardPatch(patchType, currentPos, patchSize);
-                        currentPos += patchSize + Random.Range(3 - courseNum / 3, 7 - courseNum / 3);
+                        currentPos += patchSize + Random.Range(4 - courseNum / 3, 8 - courseNum / 3);
                     }
                     //larger green
                     greenStartOffsetMax += 2;
@@ -586,7 +586,7 @@ public class Course : MonoBehaviour
                         if (patchType == 1)
                             patchSize += 2;
                         AddHazardPatch(patchType, currentPos, patchSize);
-                        currentPos += patchSize + Random.Range(1, 6 - courseNum / 2);
+                        currentPos += patchSize + Random.Range(3, 7 - courseNum / 2);
                     }
                     //small behind green
                     greenStartOffsetMin -= 2;
@@ -1484,7 +1484,7 @@ public class Course : MonoBehaviour
         //set up new card select
         GetComponent<BoxCollider2D>().enabled = false;
         GameObject newCard = GameObject.Find("GameManager").GetComponent<Hand>().RandomUpgrade();
-        int teeReward = Mathf.Max(pars[holeNum - 1] - strokeCount + 3, 1);
+        int teeReward = Mathf.Max(pars[holeNum - 1] - strokeCount + 4, 1);
         if (currentRival == 4 && holeNum <= scores.Count && pars[holeNum - 1] < scores[holeNum - 1]) //must par or better to get tees against rival 4
             teeReward = 0;
         GameObject.Find("GameManager").GetComponent<NewCardManager>().ShowUI(teeReward, newCard);
@@ -1536,54 +1536,6 @@ public class Course : MonoBehaviour
         //SceneManager.sceneLoaded += OnSceneLoaded;
         //SceneManager.LoadScene("New Card");
         //GameObject.Find("BackgroundManager").GetComponent<backgroundManager>().RemoveSprites();
-    }
-
-    //This is called once the New Card scene is finished loading
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        if (scene.name == "New Card")
-        {
-            GetComponent<BoxCollider2D>().enabled = false;
-            GameObject.Find("GameManager").GetComponent<Hand>().RemoveDeck();
-            //GameObject.Find("GameManager").GetComponent<Hand>().CreateNewCardOptions();
-            int teeReward = Mathf.Max(pars[holeNum - 1] - strokeCount + 3, 1);
-            if (currentRival == 4 && pars[holeNum - 1] < scores[holeNum - 1]) //must par or better to get tees against rival 4
-                teeReward = 0;
-            GameObject.Find("TeesText").GetComponent<TextMeshProUGUI>().text = "(     +" + teeReward + ")";
-            GameObject.Find("SkipButton").GetComponent<Button>().onClick.AddListener
-                (GameObject.Find("GameManager").GetComponent<Hand>().SkipUpgrade);
-            // Unsubscribe to avoid duplicate calls in the future
-            SceneManager.sceneLoaded -= OnSceneLoaded;
-        }
-        //if (scene.name == "Lose")
-        //{
-        //    if (currentPlaythrough[currentPlaythrough.Count - 1].lostRun)
-        //    {
-        //        GameObject.Find("EndMessage").GetComponent<TextMeshProUGUI>().text = "You Lost";
-        //    }
-        //    else
-        //    {
-        //        GameObject.Find("EndMessage").GetComponent<TextMeshProUGUI>().text = "You Won";
-        //    }
-        //    int index = 0;
-        //    foreach (scorecard sc in GameObject.Find("RecapParent").GetComponentsInChildren<scorecard>())
-        //    {
-        //        //update recap for each course played through
-        //        if(index < currentPlaythrough.Count)
-        //        {
-        //            sc.gameObject.SetActive(true);
-        //            sc.ShowRecap(currentPlaythrough[index]);
-        //        }
-        //        else
-        //        {
-        //            sc.gameObject.SetActive(false);
-        //        }
-        //        index++;
-        //    }
-        //    courseDisplay.SetActive(false);
-        //    GameObject.Find("GameManager").GetComponent<Hand>().RemoveDeck();
-        //    SceneManager.sceneLoaded -= OnSceneLoaded;
-        //}
     }
 
     //Take 1 stroke to draw a card

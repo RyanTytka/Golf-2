@@ -122,6 +122,7 @@ public class shopManager : MonoBehaviour
                 //start new course
                 GameObject.Find("CourseManager").GetComponent<Course>().NewCourse();
                 GameObject.Find("CourseManager").GetComponent<Course>().comingFromShop = false;
+                GameObject.Find("CourseManager").GetComponent<Course>().gameState = Course.GameState.PLAYING;
             }
             else
             {
@@ -134,6 +135,8 @@ public class shopManager : MonoBehaviour
                 (GameObject.Find("CourseManager").GetComponent<Course>().Swing);
             GameObject.Find("MulliganButton").GetComponent<Button>().onClick.AddListener
                 (GameObject.Find("CourseManager").GetComponent<Course>().Mulligan);
+            Button pauseButton = GameObject.Find("ReferenceManager").GetComponent<referenceManager>().pauseButton.GetComponent<Button>();
+            pauseButton.onClick.AddListener(GameObject.Find("CourseManager").GetComponent<Course>().TogglePause);
             //GameObject.Find("TeesCount").GetComponent<TextMeshProUGUI>().text = GameObject.Find("CourseManager").GetComponent<Course>().tees.ToString();
             //GameObject.Find("ContinueButton").GetComponent<Button>().onClick.AddListener(ToNewHole);
             //upgradeButton.GetComponent<Button>().onClick.AddListener(ClickUpgrade);

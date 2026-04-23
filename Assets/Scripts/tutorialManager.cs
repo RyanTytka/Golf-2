@@ -62,6 +62,11 @@ public class tutorialManager : MonoBehaviour
         settingsPanel.SetActive(true);
         nextButton.SetActive(false);
         prevButton.SetActive(false);
+        GameObject.Find("Music Manager").GetComponent<musicmanager>().musicSlider = GameObject.Find("ReferenceManager").GetComponent<referenceManager>().musicSlider;
+        GameObject.Find("Music Manager").GetComponent<musicmanager>().sfxSlider = GameObject.Find("ReferenceManager").GetComponent<referenceManager>().sfxSlider;
+        GameObject.Find("Music Manager").GetComponent<musicmanager>().musicSlider.onValueChanged.AddListener(GameObject.Find("Music Manager").GetComponent<musicmanager>().SetMusicVolume);
+        GameObject.Find("Music Manager").GetComponent<musicmanager>().sfxSlider.onValueChanged.AddListener(GameObject.Find("Music Manager").GetComponent<musicmanager>().SetSFXVolume);
+        GameObject.Find("Music Manager").GetComponent<musicmanager>().LoadVolumes();
         //animate opening
         bgPanel.GetComponent<RectTransform>().transform.localScale = new Vector3(0, 0, 0);
         bgPanel.GetComponent<RectTransform>().transform.DOScale(new Vector3(1, 1, 1), 0.15f);//.SetEase(Ease.OutBounce);

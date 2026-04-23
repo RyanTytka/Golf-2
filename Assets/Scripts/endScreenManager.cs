@@ -8,6 +8,8 @@ public class endScreenManager : MonoBehaviour
 
     void Start()
     {
+
+
         //update end screen UI
         Course c = GameObject.Find("CourseManager").GetComponent<Course>();
         if (c.currentPlaythrough[c.currentPlaythrough.Count - 1].lostRun)
