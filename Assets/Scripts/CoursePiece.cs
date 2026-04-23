@@ -21,9 +21,6 @@ public class CoursePiece : MonoBehaviour
 
     void Update()
     {
-        if (GameObject.Find("CourseManager").GetComponent<Course>().paused) return;
-        if (GameObject.Find("CourseManager").GetComponent<Course>().gameState != Course.GameState.PLAYING) return;
-
         //If hovering this piece, display distance data
         Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         bool hovering = false;
@@ -33,6 +30,9 @@ public class CoursePiece : MonoBehaviour
         {
             if (hit.transform == transform)
             {
+                if (GameObject.Find("CourseManager").GetComponent<Course>().paused) return;
+                if (GameObject.Find("CourseManager").GetComponent<Course>().gameState != Course.GameState.PLAYING) return;
+
                 //highlight this piece
                 GetComponent<SpriteRenderer>().color = new Color(.8f, .8f, .5f, 1);
                 hovering = true;

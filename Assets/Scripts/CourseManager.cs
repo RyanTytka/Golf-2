@@ -855,11 +855,10 @@ public class Course : MonoBehaviour
         string ballName = selectedBall != null ? selectedBall.GetComponent<Draggable>().cardName : "";
         luck += swing.luckGained;
         luck -= swing.luckUsed;
-        if (selectedClub.GetComponent<Draggable>().cardName == "Foot Wedge")
-            if (courseLayout[ballPos].GetComponent<CoursePiece>().pieceName == "Sand" ||
-                courseLayout[ballPos].GetComponent<CoursePiece>().pieceName == "Rough")
-                strokeCount--;
-        strokeCount++;
+        if (!(selectedClub.GetComponent<Draggable>().cardName == "Foot Wedge" &&
+            (courseLayout[ballPos].GetComponent<CoursePiece>().pieceName == "Sand" ||
+            courseLayout[ballPos].GetComponent<CoursePiece>().pieceName == "Rough")))
+            ChangeStrokeCount(1);
         //card effects
         //clubs
         if (selectedClub.GetComponent<Draggable>().cardName == "Swiss Army Wedge")
@@ -874,7 +873,7 @@ public class Course : MonoBehaviour
         if (swing.endIndex >= courseLayout.Count)
         {
             //ball stays where it is and you lose a stroke
-            strokeCount++;
+            ChangeStrokeCount(1);
             pinpoint = 0;
         }
         else
@@ -903,7 +902,7 @@ public class Course : MonoBehaviour
                 while (courseLayout[ballPos].GetComponent<CoursePiece>().pieceName == "Water")
                     ballPos++;
                 //Item effects
-                foreach (int rarity in GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Caddie A"))
+                foreach (int rarity in GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Bubba Bunker"))
                 {
                     tees += 2 + rarity;
                 }
@@ -916,9 +915,9 @@ public class Course : MonoBehaviour
                     //rubber duck ball does not take stroke penalty
                     if (selectedBall == null || selectedBall.GetComponent<Draggable>().cardName != "Rubber Duck Ball")
                     {
-                        strokeCount++;
+                        ChangeStrokeCount(1);
                         if (currentRival == 1)
-                            strokeCount++;
+                            ChangeStrokeCount(1);
                     }
                 }
             }
@@ -932,7 +931,7 @@ public class Course : MonoBehaviour
                     int drawAmount = selectedBall.GetComponent<Draggable>().rarity + 2;
                     GameObject.Find("GameManager").GetComponent<Hand>().DrawCard(drawAmount);
                 }
-                if (selectedClub.GetComponent<Draggable>().cardName == "Club of Greed")
+                if (selectedClub.GetComponent<Draggable>().cardName == "Club of Riches")
                     tees += 2 + selectedClub.GetComponent<Draggable>().rarity;
             }
         }
@@ -942,7 +941,7 @@ public class Course : MonoBehaviour
             //ball effects
             if (selectedBall != null)
             {
-                if (selectedBall.GetComponent<Draggable>().cardName == "The Finisher")
+                if (selectedBall.GetComponent<Draggable>().cardName == "")
                 {
                     tees += 3 + selectedBall.GetComponent<Draggable>().rarity;
                 }
@@ -1031,7 +1030,7 @@ public class Course : MonoBehaviour
                 //Draw 3/4/5
                 GameObject.Find("GameManager").GetComponent<Hand>().DrawCard(3 + selectedBall.GetComponent<Draggable>().rarity);
             }
-            foreach (int rarity in GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Caddie A"))
+            foreach (int rarity in GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Bubba Bunker"))
             {
                 tees += 2 + rarity;
             }
@@ -1071,7 +1070,7 @@ public class Course : MonoBehaviour
                                  RollBall(true);
                              }).OnComplete(() =>
                              {
-                                 strokeCount++;
+                                 ChangeStrokeCount(1);
                                  UpdateStatusEffectDisplay();
                              })
                 );
@@ -1098,7 +1097,7 @@ public class Course : MonoBehaviour
         canPlayBall = true;
         canPlayAbilities = true;
         handRef.DrawCard(1);
-        foreach (int rarity in GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Caddie 4"))
+        foreach (int rarity in GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Ray Scratch"))
         {
             luck += 1 + rarity;
         }
@@ -1157,9 +1156,9 @@ public class Course : MonoBehaviour
         if (selectedClub.GetComponent<Draggable>().cardName == "Big Iron")
             if (courseLayout[ballPos].GetComponent<CoursePiece>().pieceName == "Rough")
                 carry += 5 + (selectedClub.GetComponent<Draggable>().rarity * 3);
-        if (selectedClub.GetComponent<Draggable>().cardName == "Big Betty")
+        if (selectedClub.GetComponent<Draggable>().cardName == "Hot Rod")
             carry += GameObject.Find("GameManager").GetComponent<Hand>().hand.Count;
-        if (selectedClub.GetComponent<Draggable>().cardName == "Long Ranger")
+        if (selectedClub.GetComponent<Draggable>().cardName == "The Showoff")
         {
             bool onlyClub = true;
             foreach (GameObject go in GameObject.Find("GameManager").GetComponent<Hand>().hand)
@@ -1175,7 +1174,7 @@ public class Course : MonoBehaviour
         }
         if (selectedClub.GetComponent<Draggable>().cardName == "The Loner")
             carry = Mathf.Max(1, carry - GameObject.Find("GameManager").GetComponent<Hand>().hand.Count + 1);
-        if (selectedClub.GetComponent<Draggable>().cardName == "Dead Stop Iron")
+        if (selectedClub.GetComponent<Draggable>().cardName == "Bone Club")
             carry += GameObject.Find("GameManager").GetComponent<Hand>().cardsTossed;
         //caddies
         if (selectedClub.GetComponent<Draggable>().clubType == Draggable.ClubTypes.Iron)
@@ -1185,11 +1184,11 @@ public class Course : MonoBehaviour
                 carry += rarity == 2 ? 10 : 5 + (rarity * 2);
             }
         }
-        foreach (int rarity in GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Caddie 3"))
+        foreach (int rarity in GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Paula Parsons"))
         {
             carry += GameObject.Find("GameManager").GetComponent<Hand>().caddies.Count * (rarity + 1);
         }
-        foreach (int rarity in GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Lion Forest"))
+        foreach (int rarity in GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Elsa Woods"))
         {
             if (selectedClub.GetComponent<Draggable>().clubType == Draggable.ClubTypes.Wood)
             {
@@ -1230,7 +1229,7 @@ public class Course : MonoBehaviour
                 case "Lead Ball":
                     carry += 5 + (ballRarity * 2);
                     break;
-                case "The Finisher":
+                case "Heat Seeking Ball":
                     tempLuck += ballRarity + 1;
                     break;
                 case "Clover Ball":
@@ -1333,7 +1332,7 @@ public class Course : MonoBehaviour
         GameObject.Find("StatusEffects").GetComponentsInChildren<Image>()[2].enabled = false;
         GameObject.Find("StatusEffects").GetComponent<TextMeshProUGUI>().text = "";
         int tempPower = 0;
-        foreach (int rarity in GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Caddie 3"))
+        foreach (int rarity in GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Paula Parsons"))
         {
             tempPower += 10 * GameObject.Find("GameManager").GetComponent<Hand>().caddies.Count * (1 + rarity);
         }
@@ -1405,15 +1404,20 @@ public class Course : MonoBehaviour
         GoToNextHole();
     }
 
+    public void ChangeStrokeCount(int amount)
+    {
+        strokeCount = Mathf.Max(0, strokeCount + amount);
+    }
+
     public GameObject continueObj;
     public void GoToNextHole()
     {
         canPlayAbilities = true;
         gameState = GameState.SHOWING_SCORE;
-        foreach (int rarity in GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Caddie 1"))
+        foreach (int rarity in GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Ace Rollins"))
         {
             if (GameObject.Find("GameManager").GetComponent<Hand>().hand.Count >= 6 - rarity)
-                strokeCount--;
+                ChangeStrokeCount(-1);
         }
         DisplayCourse();
         //Display Score
@@ -1423,7 +1427,7 @@ public class Course : MonoBehaviour
         if (strokeCount >= score.Length)
             continueObj.GetComponent<TextMeshProUGUI>().text = "+" + (strokeCount - pars[holeNum - 1]);
         else
-            continueObj.GetComponent<TextMeshProUGUI>().text = score[strokeCount + 4 - pars[holeNum - 1]];
+            continueObj.GetComponent<TextMeshProUGUI>().text = Mathf.Max(0, strokeCount - pars[holeNum - 1] + 4).ToString();
         float t = Mathf.Min(Mathf.Max(strokeCount - 3, 0), 7.0f) / 7.0f;
         continueObj.GetComponent<TextMeshProUGUI>().color = Color.Lerp(Color.green, Color.red, t);
         continueObj.GetComponentInChildren<Button>().onClick.AddListener(ContinueButtonClick);
@@ -1541,7 +1545,7 @@ public class Course : MonoBehaviour
     //Take 1 stroke to draw a card
     public void Mulligan()
     {
-        strokeCount++;
+        ChangeStrokeCount(1);
         GameObject.Find("GameManager").GetComponent<Hand>().DrawCard(1);
         if (currentRival == 3)
             power -= 30;

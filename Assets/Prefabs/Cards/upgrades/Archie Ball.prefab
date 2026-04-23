@@ -11,11 +11,11 @@ PrefabInstance:
     - target: {fileID: 1636312264385510429, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 8a78fc6e11d8e0649aeb2311ee1ed26e, type: 3}
+      objectReference: {fileID: 21300000, guid: 017ccb0ca90c0dd44bded28a359383c6, type: 3}
     - target: {fileID: 1683249602816217892, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 4cdd371a575be8543b5b1e149dbde06d, type: 3}
+      objectReference: {fileID: 21300000, guid: c6451fa8f7babae4b80d55231c2b81dc, type: 3}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: roll
       value: 0
@@ -30,14 +30,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: cardName
-      value: Recycle
+      value: Archie Ball
       objectReference: {fileID: 0}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: cardType
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
-      propertyPath: clubType
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
@@ -45,12 +41,16 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
+      propertyPath: caddieIcon
+      value: 
+      objectReference: {fileID: 21300000, guid: bcee14cd501f4ae46a38d837cd35c5d4, type: 3}
+    - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: description
-      value: Toss your hand. Then draw that many cards{/ plus 1/ plus 2}.
+      value: Gain {10/20/30} Power when you Toss a card
       objectReference: {fileID: 0}
     - target: {fileID: 7053857363415383679, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: m_Name
-      value: Recycle
+      value: Caddie 5
       objectReference: {fileID: 0}
     - target: {fileID: 8307558494132384029, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: m_LocalPosition.x

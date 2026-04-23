@@ -19,35 +19,15 @@ courses too long/varied
  - course 1 is very easy. make holes a bit longer to account for being able to hit ball in from far out?
  - idea: make it so cannot hit ball into the hole from off the green, just rolls over (unless you land on hole), must land on the green.
 balance tee earnings/costs
-settings menu
-    -windows mode?
-    -credits
+add text above ball for how far pin is
+view deck button for new card screen
 
-cards that need update:
- - new name: 
-big betty > Hot Rod
-club of greed > club of riches
-dead stop iron > Reaper Club
-caddies
-(
-    Josef Santos
-    Tommy Bunker
-    Elijah Richardson
-    Rose Quarterson
-    Ray Scratch
-    Paula Sneed
-    Fabio Hernandez
-    Betsy Watson
-    Leo Woods
-    Elsa Cooke
-    Archie Ball
-)
- - need art:
-long ranger (rename to showoff?)
-big iron (rename?)
-reckless swing
-recycle (rename?)
-the finisher (rename?)
+playtest notees:
+caddie that draws when you play caddie is too good
+rubber duck ball has no upgrades
+out of bounds shot messes up display arc
+
+
  - bugs:
  pocket aces is slow long animation 
  old scorecard draws 1 card if you have 0 strokes
@@ -55,18 +35,23 @@ its possible to toss all clubs in your deck, then you are stuck
 if your deck has 2 cards and you draw 3 (for example), doesnt reshuffle before 3rd card
 
 medium:
+shop should let you pick rival?
+settings menu
+    -windows mode?
+    -credits
 scroll bar/wheel for deck view
 make putter meter pulse every time putt is hit
 test on wide resolution
 idea: show what par is at start of each hole?
 iron shot that lands in water still gave putt range?
-distance marker is not deleted if active when you finish a hole
 stacking multiple of same caddie
 view discard pile
 add camera track ball while moving
 need new tees Icon
 new ball sprite
 unburden: (need toss animation)
+idea: 'curse' cards that stay in you deck until drawn, even between holes. Some rivals add them, some cards do too
+rival idea: add hazards to course
 
 low:
 using arrow keys to move course before clicking makes bg jump (not always based on bg element distance maybe?)
@@ -93,6 +78,14 @@ idea: cart path tile that makes ball roll further, or bounce on it to get more d
 
 card ideas:
 
+
+rename caddies:
+(
+    Josef Santos
+    Rose Putterson
+    Fabio Hernandez
+    Leo Green
+)
 
 ideas for upgrades:
 -hat or something. add to caddie and makes it level 2 caddie
@@ -274,7 +267,7 @@ cards list
         art: pending
         bugs: 
             toss animation is too slow (and cant see any indicator except deck counting down)
-    Caddie 4 - 
+    Ray Scratch - 
         desc
         Gain 1/2/3 luck at the start of each turn
         art: missing
@@ -284,14 +277,14 @@ cards list
         Gain 1/2/3 luck and 20/30/40 backspin
         art: done
         bugs: none
-Lion Forest
+Elsa Woods
         desc
         your woods have +30/40/50 power and 30/40/50 backspin
         art: missing
         bugs: none
 
     ////big hand
-    Caddie 1 - 
+    Ace Rollins - 
         desc
         -1 stroke if you have 6/5/4+ cards in hand at the end of the hole
         art: missing
@@ -329,12 +322,12 @@ Lion Forest
         Draw a caddie from your deck. Gain 2/3/4 luck
         art: pending
         bugs: none
-    Caddie 3 - 
+    Paula Parsons - 
         +10/20/30 power for each caddie you have
         effect
         art: missing
         bugs: none
-    Caddie 2 - 
+    Betsy Callaway - 
         desc
         Draw 1/2/3 cards when you play another caddie.
         art: missing
@@ -342,7 +335,7 @@ Lion Forest
 
 
     ////hazards    
-    Caddie A - 
+    Bubba Bunker - 
         desc
         Get 2/3/4 tees when you land in the sand/water
         art: missing
@@ -372,7 +365,7 @@ Big Iron
 
 
 new:
-    caddie 5 - 
+    Archie Ball - 
         desc
         +10/20/30 power when you toss a card
         art: missing

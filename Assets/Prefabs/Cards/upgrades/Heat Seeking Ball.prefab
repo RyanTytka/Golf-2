@@ -11,11 +11,11 @@ PrefabInstance:
     - target: {fileID: 1636312264385510429, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: cc63e75a50af158449b70926305c5cef, type: 3}
+      objectReference: {fileID: 21300000, guid: 568bc8d2a653ee047a2b27b270653e9a, type: 3}
     - target: {fileID: 1683249602816217892, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: c6451fa8f7babae4b80d55231c2b81dc, type: 3}
+      objectReference: {fileID: 21300000, guid: 4cdd371a575be8543b5b1e149dbde06d, type: 3}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: roll
       value: 0
@@ -30,27 +30,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: cardName
-      value: Lion Forest
+      value: Heat Seeking Ball
       objectReference: {fileID: 0}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: cardType
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
-      propertyPath: draggable
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
-      propertyPath: caddieIcon
-      value: 
-      objectReference: {fileID: 21300000, guid: 56b063ae4c6091d4ea4d2173706c7343, type: 3}
+      propertyPath: clubType
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2056628616319159231, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: description
-      value: Your Woods have +{30/40/50} Power and -{30/40/50} Roll.
+      value: 'Swing: Gain {1/1/2} Luck. If this shot goes in the hole, gain {3/4/5}
+        tees.'
       objectReference: {fileID: 0}
     - target: {fileID: 7053857363415383679, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: m_Name
-      value: Lion Forest
+      value: The Finisher
       objectReference: {fileID: 0}
     - target: {fileID: 8307558494132384029, guid: c984567c1225d224b99119016250f115, type: 3}
       propertyPath: m_LocalPosition.x

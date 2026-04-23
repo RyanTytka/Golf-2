@@ -216,7 +216,7 @@ public class Hand : MonoBehaviour
         currentDeck[0].SetActive(true);
         currentDeck.RemoveAt(0);
         if (currentDeck.Count == 0 && GameObject.Find("CourseManager").GetComponent<Course>().currentRival == 5)
-            GameObject.Find("CourseManager").GetComponent<Course>().strokeCount++;
+            GameObject.Find("CourseManager").GetComponent<Course>().ChangeStrokeCount(1);
         //animate drawing the cards
         drawnCard.GetComponent<Draggable>().AnimateDraw(amount, completeCallback);
     }
@@ -239,7 +239,7 @@ public class Hand : MonoBehaviour
         //card effects
         if (card.GetComponent<Draggable>().cardName == "Voodoo Doll")
             GameObject.Find("CourseManager").GetComponent<Course>().luck += 5 + card.GetComponent<Draggable>().rarity;
-        foreach (int rarity in GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Caddie 5"))
+        foreach (int rarity in GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Archie Ball"))
         {
             GameObject.Find("CourseManager").GetComponent<Course>().power += 10 * (rarity + 1);
         }

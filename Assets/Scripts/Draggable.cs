@@ -155,7 +155,8 @@ public class Draggable : MonoBehaviour
         if (draggable || GameObject.Find("GameManager").GetComponent<Hand>().waitingForDiscard)
             return;
         //Chip Johnson cant use woods
-        if (GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Chip Johnson").Count > 0 && clubType == ClubTypes.Wood)
+        if (GameObject.Find("GameManager").GetComponent<Hand>().HasCaddie("Chip Johnson").Count > 0 
+            && cardType == CardTypes.Club && clubType == ClubTypes.Wood)
             return;
 
         selected = !selected;
@@ -427,7 +428,7 @@ public class Draggable : MonoBehaviour
         //do effect
         if (cardType == CardTypes.Caddie)
         {
-            foreach (int rarity in h.HasCaddie("Caddie 2"))
+            foreach (int rarity in h.HasCaddie("Betsy Callaway"))
             {
                 h.DrawCard(1 + rarity);
             }
@@ -577,7 +578,7 @@ public class Draggable : MonoBehaviour
             case "Practice Swing":
                 if (h.hand.Count > 6 - rarity)
                 {
-                    c.strokeCount--;
+                    c.ChangeStrokeCount(-1);
                     h.Toss(this.gameObject);
                     isStillActive = false;
                 }
@@ -610,7 +611,7 @@ public class Draggable : MonoBehaviour
                     yield return new WaitForSeconds(timeBetweenToss);
                 }
                 break;
-            case "Recycle":
+            case "Ball Retriever":
                 //Toss your hand. Then draw that many cards{/ plus 1/ plus 2}.
                 h.DiscardCard(this.gameObject);
                 timeBetweenToss = h.hand.Count == 0 ? 0 : Mathf.Min(0.25f, 1.0f / h.hand.Count);
