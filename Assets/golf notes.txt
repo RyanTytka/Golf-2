@@ -12,29 +12,28 @@ courses too long/varied
  - par 3s scale with course at same rate as par 4s. decrease it (and par 5s too prob)
  - make beach course shorter
  - calculate from start of course for less variation
- - desert can have possibly no hazards
  - make amount of hazards more consistent but also reduced at early courses
  - scale course length with amount of hazards inversely
  - hole at front of green is easier than back of green
  - course 1 is very easy. make holes a bit longer to account for being able to hit ball in from far out?
  - idea: make it so cannot hit ball into the hole from off the green, just rolls over (unless you land on hole), must land on the green.
 balance tee earnings/costs
-add text above ball for how far pin is
-view deck button for new card screen
+
+
 
 playtest notees:
 caddie that draws when you play caddie is too good
 rubber duck ball has no upgrades
-out of bounds shot messes up display arc
 
 
  - bugs:
- pocket aces is slow long animation 
- old scorecard draws 1 card if you have 0 strokes
-its possible to toss all clubs in your deck, then you are stuck
+pocket aces is slow long animation 
+old scorecard draws 1 card if you have 0 strokes
 if your deck has 2 cards and you draw 3 (for example), doesnt reshuffle before 3rd card
 
 medium:
+view deck button for new card screen
+add text above ball for how far pin is
 shop should let you pick rival?
 settings menu
     -windows mode?

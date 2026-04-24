@@ -348,6 +348,8 @@ public class Course : MonoBehaviour
         rm.pauseResumeButton.GetComponent<Button>().onClick.AddListener(TogglePause);
         rm.mainMenuButton.GetComponent<Button>().onClick.RemoveAllListeners();
         rm.mainMenuButton.GetComponent<Button>().onClick.AddListener(ToMainMenu);
+        rm.giveUpButton.GetComponent<Button>().onClick.RemoveAllListeners();
+        rm.giveUpButton.GetComponent<Button>().onClick.AddListener(GiveUp);
         if (SceneManager.GetActiveScene().name == "Shop")
         {
             rm.settingsButton.GetComponent<Button>().onClick.AddListener(rm.tutorialCanvas.GetComponent<tutorialManager>().OpenSettings);
@@ -1115,10 +1117,10 @@ public class Course : MonoBehaviour
         {
             //lands out of bounds
             Vector3 startPos = courseLayout[swing.startIndex].transform.position;
-            Vector3 localOutOfBoundsPos = new Vector3(swing.landIndex * childWidth - 7.5f, 1.25f, 0);
-            localOutOfBoundsPos.y = courseLayout[swing.startIndex].transform.position.y;
+            Vector3 localOutOfBoundsPos = new Vector3(swing.landIndex * childWidth, 1.25f, 0);
+            localOutOfBoundsPos.y = courseLayout[swing.startIndex].transform.localPosition.y;
             Vector3 worldOutOfBoundsPos = courseDisplay.transform.TransformPoint(localOutOfBoundsPos);
-            Vector3 localTailEndPos = new Vector3(swing.endIndex * childWidth - 7.5f, 1.25f, 0);
+            Vector3 localTailEndPos = new Vector3(swing.endIndex * childWidth, 1.25f, 0);
             Vector3 worldTailEndPos = courseDisplay.transform.TransformPoint(localTailEndPos);
             DrawArc(startPos, worldOutOfBoundsPos, worldTailEndPos.x, boundsPrefab);
         }
@@ -1397,6 +1399,14 @@ public class Course : MonoBehaviour
         }
     }
 
+    //Go to next hole, if you happen to run out of cards
+    public void GiveUp()
+    {
+        TogglePause();
+        strokeCount = 10;
+        GoToNextHole();
+    }
+
     //debug tool to quickly go through holes
     public void SkipHole()
     {
@@ -1427,7 +1437,7 @@ public class Course : MonoBehaviour
         if (strokeCount >= score.Length)
             continueObj.GetComponent<TextMeshProUGUI>().text = "+" + (strokeCount - pars[holeNum - 1]);
         else
-            continueObj.GetComponent<TextMeshProUGUI>().text = Mathf.Max(0, strokeCount - pars[holeNum - 1] + 4).ToString();
+            continueObj.GetComponent<TextMeshProUGUI>().text = score[Mathf.Max(0, strokeCount - pars[holeNum - 1] + 4)];
         float t = Mathf.Min(Mathf.Max(strokeCount - 3, 0), 7.0f) / 7.0f;
         continueObj.GetComponent<TextMeshProUGUI>().color = Color.Lerp(Color.green, Color.red, t);
         continueObj.GetComponentInChildren<Button>().onClick.AddListener(ContinueButtonClick);
