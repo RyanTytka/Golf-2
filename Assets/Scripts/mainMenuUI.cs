@@ -71,6 +71,7 @@ public class mainMenuUI : MonoBehaviour
             GameObject.Find("StartButton").SetActive(false);
             GameObject.Find("StartTutorialButton").SetActive(false);
             GameObject.Find("SettingsButton").SetActive(false);
+            GameObject.Find("FeedbackButton").SetActive(false);
             GameObject.Find("QuitButton").SetActive(false);
         }
     }
