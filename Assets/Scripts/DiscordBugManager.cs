@@ -20,11 +20,11 @@ public class DiscordBugManager : MonoBehaviour
     IEnumerator SendToDiscord(string bugText)
     {
         string message = bugText;
-            //"**Bug Report**\n" +
-            //bugText + "\n\n" +
-            //"**Device:** " + SystemInfo.deviceModel + "\n" +
-            //"**OS:** " + SystemInfo.operatingSystem + "\n" +
-            //"**Unity:** " + Application.unityVersion;
+        //"**Bug Report**\n" +
+        //bugText + "\n\n" +
+        //"**Device:** " + SystemInfo.deviceModel + "\n" +
+        //"**OS:** " + SystemInfo.operatingSystem + "\n" +
+        //"**Unity:** " + Application.unityVersion;
 
         string json = JsonUtility.ToJson(new DiscordMessage(message));
 
@@ -62,4 +62,19 @@ public class DiscordBugManager : MonoBehaviour
             this.content = content;
         }
     }
+
+    public string storeURL = "https://store.steampowered.com/app/3995620/Golf_2/";
+
+    public void OpenStore()
+    {
+        Application.OpenURL(storeURL);
+    }
+
+    public string discordURL = "https://discord.gg/KJcs6wKU6";
+
+    public void OpenDiscord()
+    {
+        Application.OpenURL(discordURL);
+    }
+
 }
