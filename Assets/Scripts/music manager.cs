@@ -35,7 +35,9 @@ public class musicmanager : MonoBehaviour
 
     public enum UISounds
     {
-        ButtonClick
+        ButtonClick,
+        GolfSwing,
+        BallIntoHole,
     }
 
     void Start()
@@ -53,9 +55,9 @@ public class musicmanager : MonoBehaviour
         musicAudioSource.Play();
     }
 
-    public void PlaySounEffect(UISounds sound)
+    public void PlaySoundEffect(UISounds sound, float volume)
     {
-        sfxAudioSource.PlayOneShot(UIPlaylist[(int)sound]);
+        sfxAudioSource.PlayOneShot(UIPlaylist[(int)sound], volume);
     }
 
     public void SetMusicVolume(float volume)

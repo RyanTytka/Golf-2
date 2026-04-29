@@ -24,8 +24,6 @@ view deck button for new card screen
 
 playtest notees:
 caddie that draws when you play caddie is too good
-rubber duck ball has no upgrades
-out of bounds shot messes up display arc
 
 
  - bugs:

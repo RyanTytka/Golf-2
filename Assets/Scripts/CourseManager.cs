@@ -6,6 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static Unity.Collections.AllocatorManager;
 
 public class Course : MonoBehaviour
 {
@@ -913,7 +914,11 @@ public class Course : MonoBehaviour
                 else
                 {
                     //rubber duck ball does not take stroke penalty
-                    if (selectedBall == null || selectedBall.GetComponent<Draggable>().cardName != "Rubber Duck Ball")
+                    if (selectedBall != null && selectedBall.GetComponent<Draggable>().cardName == "Rubber Duck Ball")
+                    {
+                        luck += selectedBall.GetComponent<Draggable>().rarity * 2;
+                    }
+                    else
                     {
                         ChangeStrokeCount(1);
                         if (currentRival == 1)
@@ -1053,6 +1058,7 @@ public class Course : MonoBehaviour
             ).GetComponent<CoursePiece>().myIndex;
             Vector3 target = courseLayout[holeIndex].transform.position;
             float durationPerPutt = 0.5f;
+            Invoke(nameof(PlayHoleSound), (durationPerPutt + 0.25f) * puttCount);
             for (int i = 0; i < puttCount; i++)
             {
                 // Target is 75% towards the hole
@@ -1074,7 +1080,6 @@ public class Course : MonoBehaviour
                                  UpdateStatusEffectDisplay();
                              })
                 );
-                // small delay between putts
                 sequence.AppendInterval(0.25f);
                 currentPos = nextPos;
             }
@@ -1089,6 +1094,7 @@ public class Course : MonoBehaviour
         //if in the hole, go to next hole
         if (courseLayout[ballPos].GetComponent<CoursePiece>().pieceName == "Hole")
         {
+            PlayHoleSound();
             GoToNextHole();
             return;
         }
@@ -1103,6 +1109,11 @@ public class Course : MonoBehaviour
         }
         DisplayCourse();
         UpdateStatusEffectDisplay();
+    }
+
+    private void PlayHoleSound()
+    {
+        GameObject.Find("Music Manager").GetComponent<musicmanager>().PlaySoundEffect(musicmanager.UISounds.BallIntoHole, 0.75f);
     }
 
     //Highlight the part of the course that a hit would land on
@@ -1321,7 +1332,8 @@ public class Course : MonoBehaviour
     public void Swing()
     {
         if (selectedClub == null) return; //need a club to swing
-        HitBall();
+        GameObject.Find("Music Manager").GetComponent<musicmanager>().PlaySoundEffect(musicmanager.UISounds.GolfSwing, 1.0f);
+        Invoke(nameof(HitBall), 0.15f); //calls after slight delay to better align with audio
     }
 
     public void UpdateStatusEffectDisplay()

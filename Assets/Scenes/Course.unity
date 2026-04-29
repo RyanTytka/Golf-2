@@ -12599,9 +12599,11 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 2aba97bae1979d34cad727fb9d436195, type: 3}
   - {fileID: 8300000, guid: 6ceef81d1186e0449a8ff0ad0cde8661, type: 3}
   - {fileID: 8300000, guid: b955e7258a3a1024b8f6dd7125443788, type: 3}
-  musicNumber: 0
+  musicNumber: 6
   UIPlaylist:
   - {fileID: 8300000, guid: 9c43991025006f442a12f46425c9518a, type: 3}
+  - {fileID: 8300000, guid: f8f9235d4e592734bb5f32b64822c9dc, type: 3}
+  - {fileID: 8300000, guid: 5c15869d4d9c9db4895fd64eb4b7118e, type: 3}
   musicSlider: {fileID: 1370713295}
   sfxSlider: {fileID: 1833434213}
 --- !u!4 &882636187

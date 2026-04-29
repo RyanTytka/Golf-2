@@ -464,7 +464,7 @@ public class Draggable : MonoBehaviour
                 h.cardSelection = new();
                 // Wait for user to select a card to Toss
                 yield return h.WaitForSelection("Drag a card here to Toss it", 1);
-                // Now draw 2 cards after discarding
+                // Now draw 2/3/4 cards after discarding
                 onDisplay = false;
                 h.cardSelection[0].GetComponent<Draggable>().AnimateDiscard(true);
                 h.DrawCard(2 + rarity);

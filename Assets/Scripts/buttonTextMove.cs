@@ -17,7 +17,7 @@ public class buttonTextMove : MonoBehaviour
         if(amount == 0)
         {
             //release
-            GameObject.Find("Music Manager").GetComponent<musicmanager>().PlaySounEffect(0);
+            GameObject.Find("Music Manager").GetComponent<musicmanager>().PlaySoundEffect(musicmanager.UISounds.ButtonClick, 0.1f);
         }
         else
         {
