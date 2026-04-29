@@ -25,6 +25,8 @@ caddie that draws when you play caddie is too good
 rubber duck ball has no upgrades
 drivers have a lot of roll
 
+add Disco Ball card
+add low rider ball card
 
  - bugs:
 pocket aces is slow long animation 
@@ -390,7 +392,7 @@ new:
         art: missing
         bugs: 
             not yet implemented
-    Lawnmower ball/ Ramball (rambo) / Jungle Ball
+    Jungle Ball
         desc
         gain 10/20/30 power instead of lose it when roll over rough
         art: missing
@@ -407,7 +409,6 @@ new:
         wedge. power 10/20/30, roll 10/20/30. Does not cost a stroke if you are in snad or rough.
         art: missing
         bugs:
-            not yet implemented
 
 
 housesitting:
