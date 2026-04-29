@@ -26,6 +26,7 @@ public class referenceManager : MonoBehaviour
     public GameObject pauseButton;
     public GameObject mainMenuButton;
     public GameObject settingsButton;
+    public GameObject giveUpButton;
     public Slider musicSlider;
     public Slider sfxSlider;
     //hand highlight canvas
