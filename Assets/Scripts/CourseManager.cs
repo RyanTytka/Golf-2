@@ -882,7 +882,11 @@ public class Course : MonoBehaviour
         {
             //set ball to where it lands
             ballPos = swing.endIndex;
-            power = swing.roughHits * -10;
+            
+            if (selectedBall != null && selectedBall.GetComponent<Draggable>().cardName == "Jungle Ball")
+                power = swing.roughHits * 10 * selectedBall.GetComponent<Draggable>().rarity;
+            else
+                power = swing.roughHits * -10;
             if (courseLayout[ballPos].GetComponent<CoursePiece>().pieceName == "Rough")
             {
                 //lose 10 power
@@ -893,7 +897,7 @@ public class Course : MonoBehaviour
                 else
                 {
                     if (selectedBall != null && selectedBall.GetComponent<Draggable>().cardName == "Jungle Ball")
-                        power += 10;
+                        power += 10 * selectedBall.GetComponent<Draggable>().rarity;
                     else
                         power -= 10;
                 }
