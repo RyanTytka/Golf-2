@@ -16,6 +16,7 @@ public class scorecard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     public List<Sprite> courseImages;
     public List<Sprite> headerImages;
     public GameObject headerObj;
+    public GameObject courseNumObj;
 
     public void OnPointerEnter(PointerEventData eventData)
     {

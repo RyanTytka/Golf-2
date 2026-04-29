@@ -336,21 +336,23 @@ public class Course : MonoBehaviour
     //public method to toggle pause and set pauseCanvas active
     public void TogglePause()
     {
+        if (SceneManager.GetActiveScene().name == "Lose") return;
         paused = !paused;
-        GameObject.Find("ReferenceManager").GetComponent<referenceManager>().pauseCanvas.SetActive(paused);
+        referenceManager rm = GameObject.Find("ReferenceManager").GetComponent<referenceManager>();
+        rm.pauseCanvas.SetActive(paused);
         if (SceneManager.GetActiveScene().name == "Course")
         {
             //show scorecard
             GameObject.Find("ReferenceManager").GetComponent<referenceManager>().pauseScorecard.GetComponent<scorecard>().ShowCurrentCard();
+            GameObject.Find("ReferenceManager").GetComponent<referenceManager>().pauseScorecard.GetComponent<scorecard>().courseNumObj.GetComponent<TextMeshProUGUI>().text = courseNum.ToString();
+            rm.giveUpButton.GetComponent<Button>().onClick.RemoveAllListeners();
+            rm.giveUpButton.GetComponent<Button>().onClick.AddListener(GiveUp);
         }
         //add listeners to button
-        referenceManager rm = GameObject.Find("ReferenceManager").GetComponent<referenceManager>();
         rm.pauseResumeButton.GetComponent<Button>().onClick.RemoveAllListeners();
         rm.pauseResumeButton.GetComponent<Button>().onClick.AddListener(TogglePause);
         rm.mainMenuButton.GetComponent<Button>().onClick.RemoveAllListeners();
         rm.mainMenuButton.GetComponent<Button>().onClick.AddListener(ToMainMenu);
-        rm.giveUpButton.GetComponent<Button>().onClick.RemoveAllListeners();
-        rm.giveUpButton.GetComponent<Button>().onClick.AddListener(GiveUp);
         if (SceneManager.GetActiveScene().name == "Shop")
         {
             rm.settingsButton.GetComponent<Button>().onClick.AddListener(rm.tutorialCanvas.GetComponent<tutorialManager>().OpenSettings);
